@@ -37,7 +37,7 @@ void loop()
 {
     
     handleInput();
-    //handleObstacle();
+    handleObstacle();
 }
 
 void handleObstacle()
