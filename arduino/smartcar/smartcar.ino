@@ -1,11 +1,7 @@
 #include <Smartcar.h>
-
-
 /*
 The skeleton for this code is derived from [https://platisd.github.io/smartcar_shield/manual_control_8ino-example.html]
 */
-
-
 int fSpeed = 0;
 int bSpeed = 0; 
 int lDegrees = -75; // degrees to turn left
@@ -16,7 +12,6 @@ const int TRIGGER_PIN           = 6; // D6
 const int ECHO_PIN              = 7; // D7
 const unsigned int MAX_DISTANCE = 100;
 
- 
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
@@ -30,29 +25,29 @@ void setup()
 {
     Serial.begin(9600);
     Serial.setTimeout(200);
-    
 }
 
 void loop()
 {
-    
     handleInput();
-    handleObstacle();
-}
-
-void handleObstacle()
-{
-    int distance = front.getDistance();
-    if (distance != 0 && distance < 100)
-    { 
+    if (handleObstacle1()){
         car.setSpeed(0);
-        
-    } else {
-        handleInput();
-    }
-        delay(100);
+        car.setSpeed(-90);
+        delay(300);
+        car.setSpeed(0);
+        direct = "f";
+        }
 }
 
+boolean handleObstacle1(){
+  int distance = front.getDistance();
+  if (distance != 0 && distance < 100){
+      return true;
+      }
+  else{
+      return false;    
+  }
+}
 
 /* 
 When standing still you need to choose a direction and then enter a speed mode 1-4.
@@ -73,17 +68,17 @@ void handleInput(){
             car.setSpeed(fSpeed);
             car.setAngle(rDegrees);
             break;
-        case 'f': // go ahead
+        case 'f': // go ahead   
             car.setSpeed(fSpeed);
             car.setAngle(0);
             direct = "f";
             break;
-        case 'b': // go back
+        case 'b': // go back 
             car.setSpeed(bSpeed);
             car.setAngle(0);
             direct = "b";
             break;
-        case 'g': // go back
+        case 'g': // break
             car.setSpeed(fSpeed * 0.9);
             delay(700);
             car.setSpeed(fSpeed * 0.7);
@@ -94,7 +89,7 @@ void handleInput(){
             delay(700);
             car.setSpeed(0);
             break; 
-        case 'h': // go back
+        case 'h': // break
             car.setSpeed(fSpeed * 0.9);
             delay(500);
             car.setSpeed(fSpeed * 0.7);
@@ -105,7 +100,7 @@ void handleInput(){
             delay(500);
             car.setSpeed(0);
             break;
-         case 'j': // go back
+         case 'j': // break
             car.setSpeed(fSpeed * 0.9);
             delay(200);
             car.setSpeed(fSpeed * 0.7);
@@ -116,16 +111,14 @@ void handleInput(){
             delay(200);
             car.setSpeed(0);
             break; 
-         case 'k': // go back
+         case 'k': // break
             car.setSpeed(0);
             break;       
         default:  
              setCarSpeed(input, direct);
             }
-        
+        } 
     }
-  }
- 
 
 /*
 The method setCarSpeed takes the direction and the speed mode as arguments.
@@ -148,7 +141,6 @@ void setCarSpeed(char input, String direct){
           else{
             car.setSpeed(0);
           }
-          
           break;
         case '2':
         if (direct == "f"){
