@@ -18,3 +18,7 @@ How?
 Make a catalog of dance moves for the car to move and blink in sync with the tempo of a song, and make the timing of the execution of the moves be dependent on
 the tempo of any given song as an input variable. The program will extract the tempos of any given song, and have the car dance all night long, then send it off
 to a COVID-free music festival. 
+
+How to control the car?
+First enter in what direction you want the car to move. You can drive forward by pressing "f", backward by pressing "b", left by pressing "l" and right by pressing "r". In order to make the car accelerate you have four speed modes to select from "1", "2", "3" and "4" where "1" gives the lowest speed and "4" gives the highest speed. In order to break you can select "g", "h", "j" and "k" where "g" breaks with the longest breaking distance and "j" breaks with the shortest breaking distance. 
+If you drive towards an obstacle the car will automatically stop and drive backwards a few centimeters.
