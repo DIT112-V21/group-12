@@ -62,6 +62,7 @@ Invalid input will still get passed to setCarSpeed which will cause the car to s
 void handleInput(){
   if (Serial.available()){
     char input = Serial.read();
+    String value;
         switch (input)
         {
         case 'l': // rotate counter-clockwise going forward
@@ -81,6 +82,42 @@ void handleInput(){
             car.setSpeed(bSpeed);
             car.setAngle(0);
             direct = "b";
+            break;
+        case 'g': // go back
+            car.setSpeed(fSpeed * 0.9);
+            delay(700);
+            car.setSpeed(fSpeed * 0.7);
+            delay(700);
+            car.setSpeed(fSpeed * 0.5);
+            delay(700);
+            car.setSpeed(fSpeed * 0.3);
+            delay(700);
+            car.setSpeed(0);
+            break; 
+        case 'h': // go back
+            car.setSpeed(fSpeed * 0.9);
+            delay(500);
+            car.setSpeed(fSpeed * 0.7);
+            delay(500);
+            car.setSpeed(fSpeed * 0.5);
+            delay(500);
+            car.setSpeed(fSpeed * 0.3);
+            delay(500);
+            car.setSpeed(0);
+            break;
+         case 'j': // go back
+            car.setSpeed(fSpeed * 0.9);
+            delay(200);
+            car.setSpeed(fSpeed * 0.7);
+            delay(200);
+            car.setSpeed(fSpeed * 0.5);
+            delay(200);
+            car.setSpeed(fSpeed * 0.3);
+            delay(200);
+            car.setSpeed(0);
+            break; 
+         case 'k': // go back
+            car.setSpeed(0);
             break;       
         default:  
              setCarSpeed(input, direct);
@@ -88,6 +125,7 @@ void handleInput(){
         
     }
   }
+ 
 
 /*
 The method setCarSpeed takes the direction and the speed mode as arguments.
