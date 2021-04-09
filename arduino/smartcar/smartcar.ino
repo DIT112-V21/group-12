@@ -78,7 +78,7 @@ void handleInput(){
             car.setAngle(0);
             direct = "b";
             break;
-        case 'g': // break, can not steer while breking thius. 
+        case 'g': // break
             car.setSpeed(fSpeed * 0.9);
             delay(700);
             car.setSpeed(fSpeed * 0.7);
@@ -89,7 +89,7 @@ void handleInput(){
             delay(700);
             car.setSpeed(0);
             break; 
-        case 'h': // go back
+        case 'h': // break
             car.setSpeed(fSpeed * 0.9);
             delay(500);
             car.setSpeed(fSpeed * 0.7);
@@ -100,7 +100,7 @@ void handleInput(){
             delay(500);
             car.setSpeed(0);
             break;
-         case 'j': // go back
+         case 'j': // break
             car.setSpeed(fSpeed * 0.9);
             delay(200);
             car.setSpeed(fSpeed * 0.7);
@@ -111,7 +111,7 @@ void handleInput(){
             delay(200);
             car.setSpeed(0);
             break; 
-         case 'k': // go back
+         case 'k': // break
             car.setSpeed(0);
             break;       
         default:  
