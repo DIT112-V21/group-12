@@ -61,11 +61,9 @@ void handleInput(){
         switch (input)
         {
         case 'l': // rotate counter-clockwise going forward
-            car.setSpeed(fSpeed);
             car.setAngle(lDegrees);
             break;
         case 'r': // turn clock-wise
-            car.setSpeed(fSpeed);
             car.setAngle(rDegrees);
             break;
         case 'f': // go ahead   
@@ -78,41 +76,17 @@ void handleInput(){
             car.setAngle(0);
             direct = "b";
             break;
-        case 'g': // break
-            car.setSpeed(fSpeed * 0.9);
-            delay(700);
-            car.setSpeed(fSpeed * 0.7);
-            delay(700);
-            car.setSpeed(fSpeed * 0.5);
-            delay(700);
-            car.setSpeed(fSpeed * 0.3);
-            delay(700);
-            car.setSpeed(0);
-            break; 
-        case 'h': // break
-            car.setSpeed(fSpeed * 0.9);
-            delay(500);
-            car.setSpeed(fSpeed * 0.7);
-            delay(500);
-            car.setSpeed(fSpeed * 0.5);
-            delay(500);
-            car.setSpeed(fSpeed * 0.3);
-            delay(500);
-            car.setSpeed(0);
+        case 'g':
+          braking(0.05);
             break;
-         case 'j': // break
-            car.setSpeed(fSpeed * 0.9);
-            delay(200);
-            car.setSpeed(fSpeed * 0.7);
-            delay(200);
-            car.setSpeed(fSpeed * 0.5);
-            delay(200);
-            car.setSpeed(fSpeed * 0.3);
-            delay(200);
-            car.setSpeed(0);
+        case 'h': // break
+          braking(0.15);
+            break;
+        case 'j': // break
+           braking(0.3);
             break; 
-         case 'k': // break
-            car.setSpeed(0);
+        case 'k': // break
+           braking(0.5);
             break;       
         default:  
              setCarSpeed(input, direct);
@@ -124,6 +98,47 @@ void handleInput(){
 The method setCarSpeed takes the direction and the speed mode as arguments.
 For an invalid speed mode the car will stop.
 */
+
+char readInput(){
+  if (Serial.available()){
+  char input = Serial.read();
+  switch(input){
+    case 'l':
+    car.setAngle(lDegrees);
+    break;
+    case 'r':
+    car.setAngle(rDegrees);
+    break;
+    case 'f':
+    car.setSpeed(fSpeed);
+    return 'f';
+    break;
+    case 'b':
+    car.setSpeed(fSpeed * -1);
+    return 'b';
+    break;
+    default: return 'x';
+  }
+  }
+  return 'x';
+  
+}
+
+
+void braking(double brakeMode){
+  while(fSpeed > 0){
+    fSpeed = fSpeed - fSpeed * brakeMode;
+    car.setSpeed(fSpeed);
+    delay(150);
+    char inputChar = readInput();
+    if (inputChar == 'f'){
+      break;
+    }
+    if (inputChar == 'b'){
+      break;
+    }   
+  }
+}
 
 void setCarSpeed(char input, String direct){
   switch(input){
@@ -192,4 +207,3 @@ void setCarSpeed(char input, String direct){
           car.setAngle(0);
        }
   }
-  
