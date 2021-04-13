@@ -4,9 +4,14 @@ The skeleton for this code is derived from [https://platisd.github.io/smartcar_s
 */
 int fSpeed = 0;
 int bSpeed = 0;
-int lDegrees = -75; // degrees to turn left
-int rDegrees = 75;  // degrees to turn right
-String direct;
+int lDegrees = -5; // degrees to turn left
+int rDegrees = 5;  // degrees to turn right
+boolean backward = false;
+boolean forward = false;
+boolean left = false;
+boolean right = false;
+boolean braking = false;
+
 
 const int TRIGGER_PIN           = 6; // D6
 const int ECHO_PIN              = 7; // D7
@@ -30,24 +35,12 @@ void setup()
 void loop()
 {
     handleInput();
-    if (handleObstacle1()){
-        car.setSpeed(0);
+    if (handleObstacle()){
         car.setSpeed(-90);
         delay(300);
         car.setSpeed(0);
-        direct = "f";
-        }
-}
-
-boolean handleObstacle1(){
-  int distance = front.getDistance();
-  if (distance != 0 && distance < 100){
-      return true;
-      }
-  else{
-      return false;    
-  }
-}
+    }
+}   
 
 /* 
 When standing still you need to choose a direction and then enter a speed mode 1-4.
@@ -60,150 +53,139 @@ void handleInput(){
     String value;
         switch (input)
         {
-        case 'l': // rotate counter-clockwise going forward
-            car.setAngle(lDegrees);
-            break;
-        case 'r': // turn clock-wise
-            car.setAngle(rDegrees);
-            break;
+        case 'l': // Set steering angle to negative number(lDegrees/left). 
+          car.setAngle(lDegrees);
+          left = true;
+          right = false;
+          break;
+        case 'r': // Set steering angle to positive number(rDegrees/right). 
+          car.setAngle(rDegrees);
+          left = false;
+          right = true;
+          break;
         case 'f': // go ahead   
-            car.setSpeed(fSpeed);
-            car.setAngle(0);
-            direct = "f";
-            break;
+          car.setSpeed(fSpeed);
+          car.setAngle(0);
+          right = false;
+          left = false;
+          forward = true;
+          backward = false;
+          break;
         case 'b': // go back 
-            car.setSpeed(bSpeed);
-            car.setAngle(0);
-            direct = "b";
-            break;
-        case 'g':
-          braking(0.05);
-            break;
+          car.setSpeed(bSpeed);
+          car.setAngle(0);
+          left = false;
+          right = false;
+          backward = true;
+          forward = false;
+          break;
+        case 'g': //break
+          braking = true;
+          forward = false;
+          backward = false;
+          carBraking(0.05);
+          break;
         case 'h': // break
-          braking(0.15);
-            break;
+          braking = true;
+          forward = false;
+          backward = false;
+          carBraking(0.15);
+          break;
         case 'j': // break
-           braking(0.3);
-            break; 
+          braking = true;
+          forward = false;
+          backward = false;
+          carBraking(0.3);
+          break; 
         case 'k': // break
-           braking(0.5);
-            break;       
-        default:  
-             setCarSpeed(input, direct);
-            }
-        } 
-    }
+          braking = true;
+          forward = false;
+          backward = false;
+          carBraking(0.5);
+          break;
+        case '5': 
+          steeringAngle(5); //Steering angle mode (User must enter left or right before entering angle).
+          break;
+        case '6':  
+          steeringAngle(15);
+          break;
+        case '7':  
+          steeringAngle(30);
+          break;
+        case '8':  
+          steeringAngle(60);
+          break;
+        case '1':  
+          carSpeed(10); //Car speed mode (User must enter forward or backward before entering car speed).
+          break;
+        case '2':
+          carSpeed(40);
+          break;
+        case '3':
+          carSpeed(60);
+          break;
+        case '4':
+          carSpeed(90);
+          break;
+        default: // if you receive something that you don't know, just stop
+          car.setSpeed(0);
+          car.setAngle(0);     
+        }
+    } 
+ }
 
-/*
-The method setCarSpeed takes the direction and the speed mode as arguments.
-For an invalid speed mode the car will stop.
-*/
-
-char readInput(){
-  if (Serial.available()){
-  char input = Serial.read();
-  switch(input){
-    case 'l':
-    car.setAngle(lDegrees);
-    break;
-    case 'r':
-    car.setAngle(rDegrees);
-    break;
-    case 'f':
-    car.setSpeed(fSpeed);
-    return 'f';
-    break;
-    case 'b':
-    car.setSpeed(fSpeed * -1);
-    return 'b';
-    break;
-    default: return 'x';
-  }
-  }
-  return 'x';
-  
-}
-
-
-void braking(double brakeMode){
-  while(fSpeed > 0){
+void carBraking(double brakeMode){
+  while(fSpeed >= 0){
     fSpeed = fSpeed - fSpeed * brakeMode;
     car.setSpeed(fSpeed);
     delay(150);
-    char inputChar = readInput();
-    if (inputChar == 'f'){
-      break;
+    handleInput();
+    if (forward == true || backward == true || fSpeed == 0){
+        braking = false;
+        break;
     }
-    if (inputChar == 'b'){
-      break;
-    }   
+    else if(left == true){
+        car.setAngle(lDegrees);
+    } else if (right == true)
+        car.setAngle(rDegrees);
   }
 }
 
-void setCarSpeed(char input, String direct){
-  switch(input){
-          case '1':
-          if (direct == "f"){
-            fSpeed = 10;
-            bSpeed = -10;
-            car.setSpeed(fSpeed);
-          }
-          else if(direct == "b"){
-            bSpeed = -10;
-            fSpeed = 10;
-            car.setSpeed(bSpeed);
-          }
-          else{
-            car.setSpeed(0);
-          }
-          break;
-        case '2':
-        if (direct == "f"){
-            fSpeed = 40;
-            bSpeed = -40;
-            car.setSpeed(fSpeed);
-          }
-          else if(direct == "b"){
-            bSpeed = -40;
-            fSpeed = 40;
-            car.setSpeed(bSpeed);
-          }
-          else{
-            car.setSpeed(0);
-          }
-          break;
-        case '3':
-        if (direct == "f"){
-            fSpeed = 60;
-            bSpeed = -60;
-            car.setSpeed(fSpeed);
-          }
-          else if(direct == "b"){
-            bSpeed = -60;
-            fSpeed = 60;
-            car.setSpeed(bSpeed);
-          }
-          else{
-            car.setSpeed(0);
-          }
-          break;
-        case '4':
-        if (direct == "f"){
-            fSpeed = 90;
-            bSpeed = -90;
-            car.setSpeed(fSpeed);
-          }
-          else if(direct == "b"){
-            bSpeed = -90;
-            fSpeed = 90;
-            car.setSpeed(bSpeed);
-          }
-          else{
-            car.setSpeed(0);
-          }
-          break;
-          default: // if you receive something that you don't know, just stop
-          car.setSpeed(0);
-          car.setAngle(0);
-       }
+void steeringAngle(int angle){
+  if(right == true){
+     rDegrees = angle;
+     car.setAngle(rDegrees);
+  }else if (left == true){
+     lDegrees = angle * -1;
+     car.setAngle(lDegrees);
+  }else{
+    return;
   }
+}
+
+void carSpeed(int carSpeed){
+  if (forward == true){
+     fSpeed = carSpeed; 
+     bSpeed = carSpeed * -1;
+     car.setSpeed(fSpeed);
+  }
+  else if(backward == true){
+     bSpeed = carSpeed * -1;
+     fSpeed = carSpeed;
+     car.setSpeed(bSpeed);
+  }
+  else{
+     car.setSpeed(0);
+  }
+}
+
+boolean handleObstacle(){
+  int allowedDistance = 100;
+  int distance = front.getDistance();
+  if (distance != 0 && distance < allowedDistance){
+      return true;
+  }
+  else{
+      return false;
+  }
+}
