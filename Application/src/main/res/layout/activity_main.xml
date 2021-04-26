@@ -15,45 +15,137 @@
   ~ limitations under the License.
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="#5E5E5E"
+    tools:context=".MainActivity" >
 
-    <androidx.appcompat.widget.Toolbar
-        style="@style/Widget.MaterialComponents.Toolbar.Primary"
-        android:id="@+id/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="?android:actionBarSize"
-        android:elevation="@dimen/toolbar_elevation"
-        android:title="@string/app_name"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <FrameLayout
-        android:id="@+id/fragment_layout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
+    <Button
+        android:id="@+id/brake5"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:itemBackground="?attr/colorSurface"
-        app:itemIconTint="@drawable/bottom_nav_item_background"
-        app:itemTextColor="?attr/colorOnBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation" />
+        android:text="Brake"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        tools:layout_editor_absoluteX="50dp"
+        tools:layout_editor_absoluteY="202dp" />
+
+    <Button
+        android:id="@+id/speed7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Speed"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        tools:layout_editor_absoluteX="150dp"
+        tools:layout_editor_absoluteY="202dp" />
+
+    <Button
+        android:id="@+id/angle8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Angle"
+        android:textSize="18sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        tools:layout_editor_absoluteX="250dp"
+        tools:layout_editor_absoluteY="202dp" />
+
+    <ImageView
+        android:id="@+id/imageView20"
+        android:layout_width="57dp"
+        android:layout_height="47dp"
+        app:srcCompat="@drawable/brake"
+        tools:layout_editor_absoluteX="177dp"
+        tools:layout_editor_absoluteY="431dp" />
+
+    <ImageView
+        android:id="@+id/imageView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/left"
+        tools:layout_editor_absoluteX="108dp"
+        tools:layout_editor_absoluteY="424dp" />
+
+    <ImageView
+        android:id="@+id/imageView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotation="-360"
+        android:rotationY="182"
+        app:srcCompat="@drawable/left"
+        tools:layout_editor_absoluteX="212dp"
+        tools:layout_editor_absoluteY="424dp" />
+
+    <ImageView
+        android:id="@+id/imageView18"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/backwards"
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="487dp" />
+
+    <ImageView
+        android:id="@+id/imageView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:rotationX="-186"
+        app:srcCompat="@drawable/backwards"
+        tools:layout_editor_absoluteX="157dp"
+        tools:layout_editor_absoluteY="337dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="79dp"
+        android:layout_height="85dp"
+        android:includeFontPadding="true"
+        android:text="3"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        tools:layout_editor_absoluteX="218dp"
+        tools:layout_editor_absoluteY="621dp" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="79dp"
+        android:layout_height="85dp"
+        android:includeFontPadding="true"
+        android:text="4"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        tools:layout_editor_absoluteX="318dp"
+        tools:layout_editor_absoluteY="621dp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="79dp"
+        android:layout_height="85dp"
+        android:includeFontPadding="true"
+        android:text="1"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        tools:layout_editor_absoluteX="18dp"
+        tools:layout_editor_absoluteY="621dp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="79dp"
+        android:layout_height="85dp"
+        android:includeFontPadding="true"
+        android:text="2"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        tools:layout_editor_absoluteX="116dp"
+        tools:layout_editor_absoluteY="621dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
