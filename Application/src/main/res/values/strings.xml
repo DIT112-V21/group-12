@@ -29,5 +29,10 @@
     <string name="designer">Designer</string>
     <string name="preferences">Select your preferences</string>
     <string name="preferences_explanation">Disclaimer: This screen will only be dark when Dark Mode is forced in the OS settings in Android Q and above.</string>
+    <string name="brake">Brake</string>
+    <string name="speed">Speed</string>
+    <string name="angle">Angle</string>
+    <string name="_4">4</string>
+    <string name="todo">TODO</string>
 
 </resources>
