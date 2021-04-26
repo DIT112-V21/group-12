@@ -1,4 +1,12 @@
 #include <Smartcar.h>
+#include <MQTT.h>
+#include <WiFi.h>
+
+#ifndef __SMCE__
+WiFiClient net;
+#endif
+MQTTClient mqtt;
+
 /*
 The skeleton for this code is derived from [https://platisd.github.io/smartcar_shield/manual_control_8ino-example.html]
 */
@@ -29,11 +37,30 @@ SR04 front(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 void setup()
 {
     Serial.begin(9600);
-    Serial.setTimeout(200);
+   #ifndef __SMCE__
+    mqtt.begin(net);
+   #else
+   mqtt.begin(WiFi);
+   #endif
+    if (mqtt.connect("arduino", "public", "public"));{
+      mqtt.subscribe("/smartcar/control/#", 1);
+      mqtt.onMessage([](String topic, String message){
+        if (topic == "/smartcar/control/throttle"){
+          car.setSpeed(message.toInt());
+        } else if (topic == "/smartcar/control/steering"){
+          car.setAngle(message.toInt());
+        } else{
+          Serial.println(topic + " " + message);
+        }
+      });
+    }
 }
 
 void loop()
 {
+    if(mqtt.connected()){
+      mqtt.loop();
+    }
     handleInput();
     if (handleObstacle()){
         car.setSpeed(-90);
