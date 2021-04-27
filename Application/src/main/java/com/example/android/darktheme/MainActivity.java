@@ -16,13 +16,13 @@
 
 package com.example.android.darktheme;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -33,24 +33,25 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
 public class MainActivity extends AppCompatActivity {
+    private ImageButton nextPageButton;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_firstpage);
 
-        setContentView(R.layout.activity_main);
-
-        final Button button = findViewById(R.id.button1);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Code here executes on main thread after user presses button
-                button();
+        nextPageButton = findViewById(R.id.driveButton);
+        nextPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity();
             }
         });
     }
+    private void changeActivity() {
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivity(intent);
 
-    public void button(){
-        //code here
     }
-
 }
 
