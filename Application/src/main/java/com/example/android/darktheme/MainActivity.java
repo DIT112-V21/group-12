@@ -16,10 +16,13 @@
 
 package com.example.android.darktheme;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,92 +33,25 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
 
 public class MainActivity extends AppCompatActivity {
-
-    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    showFragment(WelcomeFragment.TAG);
-                    return true;
-                case R.id.navigation_preferences:
-                    showFragment(PreferencesFragment.TAG);
-                    return true;
-                case R.id.navigation_settings:
-                    showFragment(SettingsFragment.TAG);
-                    return true;
-            }
-            return false;
-        }
-    };
+    private ImageButton nextPageButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_firstpage);
 
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-
-        BottomNavigationView navigation = findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationListener);
-
-        if (savedInstanceState == null) {
-            showFragment(WelcomeFragment.TAG);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-
-        // This demonstrates how to programmatically tint a drawable
-        MenuItem item = menu.findItem(R.id.action_more);
-        Drawable drawableWrap = DrawableCompat.wrap(item.getIcon()).mutate();
-        DrawableCompat.setTint(drawableWrap, ColorUtils.getThemeColor(this, R.attr.colorOnPrimary));
-        item.setIcon(drawableWrap);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_more) {
-            // TODO
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void showFragment(@NonNull String tag) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(tag);
-        if (fragment == null) {
-            switch (tag) {
-                case WelcomeFragment.TAG: {
-                    fragment = new WelcomeFragment();
-                    break;
-                }
-                case PreferencesFragment.TAG: {
-                    fragment = new PreferencesFragment();
-                    break;
-                }
-                case SettingsFragment.TAG: {
-                    fragment = new SettingsFragment();
-                    break;
-                }
-                default: {
-                    fragment = new WelcomeFragment();
-                    break;
-                }
+        nextPageButton = findViewById(R.id.driveButton);
+        nextPageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity();
             }
-        }
+        });
+    }
+    private void changeActivity() {
+        Intent intent = new Intent(this, SecondActivity.class);
+        startActivity(intent);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_layout, fragment, tag)
-                .commit();
     }
 }
+
