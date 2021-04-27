@@ -9,15 +9,16 @@
 
     <ImageView
         android:id="@+id/background"
-        android:layout_width="425dp"
-        android:layout_height="760dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#FFFFFF"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.517"
-        app:srcCompat="@drawable/backgroundlinearpng" />
+        app:srcCompat="@drawable/backgroundlinearpng"
+         />
 
     <ImageButton
         android:id="@+id/speedButton"
@@ -35,7 +36,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/speedbutton" />
+        app:srcCompat="@drawable/speedbutton"
+        android:focusable="true" />
 
     <ImageButton
         android:id="@+id/brakeButton"
@@ -53,7 +55,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/brakebutton" />
+        app:srcCompat="@drawable/brakebutton"
+        android:focusable="true" />
 
     <ImageButton
         android:id="@+id/angleButton"
@@ -71,7 +74,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/anglebutton" />
+        app:srcCompat="@drawable/anglebutton"
+        android:focusable="true" />
 
     <ImageView
         android:id="@+id/buttonBar"
@@ -119,7 +123,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/arrowright" />
+        app:srcCompat="@drawable/arrowright"
+        android:focusable="true" />
 
     <ImageButton
         android:id="@+id/arrowLeft"
@@ -138,7 +143,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/arrowleft" />
+        app:srcCompat="@drawable/arrowleft"
+        android:focusable="true" />
 
     <ImageButton
         android:id="@+id/arrowDown"
@@ -185,7 +191,7 @@
         android:layout_marginRight="335dp"
         android:layout_marginBottom="78dp"
         android:background="#000000"
-        android:text="1"
+        android:text="@string/_1"
         android:textSize="18sp"
         app:backgroundTint="#81989898"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -205,7 +211,7 @@
         android:layout_marginRight="229dp"
         android:layout_marginBottom="78dp"
         android:background="#000000"
-        android:text="2"
+        android:text="@string/_2"
         android:textSize="18sp"
         app:backgroundTint="#81989898"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -225,7 +231,7 @@
         android:layout_marginRight="121dp"
         android:layout_marginBottom="78dp"
         android:background="#000000"
-        android:text="3"
+        android:text="@string/_3"
         android:textSize="18sp"
         app:backgroundTint="#81989898"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -246,7 +252,7 @@
         android:layout_marginBottom="78dp"
         android:background="#000000"
         android:longClickable="true"
-        android:text="4"
+        android:text="@string/_4"
         android:textSize="18sp"
         app:backgroundTint="#81989898"
         app:layout_constraintBottom_toBottomOf="parent"

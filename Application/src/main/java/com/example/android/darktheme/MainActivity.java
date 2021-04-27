@@ -48,10 +48,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
     private void changeActivity() {
         Intent intent = new Intent(this, SecondActivity.class);
         startActivity(intent);
 
     }
+
 }
 

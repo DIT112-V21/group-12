@@ -32,15 +32,16 @@
     <string name="brake">Brake</string>
     <string name="speed">Speed</string>
     <string name="angle">Angle</string>
-    <string name="_4">4</string>
+
     <string name="todo">TODO</string>
-    <string name="_3">3</string>
-    <string name="_1">1</string>
-    <string name="_2">2</string>
     <string name="backwards_arrow">backwards arrow</string>
     <string name="forward_arrow">forward arrow</string>
     <string name="left_arrow">left arrow</string>
     <string name="right_arrow">right arrow</string>
     <string name="brake_sign">brake sign</string>
+    <string name="_1">1</string>
+    <string name="_2">2</string>
+    <string name="_3">3</string>
+    <string name="_4">4</string>
 
 </resources>

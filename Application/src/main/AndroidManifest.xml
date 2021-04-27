@@ -37,8 +37,7 @@
             </intent-filter>
         </activity>
 
-        <item android:state_pressed="true"
-            android:color="#ffff0000"/> <!-- pressed -->
+        <activity android:name=".SecondActivity"></activity>
     </application>
 
 </manifest>
