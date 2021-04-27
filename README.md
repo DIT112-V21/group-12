@@ -4,7 +4,7 @@
 
 ## What?
 
-We will develop a program that makes the car dance in tempo with the music. The car will make a catalog of moves and choreography that it will use randomly to the beat of the music. It will change the speed based of the rhythm.
+We will develop a program that makes the car dance in tempo with the music. The car will have a catalog of moves and choreography that it will use by chosen order and will change the speed based of the rhythm. There is also an option to steer the car manually. While driving manually, you can choose which direction to steer the car in a certain speed, angle or brake mode.
 
 We will create a UI where you can upload a music file and choose dance moves. The program will combine them into a choreography and make the car dance to your song of choice.
 
@@ -15,7 +15,7 @@ Because it is guaranteed to be fun and furthermore, we will gain some insight in
 
 ## How?
 
-Make a catalogue of dance moves for the car to move and blink in sync with the tempo of a song and make the timing of the execution of the moves be dependent on the tempo of any given song as an input variable. The program will extract the tempos of any given song and have the car dance all night long, ready to be sent off to a COVID-free music festival!
+Make a catalog of dance moves for the car to move and blink in sync with the tempo of a song and make the timing of the execution of the moves be dependent on the tempo of any given song as an input variable. The program will extract the tempos of any given song and have the car dance all night long, ready to be sent off to a COVID-free music festival!
 
 ## Resources
 
