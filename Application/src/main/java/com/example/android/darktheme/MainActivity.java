@@ -37,14 +37,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.);
+        setContentView(R.layout.activity_main);
 
-        final Button button = findViewById(R.id.selection3);
+        final Button button = findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
+                button();
             }
         });
+    }
+
+    public void button(){
+        //code here
     }
 
 }

@@ -26,7 +26,7 @@
     tools:ignore="MissingClass">
 
     <Button
-        android:id="@+id/brake5"
+        android:id="@+id/brake"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -46,7 +46,7 @@
         tools:ignore="Can brake with different modes when clicked" />
 
     <Button
-        android:id="@+id/speed7"
+        android:id="@+id/speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="150dp"
@@ -67,7 +67,7 @@
         />
 
     <Button
-        android:id="@+id/angle8"
+        android:id="@+id/angle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="250dp"
@@ -88,7 +88,7 @@
         />
 
     <ImageView
-        android:id="@+id/imageView20"
+        android:id="@id/brake"
         android:layout_width="57dp"
         android:layout_height="47dp"
         android:layout_marginStart="177dp"
@@ -97,16 +97,16 @@
         android:layout_marginEnd="177dp"
         android:layout_marginRight="177dp"
         android:layout_marginBottom="253dp"
+        android:contentDescription="@string/brake_sign"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/brake"
-        tools:ignore=" Can stop the car "
-        android:contentDescription="@string/todo" />
+        tools:ignore=" Can stop the car " />
 
     <ImageView
-        android:id="@+id/imageView14"
+        android:id="@+id/left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="108dp"
@@ -124,7 +124,7 @@
         />
 
     <ImageView
-        android:id="@+id/imageView16"
+        android:id="@+id/right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="212dp"
@@ -143,7 +143,7 @@
         tools:ignore=" Moves the car to right when clicked "/>
 
     <ImageView
-        android:id="@+id/imageView18"
+        android:id="@+id/backwards"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="157dp"
@@ -161,7 +161,7 @@
         />
 
     <ImageView
-        android:id="@+id/imageView19"
+        android:id="@+id/forward"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="157dp"
@@ -177,47 +177,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/backwards"
         tools:ignore=" Moves the car to back when clicked "
-        android:contentDescription="TODO" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="79dp"
-        android:layout_height="85dp"
-        android:layout_marginStart="218dp"
-        android:layout_marginLeft="218dp"
-        android:layout_marginTop="621dp"
-        android:layout_marginEnd="114dp"
-        android:layout_marginRight="114dp"
-        android:layout_marginBottom="25dp"
-        android:includeFontPadding="true"
-        android:text="3"
-        android:textSize="36sp"
-        android:textStyle="bold|italic"
-        app:backgroundTint="#3C3F41"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore=" Controls speed, angle to 3 when clicked on the button "/>
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="79dp"
-        android:layout_height="85dp"
-        android:layout_marginStart="318dp"
-        android:layout_marginLeft="318dp"
-        android:layout_marginTop="621dp"
-        android:layout_marginBottom="25dp"
-        android:includeFontPadding="true"
-        android:text="@string/_4"
-        android:textSize="36sp"
-        android:textStyle="bold|italic"
-        app:backgroundTint="#3C3F41"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore=" Controls speed, angle to 4 when clicked on the button "
-        />
+        android:contentDescription="@string/forward_arrow" />
 
     <Button
         android:id="@+id/button1"
@@ -262,11 +222,45 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore=" Controls speed, angle to 2 when clicked on the button "/>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="20dp" />
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="79dp"
+        android:layout_height="85dp"
+        android:layout_marginStart="218dp"
+        android:layout_marginLeft="218dp"
+        android:layout_marginTop="621dp"
+        android:layout_marginEnd="114dp"
+        android:layout_marginRight="114dp"
+        android:layout_marginBottom="25dp"
+        android:includeFontPadding="true"
+        android:text="3"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore=" Controls speed, angle to 3 when clicked on the button "/>
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="79dp"
+        android:layout_height="85dp"
+        android:layout_marginStart="318dp"
+        android:layout_marginLeft="318dp"
+        android:layout_marginTop="621dp"
+        android:layout_marginBottom="25dp"
+        android:includeFontPadding="true"
+        android:text="@string/_4"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:backgroundTint="#3C3F41"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore=" Controls speed, angle to 4 when clicked on the button "
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
