@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package com.example.android.darktheme;
+package com.example.android.dancecar;
 
 import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
-import androidx.core.os.BuildCompat;
 
 public class ThemeHelper {
 

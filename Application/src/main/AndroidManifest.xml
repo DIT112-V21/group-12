@@ -27,14 +27,14 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name=".DarkThemeApplication"
+        android:name="com.example.android.dancecar.DanceCarApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/DarkThemeApp">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.android.dancecar.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,7 +43,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".SecondActivity"></activity>
+        <activity android:name="com.example.android.dancecar.SecondActivity"></activity>
 
         <service android:name="org.eclipse.paho.android.service.MqttService" >
         </service>

@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.example.android.darktheme;
+package com.example.android.dancecar;
 
 import android.app.Application;
 import android.content.SharedPreferences;
 
 import androidx.preference.PreferenceManager;
 
-public class DarkThemeApplication extends Application {
+public class DanceCarApplication extends Application {
 
     public void onCreate() {
         super.onCreate();
