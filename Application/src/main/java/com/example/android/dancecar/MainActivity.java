@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void driveForward(View view){
-        int speed = 80;
+        int speed = 60;
         mMqttClient.publish("smartcar/forward", Integer.toString(speed), 1, null);
     }
 
@@ -106,6 +106,38 @@ public class MainActivity extends AppCompatActivity {
     public void driveStop(View view){
         int stop = 0;
         mMqttClient.publish("smartcar/stop", Integer.toString(stop), 1, null);
+    }
+
+    public void speedModeOne(View view){
+        int speed = 0;
+        mMqttClient.publish("smartcar/speedOne", Integer.toString(speed), 1, null);
+    }
+    public void speedModeTwo(View view){
+        int speed = 0;
+        mMqttClient.publish("smartcar/speedTwo", Integer.toString(speed), 1, null);
+    }
+    public void speedModeThree(View view){
+        int speed = 0;
+        mMqttClient.publish("smartcar/speedThree", Integer.toString(speed), 1, null);
+    }
+    public void speedModeFour(View view){
+        int speed = 0;
+        mMqttClient.publish("smartcar/speedFour", Integer.toString(speed), 1, null);
+    }
+
+    public void speedPress(View view){
+        int message = 0;
+        mMqttClient.publish("smartcar/speedPress", Integer.toString(message), 1, null);
+    }
+
+    public void brakePress(View view){
+        int message = 0;
+        mMqttClient.publish("smartcar/brakePress", Integer.toString(message), 1, null);
+    }
+
+    public void anglePress(View view){
+        int message = 0;
+        mMqttClient.publish("smartcar/anglePress", Integer.toString(message), 1, null);
     }
 
 }
