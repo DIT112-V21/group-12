@@ -1,4 +1,4 @@
-package com.example.android.dancecar;
+/*package com.example.android.dancecar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Bitmap;
@@ -162,4 +162,4 @@ public class SecondActivity extends AppCompatActivity {
         mMqttClient.publish("smartcar/stop", Integer.toString(stop), 1, null);
     }
 
-}
+}*/

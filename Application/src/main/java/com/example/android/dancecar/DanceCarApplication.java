@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+/*
 package com.example.android.dancecar;
 
 import android.app.Application;
@@ -31,3 +31,4 @@ public class DanceCarApplication extends Application {
         ThemeHelper.applyTheme(themePref);
     }
 }
+*/

@@ -43,7 +43,6 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.example.android.dancecar.SecondActivity"></activity>
 
         <service android:name="org.eclipse.paho.android.service.MqttService" >
         </service>
