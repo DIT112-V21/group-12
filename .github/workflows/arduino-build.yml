@@ -2,6 +2,7 @@ name: Arduino CI
 
 on: [push]
 
+
 jobs:
   build-sketch:
     runs-on: ubuntu-20.04
@@ -13,6 +14,7 @@ jobs:
       - name: Get Python3
         uses: actions/setup-python@v2
         with:
+
           python-version: '3.x'
       - name: Fetch sketch dependencies
         run: |
