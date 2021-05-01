@@ -164,6 +164,7 @@ void loop()
     if(mqtt.connected()){
       mqtt.loop();
     }
+
      handleInput();
     if (handleObstacle()){
         car.setSpeed(-90);
