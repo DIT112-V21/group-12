@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"; //Coonnect local
     private MqttClient mMqttClient;
     private boolean isConnected = false;
+    private String direction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                public void messageArrived(String topic, MqttMessage message) {
                     //Add code for data to app.
                 }
 
@@ -87,43 +88,70 @@ public class MainActivity extends AppCompatActivity {
 
     public void driveForward(View view){
         int speed = 60;
-        final ImageButton forward = findViewById(R.id.arrowUp);
-        final ImageButton backward = findViewById(R.id.arrowDown);
-        backward.setColorFilter(Color.TRANSPARENT);
-        forward.setColorFilter(Color.parseColor("#ED7D9F88"));
+        direction = "forward";
+        updateButtons(direction);
         mMqttClient.publish("smartcar/forward", Integer.toString(speed), 1, null);
-    }
-
-    public void driveLeft(View view){
-        int leftAngle = -60;
-        final ImageButton left = findViewById(R.id.arrowLeft);
-        final ImageButton right = findViewById(R.id.arrowRight);
-        right.setColorFilter(Color.TRANSPARENT);
-        left.setColorFilter(Color.parseColor("#ED7D9F88"));
-        mMqttClient.publish("smartcar/left", Integer.toString(leftAngle), 1, null);
     }
 
     public void driveBackward(View view){
         int backSpeed = -80;
-        final ImageButton forward = findViewById(R.id.arrowUp);
-        final ImageButton backward = findViewById(R.id.arrowDown);
-        forward.setColorFilter(Color.TRANSPARENT);
-        backward.setColorFilter(Color.parseColor("#ED7D9F88"));
+        direction = "backward";
+        updateButtons(direction);
         mMqttClient.publish("smartcar/backward", Integer.toString(backSpeed),1, null );
+    }
+
+    public void driveLeft(View view){
+        int leftAngle = -60;
+        direction = "left";
+        updateButtons(direction);
+        mMqttClient.publish("smartcar/left", Integer.toString(leftAngle), 1, null);
     }
 
     public void driveRight(View view){
         int rightAngle = 60;
-        final ImageButton left = findViewById(R.id.arrowLeft);
-        final ImageButton right = findViewById(R.id.arrowRight);
-        left.setColorFilter(Color.TRANSPARENT);
-        right.setColorFilter(Color.parseColor("#ED7D9F88"));
+        direction = "right";
+        updateButtons(direction);
         mMqttClient.publish("smartcar/right", Integer.toString(rightAngle), 1, null);
     }
 
     public void driveStop(View view){
         int stop = 0;
         mMqttClient.publish("smartcar/stop", Integer.toString(stop), 1, null);
+    }
+
+    public void updateButtons(String direction){
+        ImageButton forward = findViewById(R.id.arrowUp);
+        ImageButton backward = findViewById(R.id.arrowDown);
+        ImageButton left = findViewById(R.id.arrowLeft);
+        ImageButton right = findViewById(R.id.arrowRight);
+        switch (direction) {
+            case "forward":
+                pressButton(forward);
+                unPressButton(backward, left, right);
+                break;
+            case "backward":
+                pressButton(backward);
+                unPressButton(forward, left, right);
+                break;
+            case "left":
+                pressButton(left);
+                unPressButton(forward, backward, right);
+                break;
+            case "right":
+                pressButton(right);
+                unPressButton(forward, backward, left);
+                break;
+        }
+    }
+
+    public void pressButton(ImageButton button){
+        button.setColorFilter(Color.parseColor("#ED7D9F88"));
+    }
+
+    public void unPressButton(ImageButton button1, ImageButton button2, ImageButton button3){
+        button1.setColorFilter(Color.TRANSPARENT);
+        button2.setColorFilter(Color.TRANSPARENT);
+        button3.setColorFilter(Color.TRANSPARENT);
     }
 
     public void speedModeOne(View view){
