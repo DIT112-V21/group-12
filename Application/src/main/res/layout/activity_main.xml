@@ -143,7 +143,7 @@
         android:layout_marginBottom="64dp"
         android:onClick="speedModeOne"
         android:text="1"
-        app:backgroundTint="#7D9F88"
+        app:backgroundTint="#ED7D9F88"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

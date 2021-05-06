@@ -2,9 +2,11 @@ package com.example.android.dancecar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageButton;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -85,21 +87,37 @@ public class MainActivity extends AppCompatActivity {
 
     public void driveForward(View view){
         int speed = 60;
+        final ImageButton forward = findViewById(R.id.arrowUp);
+        final ImageButton backward = findViewById(R.id.arrowDown);
+        backward.setColorFilter(Color.TRANSPARENT);
+        forward.setColorFilter(Color.parseColor("#ED7D9F88"));
         mMqttClient.publish("smartcar/forward", Integer.toString(speed), 1, null);
     }
 
     public void driveLeft(View view){
         int leftAngle = -60;
+        final ImageButton left = findViewById(R.id.arrowLeft);
+        final ImageButton right = findViewById(R.id.arrowRight);
+        right.setColorFilter(Color.TRANSPARENT);
+        left.setColorFilter(Color.parseColor("#ED7D9F88"));
         mMqttClient.publish("smartcar/left", Integer.toString(leftAngle), 1, null);
     }
 
     public void driveBackward(View view){
         int backSpeed = -80;
+        final ImageButton forward = findViewById(R.id.arrowUp);
+        final ImageButton backward = findViewById(R.id.arrowDown);
+        forward.setColorFilter(Color.TRANSPARENT);
+        backward.setColorFilter(Color.parseColor("#ED7D9F88"));
         mMqttClient.publish("smartcar/backward", Integer.toString(backSpeed),1, null );
     }
 
     public void driveRight(View view){
         int rightAngle = 60;
+        final ImageButton left = findViewById(R.id.arrowLeft);
+        final ImageButton right = findViewById(R.id.arrowRight);
+        left.setColorFilter(Color.TRANSPARENT);
+        right.setColorFilter(Color.parseColor("#ED7D9F88"));
         mMqttClient.publish("smartcar/right", Integer.toString(rightAngle), 1, null);
     }
 
