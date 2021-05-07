@@ -161,24 +161,28 @@ public class MainActivity extends AppCompatActivity {
     public void speedModeOne(View view){
         updateModeNumber(1);
         updateNumberButtons("one");
+        showMode();
         int speed = 0;
         mMqttClient.publish("smartcar/speedOne", Integer.toString(speed), 1, null);
     }
     public void speedModeTwo(View view){
         updateModeNumber(2);
         updateNumberButtons("two");
+        showMode();
         int speed = 0;
         mMqttClient.publish("smartcar/speedTwo", Integer.toString(speed), 1, null);
     }
     public void speedModeThree(View view){
         updateModeNumber(3);
         updateNumberButtons("three");
+        showMode();
         int speed = 0;
         mMqttClient.publish("smartcar/speedThree", Integer.toString(speed), 1, null);
     }
     public void speedModeFour(View view){
         updateModeNumber(4);
         updateNumberButtons("four");
+        showMode();
         int speed = 0;
         mMqttClient.publish("smartcar/speedFour", Integer.toString(speed), 1, null);
     }
@@ -330,4 +334,24 @@ public class MainActivity extends AppCompatActivity {
         button3.setBackgroundColor(Color.parseColor("#ED7D9F88"));
     }
 
+    public void showMode(){
+        Button currentSpeedMode = findViewById(R.id.currentSpeedMode);
+        Button currentAngleMode = findViewById(R.id.currentAngleMode);
+        Button currentBrakeMode = findViewById(R.id.currentBrakeMode);
+        if (speedMode.isActivated()){
+            currentSpeedMode.setText(speedMode.getNumber());
+        } else if (angleMode.isActivated()){
+            currentAngleMode.setText(angleMode.getNumber());
+        } else if (brakeMode.isActivated()){
+            currentBrakeMode.setText(brakeMode.getNumber());
+        } else {
+            //currentSpeedMode.setText("");
+            //currentAngleMode.setText("");
+            //currentBrakeMode.setText("");
+        }
+    }
+
+    public void showSpeed(){
+        mMqttClient.subscribe("smartcar/odometerSpeed", 1, null);
+    }
 }
