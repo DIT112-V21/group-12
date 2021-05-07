@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -21,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private MqttClient mMqttClient;
     private boolean isConnected = false;
     private String direction;
+    private boolean speedMode = false;
+    private boolean angleMode = false;
+    private boolean brakeMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,28 +93,28 @@ public class MainActivity extends AppCompatActivity {
     public void driveForward(View view){
         int speed = 60;
         direction = "forward";
-        updateButtons(direction);
+        updateArrowButtons(direction);
         mMqttClient.publish("smartcar/forward", Integer.toString(speed), 1, null);
     }
 
     public void driveBackward(View view){
         int backSpeed = -80;
         direction = "backward";
-        updateButtons(direction);
+        updateArrowButtons(direction);
         mMqttClient.publish("smartcar/backward", Integer.toString(backSpeed),1, null );
     }
 
     public void driveLeft(View view){
         int leftAngle = -60;
         direction = "left";
-        updateButtons(direction);
+        updateArrowButtons(direction);
         mMqttClient.publish("smartcar/left", Integer.toString(leftAngle), 1, null);
     }
 
     public void driveRight(View view){
         int rightAngle = 60;
         direction = "right";
-        updateButtons(direction);
+        updateArrowButtons(direction);
         mMqttClient.publish("smartcar/right", Integer.toString(rightAngle), 1, null);
     }
 
@@ -119,36 +123,36 @@ public class MainActivity extends AppCompatActivity {
         mMqttClient.publish("smartcar/stop", Integer.toString(stop), 1, null);
     }
 
-    public void updateButtons(String direction){
+    public void updateArrowButtons(String direction){
         ImageButton forward = findViewById(R.id.arrowUp);
         ImageButton backward = findViewById(R.id.arrowDown);
         ImageButton left = findViewById(R.id.arrowLeft);
         ImageButton right = findViewById(R.id.arrowRight);
         switch (direction) {
             case "forward":
-                pressButton(forward);
-                unPressButton(backward, left, right);
+                pressArrowButton(forward);
+                unPressArrowButton(backward, left, right);
                 break;
             case "backward":
-                pressButton(backward);
-                unPressButton(forward, left, right);
+                pressArrowButton(backward);
+                unPressArrowButton(forward, left, right);
                 break;
             case "left":
-                pressButton(left);
-                unPressButton(forward, backward, right);
+                pressArrowButton(left);
+                unPressArrowButton(forward, backward, right);
                 break;
             case "right":
-                pressButton(right);
-                unPressButton(forward, backward, left);
+                pressArrowButton(right);
+                unPressArrowButton(forward, backward, left);
                 break;
         }
     }
 
-    public void pressButton(ImageButton button){
+    public void pressArrowButton(ImageButton button){
         button.setColorFilter(Color.parseColor("#ED7D9F88"));
     }
 
-    public void unPressButton(ImageButton button1, ImageButton button2, ImageButton button3){
+    public void unPressArrowButton(ImageButton button1, ImageButton button2, ImageButton button3){
         button1.setColorFilter(Color.TRANSPARENT);
         button2.setColorFilter(Color.TRANSPARENT);
         button3.setColorFilter(Color.TRANSPARENT);
@@ -173,17 +177,59 @@ public class MainActivity extends AppCompatActivity {
 
     public void speedPress(View view){
         int message = 0;
+        speedMode = true;
+        angleMode = false;
+        brakeMode = false;
+        updateModeButtons();
         mMqttClient.publish("smartcar/speedPress", Integer.toString(message), 1, null);
-    }
-
-    public void brakePress(View view){
-        int message = 0;
-        mMqttClient.publish("smartcar/brakePress", Integer.toString(message), 1, null);
     }
 
     public void anglePress(View view){
         int message = 0;
+        speedMode = false;
+        angleMode = true;
+        brakeMode = false;
+        updateModeButtons();
         mMqttClient.publish("smartcar/anglePress", Integer.toString(message), 1, null);
+    }
+
+    public void brakePress(View view){
+        int message = 0;
+        speedMode = false;
+        angleMode = false;
+        brakeMode = true;
+        updateModeButtons();
+        mMqttClient.publish("smartcar/brakePress", Integer.toString(message), 1, null);
+    }
+
+    public void updateModeButtons(){
+        Button speed = findViewById(R.id.speed);
+        Button angle = findViewById(R.id.angle);
+        Button brake = findViewById(R.id.brake);
+
+        if (speedMode) {
+            pressModeButton(speed);
+            unPressModeButton(angle, brake);
+        } else if (angleMode) {
+            pressModeButton(angle);
+            unPressModeButton(speed, brake);
+        } else if (brakeMode) {
+            pressModeButton(brake);
+            unPressModeButton(speed, angle);
+        } else {
+            speed.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            angle.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            brake.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        }
+    }
+
+    public void pressModeButton(Button button){
+        button.setBackgroundColor(Color.parseColor("#ED2E3C34"));
+    }
+
+    public void unPressModeButton(Button button1, Button button2){
+        button1.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        button2.setBackgroundColor(Color.parseColor("#ED7D9F88"));
     }
 
 }
