@@ -61,6 +61,17 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(IMqttToken asyncActionToken) {
                     isConnected = true;
+                    mMqttClient.subscribe("smartcar/odometerSpeed", 1, new IMqttActionListener() {
+                        @Override
+                        public void onSuccess(IMqttToken asyncActionToken) {
+
+                        }
+
+                        @Override
+                        public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+
+                        }
+                    });
                 }
 
                 @Override
@@ -80,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void messageArrived(String topic, MqttMessage message) {
                     //Add code for data to app.
+                    Log.e(TAG, message.toString());
+                    if (topic.equals("smartcar/odometerSpeed")){
+                        showSpeed(message.toString());
+                    }
                 }
 
                 @Override
@@ -354,7 +369,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void showSpeed(){
-        mMqttClient.subscribe("smartcar/odometerSpeed", 1, null);
+    public void showSpeed(String message){
+        Button currentSpeed = findViewById(R.id.currentSpeed);
+        currentSpeed.setText(message);
     }
 }

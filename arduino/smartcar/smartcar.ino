@@ -33,9 +33,24 @@ BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
 
-SimpleCar car(control);
-
 SR04 front(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
+GY50 gyroscope(arduinoRuntime, 37);
+
+const auto pulsesPerMeter = 600;
+
+DirectionlessOdometer leftOdometer(
+    arduinoRuntime,
+    smartcarlib::pins::v2::leftOdometerPin,
+    []() { leftOdometer.update(); },
+    pulsesPerMeter);
+DirectionlessOdometer rightOdometer(
+    arduinoRuntime,
+    smartcarlib::pins::v2::rightOdometerPin,
+    []() { rightOdometer.update(); },
+    pulsesPerMeter);
+
+SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer, rightOdometer);
 
 void setup()
 {
@@ -45,7 +60,7 @@ void setup()
    #else
    mqtt.begin(WiFi);
    #endif
-    if (mqtt.connect("arduino", "public", "public"));{
+    if (mqtt.connect("arduino", "public", "public")){
       mqtt.subscribe("smartcar/#", 1);
       mqtt.onMessage([](String topic, String message){
         if (topic == "smartcar/forward"){
@@ -171,6 +186,7 @@ void loop()
         delay(300);
         car.setSpeed(0);
     }
+    sendSpeed();
 }
 
 /*
@@ -320,4 +336,12 @@ boolean handleObstacle(){
   else{
       return false;
   }
+
+}
+
+void sendSpeed(){
+   #ifndef __SMCE__
+     mqtt.publish("/smartcar/camera",car.getSpeed(),12, false, 0);
+   #endif
+
 }
