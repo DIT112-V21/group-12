@@ -22,9 +22,9 @@ public class MainActivity extends AppCompatActivity {
     private MqttClient mMqttClient;
     private boolean isConnected = false;
     private String direction;
-    private boolean speedMode = false;
-    private boolean angleMode = false;
-    private boolean brakeMode = false;
+    Mode speedMode = new Mode("speed");
+    Mode angleMode = new Mode("angle");
+    Mode brakeMode = new Mode("brake");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,45 +159,137 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void speedModeOne(View view){
+        updateModeNumber(1);
+        updateNumberButtons("one");
         int speed = 0;
         mMqttClient.publish("smartcar/speedOne", Integer.toString(speed), 1, null);
     }
     public void speedModeTwo(View view){
+        updateModeNumber(2);
+        updateNumberButtons("two");
         int speed = 0;
         mMqttClient.publish("smartcar/speedTwo", Integer.toString(speed), 1, null);
     }
     public void speedModeThree(View view){
+        updateModeNumber(3);
+        updateNumberButtons("three");
         int speed = 0;
         mMqttClient.publish("smartcar/speedThree", Integer.toString(speed), 1, null);
     }
     public void speedModeFour(View view){
+        updateModeNumber(4);
+        updateNumberButtons("four");
         int speed = 0;
         mMqttClient.publish("smartcar/speedFour", Integer.toString(speed), 1, null);
     }
 
+    public void updateNumberButtons(String number){
+        Button one = findViewById(R.id.button1);
+        Button two = findViewById(R.id.button2);
+        Button three = findViewById(R.id.button3);
+        Button four = findViewById(R.id.button4);
+        switch (number) {
+            case "one":
+                pressModeButton(one);
+                unPressNumberButton(two, three, four);
+                break;
+            case "two":
+                pressModeButton(two);
+                unPressNumberButton(one, three, four);
+                break;
+            case "three":
+                pressModeButton(three);
+                unPressNumberButton(one, two, four);
+                break;
+            case "four":
+                pressModeButton(four);
+                unPressNumberButton(one, two, three);
+                break;
+        }
+    }
+
+    public void updateModeNumber(int number) {
+        if (speedMode.isActivated()) {
+            speedMode.setNumber(number);
+        } else if (angleMode.isActivated()) {
+            angleMode.setNumber(number);
+        } else if (brakeMode.isActivated()) {
+            brakeMode.setNumber(number);
+        } else {
+            //TODO: if no mode is activated, what should happen?
+        }
+    }
+
+    /* 
+    When a mode has already been activated earlier, 
+    when choosing that mode again, the current number 
+    that mode is in shows as pressed/colored.
+     */
+    public void checkNumberButtons() {
+        if (speedMode.isActivated()) {
+            int number = speedMode.getNumber();
+            numberActivated(number);
+        } else if (angleMode.isActivated()) {
+            int number = angleMode.getNumber();
+            numberActivated(number);
+        } else if (brakeMode.isActivated()) {
+            int number = brakeMode.getNumber();
+            numberActivated(number);
+        }
+    }
+
+    public void numberActivated(int number) {
+        Button one = findViewById(R.id.button1);
+        Button two = findViewById(R.id.button2);
+        Button three = findViewById(R.id.button3);
+        Button four = findViewById(R.id.button4);
+
+        if (number == 1) {
+            pressModeButton(one);
+            unPressNumberButton(two, three, four);
+        } else if (number == 2) {
+            pressModeButton(two);
+            unPressNumberButton(one, three, four);
+        } else if (number == 3) {
+            pressModeButton(three);
+            unPressNumberButton(two, one, four);
+        } else if (number == 4) {
+            pressModeButton(four);
+            unPressNumberButton(two, three, one);
+        } else if (number == 0) {
+            one.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            two.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            three.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            four.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        }
+    }
+
     public void speedPress(View view){
+        speedMode.setActivated(true);
+        angleMode.setActivated(false);
+        brakeMode.setActivated(false);
+        checkNumberButtons();
         int message = 0;
-        speedMode = true;
-        angleMode = false;
-        brakeMode = false;
         updateModeButtons();
         mMqttClient.publish("smartcar/speedPress", Integer.toString(message), 1, null);
     }
 
     public void anglePress(View view){
+        angleMode.setActivated(true);
+        brakeMode.setActivated(false);
+        speedMode.setActivated(false);
+        checkNumberButtons();
         int message = 0;
-        speedMode = false;
-        angleMode = true;
-        brakeMode = false;
         updateModeButtons();
         mMqttClient.publish("smartcar/anglePress", Integer.toString(message), 1, null);
     }
 
     public void brakePress(View view){
+        brakeMode.setActivated(true);
+        speedMode.setActivated(false);
+        angleMode.setActivated(false);
+        checkNumberButtons();
         int message = 0;
-        speedMode = false;
-        angleMode = false;
-        brakeMode = true;
         updateModeButtons();
         mMqttClient.publish("smartcar/brakePress", Integer.toString(message), 1, null);
     }
@@ -207,13 +299,13 @@ public class MainActivity extends AppCompatActivity {
         Button angle = findViewById(R.id.angle);
         Button brake = findViewById(R.id.brake);
 
-        if (speedMode) {
+        if (speedMode.isActivated()) {
             pressModeButton(speed);
             unPressModeButton(angle, brake);
-        } else if (angleMode) {
+        } else if (angleMode.isActivated()) {
             pressModeButton(angle);
             unPressModeButton(speed, brake);
-        } else if (brakeMode) {
+        } else if (brakeMode.isActivated()) {
             pressModeButton(brake);
             unPressModeButton(speed, angle);
         } else {
@@ -230,6 +322,12 @@ public class MainActivity extends AppCompatActivity {
     public void unPressModeButton(Button button1, Button button2){
         button1.setBackgroundColor(Color.parseColor("#ED7D9F88"));
         button2.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+    }
+
+    public void unPressNumberButton(Button button1, Button button2, Button button3){
+        button1.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        button2.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        button3.setBackgroundColor(Color.parseColor("#ED7D9F88"));
     }
 
 }
