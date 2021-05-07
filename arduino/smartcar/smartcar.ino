@@ -2,10 +2,12 @@
 #include <MQTT.h>
 #include <WiFi.h>
 
+
 #ifndef __SMCE__
 WiFiClient net;
 #endif
 MQTTClient mqtt;
+File myFile;
 
 /*
 The skeleton for this code is derived from [https://platisd.github.io/smartcar_shield/manual_control_8ino-example.html]
@@ -278,8 +280,9 @@ void carBraking(double brakeMode){
     }
     else if(left == true){
         car.setAngle(lDegrees);
-    } else if (right == true)
+    } else if (right == true){
         car.setAngle(rDegrees);
+    }
   }
 }
 
