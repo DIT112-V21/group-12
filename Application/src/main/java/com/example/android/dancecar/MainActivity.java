@@ -339,15 +339,18 @@ public class MainActivity extends AppCompatActivity {
         Button currentAngleMode = findViewById(R.id.currentAngleMode);
         Button currentBrakeMode = findViewById(R.id.currentBrakeMode);
         if (speedMode.isActivated()){
-            currentSpeedMode.setText(speedMode.getNumber());
+            String number = Integer.toString(speedMode.getNumber());
+            currentSpeedMode.setText(number);
         } else if (angleMode.isActivated()){
-            currentAngleMode.setText(angleMode.getNumber());
+            String number = Integer.toString(angleMode.getNumber());
+            currentAngleMode.setText(number);
         } else if (brakeMode.isActivated()){
-            currentBrakeMode.setText(brakeMode.getNumber());
-        } else {
-            //currentSpeedMode.setText("");
-            //currentAngleMode.setText("");
-            //currentBrakeMode.setText("");
+            String number = Integer.toString(brakeMode.getNumber());
+            currentBrakeMode.setText(number);
+        } else { //TODO: if the car is standing still
+            currentSpeedMode.setText("");
+            currentAngleMode.setText("");
+            currentBrakeMode.setText("");
         }
     }
 
