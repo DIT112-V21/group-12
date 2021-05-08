@@ -108,28 +108,28 @@ public class MainActivity extends AppCompatActivity {
     public void driveForward(View view){
         int speed = 60;
         direction = "forward";
-        updateArrowButtons(direction);
+        colorArrowButtons(direction);
         mMqttClient.publish("smartcar/forward", Integer.toString(speed), 1, null);
     }
 
     public void driveBackward(View view){
         int backSpeed = -80;
         direction = "backward";
-        updateArrowButtons(direction);
+        colorArrowButtons(direction);
         mMqttClient.publish("smartcar/backward", Integer.toString(backSpeed),1, null );
     }
 
     public void driveLeft(View view){
         int leftAngle = -60;
         direction = "left";
-        updateArrowButtons(direction);
+        colorArrowButtons(direction);
         mMqttClient.publish("smartcar/left", Integer.toString(leftAngle), 1, null);
     }
 
     public void driveRight(View view){
         int rightAngle = 60;
         direction = "right";
-        updateArrowButtons(direction);
+        colorArrowButtons(direction);
         mMqttClient.publish("smartcar/right", Integer.toString(rightAngle), 1, null);
     }
 
@@ -138,96 +138,75 @@ public class MainActivity extends AppCompatActivity {
         mMqttClient.publish("smartcar/stop", Integer.toString(stop), 1, null);
     }
 
-    public void updateArrowButtons(String direction){
+    /*
+    Only one arrow button can show as pressed/color at a time.
+    The other buttons will get unpressed when one button is pressed.
+    */
+    public void colorArrowButtons(String direction){
         ImageButton forward = findViewById(R.id.arrowUp);
         ImageButton backward = findViewById(R.id.arrowDown);
         ImageButton left = findViewById(R.id.arrowLeft);
         ImageButton right = findViewById(R.id.arrowRight);
         switch (direction) {
             case "forward":
-                pressArrowButton(forward);
-                unPressArrowButton(backward, left, right);
+                colorImageButton(forward);
+                unColorImageButton(backward, left, right);
                 break;
             case "backward":
-                pressArrowButton(backward);
-                unPressArrowButton(forward, left, right);
+                colorImageButton(backward);
+                unColorImageButton(forward, left, right);
                 break;
             case "left":
-                pressArrowButton(left);
-                unPressArrowButton(forward, backward, right);
+                colorImageButton(left);
+                unColorImageButton(forward, backward, right);
                 break;
             case "right":
-                pressArrowButton(right);
-                unPressArrowButton(forward, backward, left);
+                colorImageButton(right);
+                unColorImageButton(forward, backward, left);
                 break;
         }
     }
 
-    public void pressArrowButton(ImageButton button){
+    public void colorImageButton(ImageButton button){
         button.setColorFilter(Color.parseColor("#ED7D9F88"));
     }
 
-    public void unPressArrowButton(ImageButton button1, ImageButton button2, ImageButton button3){
+    public void unColorImageButton(ImageButton button1, ImageButton button2, ImageButton button3){
         button1.setColorFilter(Color.TRANSPARENT);
         button2.setColorFilter(Color.TRANSPARENT);
         button3.setColorFilter(Color.TRANSPARENT);
     }
 
-    public void speedModeOne(View view){
-        updateModeNumber(1);
-        updateNumberButtons("one");
-        showMode();
-        int speed = 0;
-        mMqttClient.publish("smartcar/speedOne", Integer.toString(speed), 1, null);
+    public void numberModeOne(View view){
+        setCurrentModeNumber(1);
+        colorNumberButtons("one");
+        updateAndShowModeNumbers();
+        int message = 0;
+        mMqttClient.publish("smartcar/speedOne", Integer.toString(message), 1, null);
     }
-    public void speedModeTwo(View view){
-        updateModeNumber(2);
-        updateNumberButtons("two");
-        showMode();
-        int speed = 0;
-        mMqttClient.publish("smartcar/speedTwo", Integer.toString(speed), 1, null);
+    public void numberModeTwo(View view){
+        setCurrentModeNumber(2);
+        colorNumberButtons("two");
+        updateAndShowModeNumbers();
+        int message = 0;
+        mMqttClient.publish("smartcar/speedTwo", Integer.toString(message), 1, null);
     }
-    public void speedModeThree(View view){
-        updateModeNumber(3);
-        updateNumberButtons("three");
-        showMode();
-        int speed = 0;
-        mMqttClient.publish("smartcar/speedThree", Integer.toString(speed), 1, null);
+    public void numberModeThree(View view){
+        setCurrentModeNumber(3);
+        colorNumberButtons("three");
+        updateAndShowModeNumbers();
+        int message = 0;
+        mMqttClient.publish("smartcar/speedThree", Integer.toString(message), 1, null);
     }
-    public void speedModeFour(View view){
-        updateModeNumber(4);
-        updateNumberButtons("four");
-        showMode();
-        int speed = 0;
-        mMqttClient.publish("smartcar/speedFour", Integer.toString(speed), 1, null);
-    }
-
-    public void updateNumberButtons(String number){
-        Button one = findViewById(R.id.button1);
-        Button two = findViewById(R.id.button2);
-        Button three = findViewById(R.id.button3);
-        Button four = findViewById(R.id.button4);
-        switch (number) {
-            case "one":
-                pressModeButton(one);
-                unPressNumberButton(two, three, four);
-                break;
-            case "two":
-                pressModeButton(two);
-                unPressNumberButton(one, three, four);
-                break;
-            case "three":
-                pressModeButton(three);
-                unPressNumberButton(one, two, four);
-                break;
-            case "four":
-                pressModeButton(four);
-                unPressNumberButton(one, two, three);
-                break;
-        }
+    public void numberModeFour(View view){
+        setCurrentModeNumber(4);
+        colorNumberButtons("four");
+        updateAndShowModeNumbers();
+        int message = 0;
+        mMqttClient.publish("smartcar/speedFour", Integer.toString(message), 1, null);
     }
 
-    public void updateModeNumber(int number) {
+    public void setCurrentModeNumber(int number) {
         if (speedMode.isActivated()) {
             speedMode.setNumber(number);
         } else if (angleMode.isActivated()) {
@@ -239,117 +218,50 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /* 
-    When a mode has already been activated earlier, 
-    when choosing that mode again, the current number 
-    that mode is in shows as pressed/colored.
+    /*
+    Only one number button can show as pressed/colored at a time.
+    The other buttons will get unpressed when one button is pressed.
      */
-    public void checkNumberButtons() {
-        if (speedMode.isActivated()) {
-            int number = speedMode.getNumber();
-            numberActivated(number);
-        } else if (angleMode.isActivated()) {
-            int number = angleMode.getNumber();
-            numberActivated(number);
-        } else if (brakeMode.isActivated()) {
-            int number = brakeMode.getNumber();
-            numberActivated(number);
-        }
-    }
-
-    public void numberActivated(int number) {
+    public void colorNumberButtons(String number){
         Button one = findViewById(R.id.button1);
         Button two = findViewById(R.id.button2);
         Button three = findViewById(R.id.button3);
         Button four = findViewById(R.id.button4);
-
-        if (number == 1) {
-            pressModeButton(one);
-            unPressNumberButton(two, three, four);
-        } else if (number == 2) {
-            pressModeButton(two);
-            unPressNumberButton(one, three, four);
-        } else if (number == 3) {
-            pressModeButton(three);
-            unPressNumberButton(two, one, four);
-        } else if (number == 4) {
-            pressModeButton(four);
-            unPressNumberButton(two, three, one);
-        } else if (number == 0) {
-            one.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            two.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            three.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            four.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        switch (number) {
+            case "one":
+                colorButton(one);
+                unColorNumberButton(two, three, four);
+                break;
+            case "two":
+                colorButton(two);
+                unColorNumberButton(one, three, four);
+                break;
+            case "three":
+                colorButton(three);
+                unColorNumberButton(one, two, four);
+                break;
+            case "four":
+                colorButton(four);
+                unColorNumberButton(one, two, three);
+                break;
         }
     }
 
-    public void speedPress(View view){
-        speedMode.setActivated(true);
-        angleMode.setActivated(false);
-        brakeMode.setActivated(false);
-        checkNumberButtons();
-        int message = 0;
-        updateModeButtons();
-        mMqttClient.publish("smartcar/speedPress", Integer.toString(message), 1, null);
-    }
-
-    public void anglePress(View view){
-        angleMode.setActivated(true);
-        brakeMode.setActivated(false);
-        speedMode.setActivated(false);
-        checkNumberButtons();
-        int message = 0;
-        updateModeButtons();
-        mMqttClient.publish("smartcar/anglePress", Integer.toString(message), 1, null);
-    }
-
-    public void brakePress(View view){
-        brakeMode.setActivated(true);
-        speedMode.setActivated(false);
-        angleMode.setActivated(false);
-        checkNumberButtons();
-        int message = 0;
-        updateModeButtons();
-        mMqttClient.publish("smartcar/brakePress", Integer.toString(message), 1, null);
-    }
-
-    public void updateModeButtons(){
-        Button speed = findViewById(R.id.speed);
-        Button angle = findViewById(R.id.angle);
-        Button brake = findViewById(R.id.brake);
-
-        if (speedMode.isActivated()) {
-            pressModeButton(speed);
-            unPressModeButton(angle, brake);
-        } else if (angleMode.isActivated()) {
-            pressModeButton(angle);
-            unPressModeButton(speed, brake);
-        } else if (brakeMode.isActivated()) {
-            pressModeButton(brake);
-            unPressModeButton(speed, angle);
-        } else {
-            speed.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            angle.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            brake.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-        }
-    }
-
-    public void pressModeButton(Button button){
+    public void colorButton(Button button){
         button.setBackgroundColor(Color.parseColor("#ED2E3C34"));
     }
 
-    public void unPressModeButton(Button button1, Button button2){
-        button1.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-        button2.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-    }
-
-    public void unPressNumberButton(Button button1, Button button2, Button button3){
+    public void unColorNumberButton(Button button1, Button button2, Button button3){
         button1.setBackgroundColor(Color.parseColor("#ED7D9F88"));
         button2.setBackgroundColor(Color.parseColor("#ED7D9F88"));
         button3.setBackgroundColor(Color.parseColor("#ED7D9F88"));
     }
 
-    public void showMode(){
+    /*
+    A number is shown underneath the three different mode buttons
+    to show in which number that mode is currently in.
+    */
+    public void updateAndShowModeNumbers(){
         Button currentSpeedMode = findViewById(R.id.currentSpeedMode);
         Button currentAngleMode = findViewById(R.id.currentAngleMode);
         Button currentBrakeMode = findViewById(R.id.currentBrakeMode);
@@ -367,6 +279,106 @@ public class MainActivity extends AppCompatActivity {
             currentAngleMode.setText("");
             currentBrakeMode.setText("");
         }
+    }
+
+    public void speedPress(View view){
+        speedMode.setActivated(true);
+        angleMode.setActivated(false);
+        brakeMode.setActivated(false);
+        int message = 0;
+        numberAlreadyActivated();
+        colorModeButtons();
+        mMqttClient.publish("smartcar/speedPress", Integer.toString(message), 1, null);
+    }
+
+    public void anglePress(View view){
+        angleMode.setActivated(true);
+        brakeMode.setActivated(false);
+        speedMode.setActivated(false);
+        int message = 0;
+        numberAlreadyActivated();
+        colorModeButtons();
+        mMqttClient.publish("smartcar/anglePress", Integer.toString(message), 1, null);
+    }
+
+    public void brakePress(View view){
+        brakeMode.setActivated(true);
+        speedMode.setActivated(false);
+        angleMode.setActivated(false);
+        int message = 0;
+        numberAlreadyActivated();
+        colorModeButtons();
+        mMqttClient.publish("smartcar/brakePress", Integer.toString(message), 1, null);
+    }
+
+    /*
+    When a mode has already been activated earlier,
+    when choosing that mode again, the current number
+    that mode is in shows as pressed/colored.
+    */
+    public void numberAlreadyActivated() {
+        Button one = findViewById(R.id.button1);
+        Button two = findViewById(R.id.button2);
+        Button three = findViewById(R.id.button3);
+        Button four = findViewById(R.id.button4);
+        int number = getCurrentModeNumber();
+
+        if (number == 1) {
+            colorButton(one);
+            unColorNumberButton(two, three, four);
+        } else if (number == 2) {
+            colorButton(two);
+            unColorNumberButton(one, three, four);
+        } else if (number == 3) {
+            colorButton(three);
+            unColorNumberButton(two, one, four);
+        } else if (number == 4) {
+            colorButton(four);
+            unColorNumberButton(two, three, one);
+        } else if (number == 0) {
+            one.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            two.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            three.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            four.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        }
+    }
+
+    public int getCurrentModeNumber() {
+        if (speedMode.isActivated()) {
+            return speedMode.getNumber();
+        } else if (angleMode.isActivated()) {
+            return angleMode.getNumber();
+        } else if (brakeMode.isActivated()) {
+            return brakeMode.getNumber();
+        } else {
+            return 0;
+        }
+    }
+
+    public void colorModeButtons(){
+        Button speed = findViewById(R.id.speed);
+        Button angle = findViewById(R.id.angle);
+        Button brake = findViewById(R.id.brake);
+
+        if (speedMode.isActivated()) {
+            colorButton(speed);
+            unColorModeButton(angle, brake);
+        } else if (angleMode.isActivated()) {
+            colorButton(angle);
+            unColorModeButton(speed, brake);
+        } else if (brakeMode.isActivated()) {
+            colorButton(brake);
+            unColorModeButton(speed, angle);
+        } else {
+            speed.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            angle.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            brake.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        }
+    }
+
+    public void unColorModeButton(Button button1, Button button2){
+        button1.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        button2.setBackgroundColor(Color.parseColor("#ED7D9F88"));
     }
 
     public void showSpeed(String message){
