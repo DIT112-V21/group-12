@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Choreographies">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="441dp"
+        android:layout_height="739dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/backgroundlinearpng" />
+
+
+    <Switch
+        android:id="@+id/goToDrive"
+        android:layout_width="140dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="143dp"
+        android:layout_marginLeft="143dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="126dp"
+        android:layout_marginRight="126dp"
+        android:layout_marginBottom="624dp"
+        android:fontFamily="@font/give_you_glory"
+        android:onClick="goToDrive"
+        android:text="Drive"
+        android:textColor="#8BC34A"
+        android:textColorLink="#8BC34A"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/topBar"
+        android:layout_width="428dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="622dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bottombar" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="416dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="133dp"
+        android:layout_marginBottom="548dp"
+        android:foreground="@drawable/dance_and_drive_background"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="188dp"
+        android:layout_height="51dp"
+        android:layout_marginStart="143dp"
+        android:layout_marginLeft="143dp"
+        android:layout_marginTop="134dp"
+        android:layout_marginEnd="128dp"
+        android:layout_marginRight="128dp"
+        android:layout_marginBottom="548dp"
+        android:fontFamily="@font/amatic_sc"
+        android:text="Choreographies"
+        android:textColor="#FFFFFF"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="359dp"
+        android:layout_height="292dp"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="192dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginRight="26dp"
+        android:layout_marginBottom="247dp"
+        android:scrollbarSize="@dimen/margin_small"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="408dp"
+            android:layout_height="216dp"
+
+            android:background="@color/cardview_dark_background"
+            android:orientation="vertical"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:visibility="visible"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.333"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/imageView"
+            app:layout_constraintVertical_bias="0.154">
+
+            <CheckBox
+                android:id="@+id/choreography1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/give_you_glory"
+                android:onClick="choreography1"
+                android:text="Choreography 1"
+                android:textColor="#8BC34A"
+                android:textColorLink="#8BC34A"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <CheckBox
+                android:id="@+id/choreography2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/give_you_glory"
+                android:onClick="choreography2"
+                android:text="Choreography 2"
+                android:textColor="#8BC34A"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <CheckBox
+                android:id="@+id/choreography3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/give_you_glory"
+                android:onClick="choreography3"
+                android:text="Choreography 3"
+                android:textColor="#8BC34A"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <CheckBox
+                android:id="@+id/choreography4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/give_you_glory"
+                android:onClick="choreography4"
+                android:text="Choreography 4"
+                android:textColor="#8BC34A"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <CheckBox
+                android:id="@+id/choreography5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/give_you_glory"
+                android:onClick="choreography5"
+                android:text="Choreography 5"
+                android:textAllCaps="false"
+                android:textColor="#8BC34A"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <CheckBox
+                android:id="@+id/choreography6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/give_you_glory"
+                android:onClick="choreography6"
+                android:text="Choreography 6"
+                android:textAllCaps="false"
+                android:textColor="#8BC34A"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+            <CheckBox
+                android:id="@+id/choreography7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/give_you_glory"
+                android:onClick="choreography7"
+                android:text="Choreography 7"
+                android:textAllCaps="false"
+                android:textColor="#8BC34A"
+                android:textSize="24sp"
+                android:textStyle="bold|italic" />
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <EditText
+        android:id="@+id/selectedDances"
+        android:layout_width="189dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="111dp"
+        android:layout_marginLeft="111dp"
+        android:layout_marginTop="484dp"
+        android:layout_marginEnd="111dp"
+        android:layout_marginRight="111dp"
+        android:layout_marginBottom="150dp"
+        android:fontFamily="@font/amatic_sc"
+        android:inputType="textPersonName"
+        android:text="Selected Choreographies"
+        android:textColor="#8BC34A"
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/currentChoreographies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#8BC34A"
+        android:background="@color/cardview_dark_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selectedDances"
+        app:layout_constraintVertical_bias="0.065" />
+
+    <Button
+        android:id="@+id/createChoreography"
+        android:layout_width="155dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="115dp"
+        android:layout_marginLeft="115dp"
+        android:layout_marginTop="659dp"
+        android:layout_marginEnd="115dp"
+        android:layout_marginRight="115dp"
+        android:layout_marginBottom="33dp"
+        android:fontFamily="@font/amatic_sc"
+        android:onClick="createDance"
+        android:text="Dance"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#8BC34A"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="72dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="660dp"
+        android:layout_marginEnd="313dp"
+        android:layout_marginRight="313dp"
+        android:layout_marginBottom="33dp"
+        android:onClick="perviousScreen"
+        android:text="Back"
+        android:textColor="#8BC34A"
+        android:textSize="12sp"
+        app:backgroundTint="#393939"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
