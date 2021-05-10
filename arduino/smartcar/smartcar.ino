@@ -39,16 +39,16 @@ GY50 gyroscope(arduinoRuntime, 37);
 
 const auto pulsesPerMeter = 600;
 
-DirectionlessOdometer leftOdometer(
+DirectionlessOdometer leftOdometer{
     arduinoRuntime,
     smartcarlib::pins::v2::leftOdometerPin,
     []() { leftOdometer.update(); },
-    pulsesPerMeter);
-DirectionlessOdometer rightOdometer(
+    pulsesPerMeter};
+DirectionlessOdometer rightOdometer{
     arduinoRuntime,
     smartcarlib::pins::v2::rightOdometerPin,
     []() { rightOdometer.update(); },
-    pulsesPerMeter);
+    pulsesPerMeter};
 
 SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer, rightOdometer);
 
@@ -341,7 +341,9 @@ boolean handleObstacle(){
 
 void sendSpeed(){
    #ifndef __SMCE__
-     mqtt.publish("/smartcar/camera",car.getSpeed(),12, false, 0);
+     mqtt.publish("/smartcar/odometerSpeed", car.getSpeed(), 12, false, 0);
+   #else
+     mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()));
    #endif
 
 }
