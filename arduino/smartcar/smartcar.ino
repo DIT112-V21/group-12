@@ -186,9 +186,18 @@ void loop()
         delay(300);
         car.setSpeed(0);
     }
-    sendSpeed();
+    handleOutput();
 }
 
+
+void handleOutput(){
+    float currentSpeed1 = car.getSpeed();
+    delay(500);
+    float currentSpeed2 = car.getSpeed();
+    if (currentSpeed1 != currentSpeed2){
+        sendSpeed();
+    }
+}
 /*
 When standing still you need to choose a direction and then enter a speed mode 1-4.
 Invalid input will still get passed to setCarSpeed which will cause the car to stop.
@@ -341,9 +350,10 @@ boolean handleObstacle(){
 
 void sendSpeed(){
    #ifndef __SMCE__
-     mqtt.publish("/smartcar/odometerSpeed", car.getSpeed(), 12, false, 0);
+     mqtt.publish("smartcar/odometerSpeed", car.getSpeed(), 12, false, 0);
    #else
      mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()));
    #endif
-
 }
+
+
