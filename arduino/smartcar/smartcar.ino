@@ -10,8 +10,8 @@ MQTTClient mqtt;
 /*
 The skeleton for this code is derived from [https://platisd.github.io/smartcar_shield/manual_control_8ino-example.html]
 */
-int fSpeed = 40;
-int bSpeed = -40;
+int fSpeed = 20;
+int bSpeed = -20;
 int lDegrees = -20; // degrees to turn left
 int rDegrees = 20;  // degrees to turn right
 boolean backward = false;
@@ -64,6 +64,9 @@ void setup()
       mqtt.subscribe("smartcar/#", 1);
       mqtt.onMessage([](String topic, String message){
         if (topic == "smartcar/forward"){
+          if (fSpeed == 0) {
+            fSpeed = 20;
+          }
           car.setSpeed(fSpeed);
           car.setAngle(0);
           right = false;

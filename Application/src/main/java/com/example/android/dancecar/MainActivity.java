@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private MqttClient mMqttClient;
     private boolean isConnected = false;
     private String direction;
+    private String currentSpeed;
     Mode speedMode = new Mode("speed");
     Mode angleMode = new Mode("angle");
     Mode brakeMode = new Mode("brake");
@@ -93,7 +94,11 @@ public class MainActivity extends AppCompatActivity {
                     //Add code for data to app.
                     Log.e(TAG, message.toString());
                     if (topic.equals("smartcar/odometerSpeed")){
-                        showSpeed(message.toString());
+                        currentSpeed = message.toString();
+                        showSpeed(currentSpeed);
+                        if (currentSpeed.equals("0.000000")) {
+                            resetSettings();
+                        }
                     }
                 }
 
@@ -106,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void driveForward(View view){
+        //speedMode.setNumber(1);
+        //speedMode.setActivated(true);
         int speed = 60;
         direction = "forward";
         colorArrowButtons(direction);
@@ -149,20 +156,20 @@ public class MainActivity extends AppCompatActivity {
         ImageButton right = findViewById(R.id.arrowRight);
         switch (direction) {
             case "forward":
+                unColorImageButton(forward, backward, left, right);
                 colorImageButton(forward);
-                unColorImageButton(backward, left, right);
                 break;
             case "backward":
+                unColorImageButton(forward, backward, left, right);
                 colorImageButton(backward);
-                unColorImageButton(forward, left, right);
                 break;
             case "left":
+                unColorImageButton(forward, backward, left, right);
                 colorImageButton(left);
-                unColorImageButton(forward, backward, right);
                 break;
             case "right":
+                unColorImageButton(forward, backward, left, right);
                 colorImageButton(right);
-                unColorImageButton(forward, backward, left);
                 break;
         }
     }
@@ -171,10 +178,11 @@ public class MainActivity extends AppCompatActivity {
         button.setColorFilter(Color.parseColor("#ED7D9F88"));
     }
 
-    public void unColorImageButton(ImageButton button1, ImageButton button2, ImageButton button3){
+    public void unColorImageButton(ImageButton button1, ImageButton button2, ImageButton button3, ImageButton button4){
         button1.setColorFilter(Color.TRANSPARENT);
         button2.setColorFilter(Color.TRANSPARENT);
         button3.setColorFilter(Color.TRANSPARENT);
+        button4.setColorFilter(Color.TRANSPARENT);
     }
 
     public void numberModeOne(View view){
@@ -229,20 +237,20 @@ public class MainActivity extends AppCompatActivity {
         Button four = findViewById(R.id.button4);
         switch (number) {
             case "one":
+                unColorNumberButton(one, two, three, four);
                 colorButton(one);
-                unColorNumberButton(two, three, four);
                 break;
             case "two":
+                unColorNumberButton(one, two, three, four);
                 colorButton(two);
-                unColorNumberButton(one, three, four);
                 break;
             case "three":
+                unColorNumberButton(one, two, three, four);
                 colorButton(three);
-                unColorNumberButton(one, two, four);
                 break;
             case "four":
+                unColorNumberButton(one, two, three, four);
                 colorButton(four);
-                unColorNumberButton(one, two, three);
                 break;
         }
     }
@@ -251,10 +259,11 @@ public class MainActivity extends AppCompatActivity {
         button.setBackgroundColor(Color.parseColor("#ED2E3C34"));
     }
 
-    public void unColorNumberButton(Button button1, Button button2, Button button3){
+    public void unColorNumberButton(Button button1, Button button2, Button button3, Button button4){
         button1.setBackgroundColor(Color.parseColor("#ED7D9F88"));
         button2.setBackgroundColor(Color.parseColor("#ED7D9F88"));
         button3.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        button4.setBackgroundColor(Color.parseColor("#ED7D9F88"));
     }
 
     /*
@@ -324,22 +333,19 @@ public class MainActivity extends AppCompatActivity {
         int number = getCurrentModeNumber();
 
         if (number == 1) {
+            unColorNumberButton(one, two, three, four);
             colorButton(one);
-            unColorNumberButton(two, three, four);
         } else if (number == 2) {
+            unColorNumberButton(one, two, three, four);
             colorButton(two);
-            unColorNumberButton(one, three, four);
         } else if (number == 3) {
+            unColorNumberButton(one, two, three, four);
             colorButton(three);
-            unColorNumberButton(two, one, four);
         } else if (number == 4) {
+            unColorNumberButton(one, two, three, four);
             colorButton(four);
-            unColorNumberButton(two, three, one);
         } else if (number == 0) {
-            one.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            two.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            three.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            four.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            unColorNumberButton(one, two, three, four);
         }
     }
 
@@ -361,28 +367,58 @@ public class MainActivity extends AppCompatActivity {
         Button brake = findViewById(R.id.brake);
 
         if (speedMode.isActivated()) {
+            unColorModeButton(angle, brake, speed);
             colorButton(speed);
-            unColorModeButton(angle, brake);
         } else if (angleMode.isActivated()) {
+            unColorModeButton(angle, brake, speed);
             colorButton(angle);
-            unColorModeButton(speed, brake);
         } else if (brakeMode.isActivated()) {
+            unColorModeButton(angle, brake, speed);
             colorButton(brake);
-            unColorModeButton(speed, angle);
         } else {
-            speed.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            angle.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            brake.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            unColorModeButton(angle, brake, speed);
         }
     }
 
-    public void unColorModeButton(Button button1, Button button2){
+    public void unColorModeButton(Button button1, Button button2, Button button3){
         button1.setBackgroundColor(Color.parseColor("#ED7D9F88"));
         button2.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+        button3.setBackgroundColor(Color.parseColor("#ED7D9F88"));
     }
 
     public void showSpeed(String message){
         Button currentSpeed = findViewById(R.id.currentSpeed);
         currentSpeed.setText(message);
     }
+
+    public void resetSettings(){
+        // TODO: global buttons?
+        ImageButton forward = findViewById(R.id.arrowUp);
+        ImageButton backward = findViewById(R.id.arrowDown);
+        ImageButton left = findViewById(R.id.arrowLeft);
+        ImageButton right = findViewById(R.id.arrowRight);
+        Button one = findViewById(R.id.button1);
+        Button two = findViewById(R.id.button2);
+        Button three = findViewById(R.id.button3);
+        Button four = findViewById(R.id.button4);
+        Button speed = findViewById(R.id.speed);
+        Button angle = findViewById(R.id.angle);
+        Button brake = findViewById(R.id.brake);
+        speedMode.setActivated(false);
+        angleMode.setActivated(false);
+        brakeMode.setActivated(false);
+        speedMode.setNumber(0);
+        angleMode.setNumber(0);
+        brakeMode.setNumber(0);
+        updateAndShowModeNumbers();
+        numberAlreadyActivated();
+
+        unColorImageButton(forward, backward, left, right);
+        unColorModeButton(speed, angle, brake);
+        unColorNumberButton(one, two, three, four);
+
+    }
+    /*
+    When getSpeed() 0.0000 then uncolor(allModes, allNumbers, allArrows)
+     */
 }
