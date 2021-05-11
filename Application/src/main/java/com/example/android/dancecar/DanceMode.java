@@ -23,10 +23,4 @@ public class DanceMode extends AppCompatActivity {
         Intent intent = new Intent(this,DanceMoves.class);
         startActivity(intent);
     }
-
-    public void choreographyPage(View view){
-        Intent intent = new Intent(this, Choreographies.class);
-        startActivity(intent);
-
-    }
 }
