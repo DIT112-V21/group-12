@@ -127,6 +127,11 @@ public class DanceMoves extends AppCompatActivity {
         }
         }
 
+        public void recordNewDance(View view){
+            Intent intent = new Intent(this, NewMoves.class);
+            startActivity(intent);
+        }
+
 
     }
 
