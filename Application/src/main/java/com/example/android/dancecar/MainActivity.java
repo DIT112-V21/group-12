@@ -111,38 +111,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void driveForward(View view){
-        //speedMode.setNumber(1);
-        //speedMode.setActivated(true);
-        int speed = 60;
+        int message = 0;
         direction = "forward";
         colorArrowButtons(direction);
-        mMqttClient.publish("smartcar/forward", Integer.toString(speed), 1, null);
+        mMqttClient.publish("smartcar/forward", Integer.toString(message), 1, null);
     }
 
     public void driveBackward(View view){
-        int backSpeed = -80;
+        int message = 0;
         direction = "backward";
         colorArrowButtons(direction);
-        mMqttClient.publish("smartcar/backward", Integer.toString(backSpeed),1, null );
+        mMqttClient.publish("smartcar/backward", Integer.toString(message),1, null );
     }
 
     public void driveLeft(View view){
-        int leftAngle = -60;
+        int message = 0;
         direction = "left";
         colorArrowButtons(direction);
-        mMqttClient.publish("smartcar/left", Integer.toString(leftAngle), 1, null);
+        mMqttClient.publish("smartcar/left", Integer.toString(message), 1, null);
     }
 
     public void driveRight(View view){
-        int rightAngle = 60;
+        int message = 0;
         direction = "right";
         colorArrowButtons(direction);
-        mMqttClient.publish("smartcar/right", Integer.toString(rightAngle), 1, null);
+        mMqttClient.publish("smartcar/right", Integer.toString(message), 1, null);
     }
 
     public void driveStop(View view){
-        int stop = 0;
-        mMqttClient.publish("smartcar/stop", Integer.toString(stop), 1, null);
+        int message = 0;
+        mMqttClient.publish("smartcar/stop", Integer.toString(message), 1, null);
     }
 
     /*
@@ -222,7 +220,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (brakeMode.isActivated()) {
             brakeMode.setNumber(number);
         } else {
-            //TODO: if no mode is activated, what should happen?
+            // TODO: insert global buttons
+            //unColorNumberButton();
         }
     }
 
@@ -283,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
         } else if (brakeMode.isActivated()){
             String number = Integer.toString(brakeMode.getNumber());
             currentBrakeMode.setText(number);
-        } else { //TODO: if the car is standing still
+        } else {
             currentSpeedMode.setText("");
             currentAngleMode.setText("");
             currentBrakeMode.setText("");
@@ -418,7 +417,4 @@ public class MainActivity extends AppCompatActivity {
         unColorNumberButton(one, two, three, four);
 
     }
-    /*
-    When getSpeed() 0.0000 then uncolor(allModes, allNumbers, allArrows)
-     */
 }
