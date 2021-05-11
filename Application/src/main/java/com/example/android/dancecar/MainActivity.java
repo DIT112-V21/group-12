@@ -26,6 +26,20 @@ public class MainActivity extends AppCompatActivity {
     Mode speedMode = new Mode("speed");
     Mode angleMode = new Mode("angle");
     Mode brakeMode = new Mode("brake");
+    ImageButton forward;
+    ImageButton backward;
+    ImageButton left;
+    ImageButton right;
+    Button speed;
+    Button angle;
+    Button brake;
+    Button one;
+    Button two;
+    Button three;
+    Button four;
+    Button currentSpeedMode;
+    Button currentAngleMode;
+    Button currentBrakeMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +47,21 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
+
+        forward  = findViewById(R.id.arrowUp);
+        backward  = findViewById(R.id.arrowDown);
+        left  = findViewById(R.id.arrowLeft);
+        right  = findViewById(R.id.arrowRight);
+        speed = findViewById(R.id.speed);
+        angle = findViewById(R.id.angle);
+        brake = findViewById(R.id.brake);
+        one = findViewById(R.id.button1);
+        two  = findViewById(R.id.button2);
+        three = findViewById(R.id.button3);
+        four = findViewById(R.id.button4);
+        currentSpeedMode  = findViewById(R.id.currentSpeedMode);
+        currentAngleMode  = findViewById(R.id.currentAngleMode);
+        currentBrakeMode  = findViewById(R.id.currentBrakeMode);
     }
 
     @Override
@@ -148,10 +177,6 @@ public class MainActivity extends AppCompatActivity {
     The other buttons will get unpressed when one button is pressed.
     */
     public void colorArrowButtons(String direction){
-        ImageButton forward = findViewById(R.id.arrowUp);
-        ImageButton backward = findViewById(R.id.arrowDown);
-        ImageButton left = findViewById(R.id.arrowLeft);
-        ImageButton right = findViewById(R.id.arrowRight);
         switch (direction) {
             case "forward":
                 unColorImageButton(forward, backward, left, right);
@@ -230,10 +255,6 @@ public class MainActivity extends AppCompatActivity {
     The other buttons will get unpressed when one button is pressed.
      */
     public void colorNumberButtons(String number){
-        Button one = findViewById(R.id.button1);
-        Button two = findViewById(R.id.button2);
-        Button three = findViewById(R.id.button3);
-        Button four = findViewById(R.id.button4);
         switch (number) {
             case "one":
                 unColorNumberButton(one, two, three, four);
@@ -270,9 +291,6 @@ public class MainActivity extends AppCompatActivity {
     to show in which number that mode is currently in.
     */
     public void updateAndShowModeNumbers(){
-        Button currentSpeedMode = findViewById(R.id.currentSpeedMode);
-        Button currentAngleMode = findViewById(R.id.currentAngleMode);
-        Button currentBrakeMode = findViewById(R.id.currentBrakeMode);
         if (speedMode.isActivated()){
             String number = Integer.toString(speedMode.getNumber());
             currentSpeedMode.setText(number);
@@ -325,10 +343,6 @@ public class MainActivity extends AppCompatActivity {
     that mode is in shows as pressed/colored.
     */
     public void numberAlreadyActivated() {
-        Button one = findViewById(R.id.button1);
-        Button two = findViewById(R.id.button2);
-        Button three = findViewById(R.id.button3);
-        Button four = findViewById(R.id.button4);
         int number = getCurrentModeNumber();
 
         if (number == 1) {
@@ -361,10 +375,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void colorModeButtons(){
-        Button speed = findViewById(R.id.speed);
-        Button angle = findViewById(R.id.angle);
-        Button brake = findViewById(R.id.brake);
-
         if (speedMode.isActivated()) {
             unColorModeButton(angle, brake, speed);
             colorButton(speed);
@@ -391,18 +401,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void resetSettings(){
-        // TODO: global buttons?
-        ImageButton forward = findViewById(R.id.arrowUp);
-        ImageButton backward = findViewById(R.id.arrowDown);
-        ImageButton left = findViewById(R.id.arrowLeft);
-        ImageButton right = findViewById(R.id.arrowRight);
-        Button one = findViewById(R.id.button1);
-        Button two = findViewById(R.id.button2);
-        Button three = findViewById(R.id.button3);
-        Button four = findViewById(R.id.button4);
-        Button speed = findViewById(R.id.speed);
-        Button angle = findViewById(R.id.angle);
-        Button brake = findViewById(R.id.brake);
         speedMode.setActivated(false);
         angleMode.setActivated(false);
         brakeMode.setActivated(false);
