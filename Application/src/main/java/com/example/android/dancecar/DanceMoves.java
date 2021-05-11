@@ -149,5 +149,9 @@ public class DanceMoves extends AppCompatActivity {
 
     }
 
+    public void createDanceMove(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 
 }
