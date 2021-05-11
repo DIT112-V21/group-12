@@ -10,8 +10,8 @@ MQTTClient mqtt;
 /*
 The skeleton for this code is derived from [https://platisd.github.io/smartcar_shield/manual_control_8ino-example.html]
 */
-int fSpeed = 40;
-int bSpeed = -40;
+int fSpeed = 20;
+int bSpeed = -20;
 int lDegrees = -20; // degrees to turn left
 int rDegrees = 20;  // degrees to turn right
 boolean backward = false;
@@ -33,9 +33,24 @@ BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
 BrushedMotor rightMotor(arduinoRuntime, smartcarlib::pins::v2::rightMotorPins);
 DifferentialControl control(leftMotor, rightMotor);
 
-SimpleCar car(control);
-
 SR04 front(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
+
+GY50 gyroscope(arduinoRuntime, 37);
+
+const auto pulsesPerMeter = 600;
+
+DirectionlessOdometer leftOdometer{
+    arduinoRuntime,
+    smartcarlib::pins::v2::leftOdometerPin,
+    []() { leftOdometer.update(); },
+    pulsesPerMeter};
+DirectionlessOdometer rightOdometer{
+    arduinoRuntime,
+    smartcarlib::pins::v2::rightOdometerPin,
+    []() { rightOdometer.update(); },
+    pulsesPerMeter};
+
+SmartCar car(arduinoRuntime, control, gyroscope, leftOdometer, rightOdometer);
 
 void setup()
 {
@@ -45,10 +60,13 @@ void setup()
    #else
    mqtt.begin(WiFi);
    #endif
-    if (mqtt.connect("arduino", "public", "public"));{
+    if (mqtt.connect("arduino", "public", "public")){
       mqtt.subscribe("smartcar/#", 1);
       mqtt.onMessage([](String topic, String message){
         if (topic == "smartcar/forward"){
+          if (fSpeed == 0) {
+            fSpeed = 20;
+          }
           car.setSpeed(fSpeed);
           car.setAngle(0);
           right = false;
@@ -171,8 +189,18 @@ void loop()
         delay(300);
         car.setSpeed(0);
     }
+    handleOutput();
 }
 
+
+void handleOutput(){
+    float currentSpeed1 = car.getSpeed();
+    delay(500);
+    float currentSpeed2 = car.getSpeed();
+    if (currentSpeed1 != currentSpeed2){
+        sendSpeed();
+    }
+}
 /*
 When standing still you need to choose a direction and then enter a speed mode 1-4.
 Invalid input will still get passed to setCarSpeed which will cause the car to stop.
@@ -320,4 +348,14 @@ boolean handleObstacle(){
   else{
       return false;
   }
+
 }
+
+void sendSpeed(){
+   #ifndef __SMCE__
+     mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()), false, 0);
+   #else
+     mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()));
+   #endif
+}
+
