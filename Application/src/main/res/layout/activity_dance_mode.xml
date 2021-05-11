@@ -17,23 +17,10 @@
         app:srcCompat="@drawable/backgroundlinearpng" />
 
 
-
-    <ImageView
-        android:id="@+id/topBar"
-        android:layout_width="428dp"
-        android:layout_height="59dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="622dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bottombar" />
-
     <Switch
         android:id="@+id/goToDrive"
-        android:layout_width="113dp"
-        android:layout_height="56dp"
+        android:layout_width="129dp"
+        android:layout_height="54dp"
         android:layout_marginStart="143dp"
         android:layout_marginLeft="143dp"
         android:layout_marginTop="46dp"

@@ -2,6 +2,7 @@ package com.example.android.dancecar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -399,4 +400,10 @@ public class MainActivity extends AppCompatActivity {
             right.setColorFilter(Color.TRANSPARENT);
         }
     }
+    public void goToDance(View view){
+        Intent intent = new Intent(this, DanceMode.class);
+        startActivity(intent);
+
+    }
+
 }

@@ -18,6 +18,28 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/backgroundlinearpng" />
 
+    <Switch
+        android:id="@+id/goToDrive"
+        android:layout_width="148dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="143dp"
+        android:layout_marginLeft="143dp"
+        android:layout_marginTop="31dp"
+        android:layout_marginEnd="133dp"
+        android:layout_marginRight="133dp"
+        android:layout_marginBottom="643dp"
+        android:fontFamily="@font/give_you_glory"
+        android:onClick="goToDance"
+        android:text="Dance"
+        android:textColor="#8BC34A"
+        android:textColorLink="#8BC34A"
+        android:textSize="36sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/buttonBar"
         android:layout_width="432dp"
@@ -129,7 +151,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/stopbutton" />
-
 
 
     <Button
@@ -321,8 +342,8 @@
         android:layout_marginEnd="292dp"
         android:layout_marginRight="292dp"
         android:layout_marginBottom="456dp"
-        android:text="0.0"
         android:background="?android:attr/selectableItemBackground"
+        android:text="0.0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

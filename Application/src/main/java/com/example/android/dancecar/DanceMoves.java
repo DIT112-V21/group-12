@@ -5,21 +5,79 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import java.util.ArrayList;
 
 public class DanceMoves extends AppCompatActivity {
     ArrayList danceMoves = new ArrayList();
+    ArrayList choreography = new ArrayList();
+    ArrayList selectedDance = new ArrayList();
+    LinearLayout lLayout;
+    LinearLayout rLayout;
+    CheckBox checkBox;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dance_moves);
+        DaneMoveObject dance1  = new DaneMoveObject("Dance 1",1);
+        danceMoves.add(dance1.getDanceName());
+        DaneMoveObject dance2  = new DaneMoveObject("Dance 2",2);
+        danceMoves.add(dance2.getDanceName());
+        DaneMoveObject dance3  = new DaneMoveObject("Dance 3",3);
+        danceMoves.add(dance3.getDanceName());
+        DaneMoveObject dance4  = new DaneMoveObject("Dance 4",4);
+        danceMoves.add(dance4.getDanceName());
+
+        lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
+        rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
+
+        for (int i = 0; i < danceMoves.size(); i++) {
+
+            checkBox = new CheckBox(this);
+            checkBox.setId(i);
+            checkBox.setText(danceMoves.get(i).toString());
+            checkBox.setOnClickListener(getOnClickDoSomething(checkBox));
+            lLayout.addView(checkBox);
+        }
+
+        for (int i = 0; i < choreography.size(); i++) {
+
+            checkBox = new CheckBox(this);
+            checkBox.setId(i);
+            checkBox.setText(choreography.get(i).toString());
+            checkBox.setOnClickListener(getOnClickDoSomething(checkBox));
+            rLayout.addView(checkBox);
+
+        }
+    }
+
+    View.OnClickListener getOnClickDoSomething(final CheckBox checkBox){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkBox.isChecked()){
+                    selectedDance.add(checkBox.getText().toString());
+                    TextView current = findViewById(R.id.currentDances);
+                    current.setText(selectedDance.toString());
+                }else{
+                    selectedDance.remove(checkBox.getText().toString());
+                    TextView current = findViewById(R.id.currentDances);
+                    current.setText(selectedDance.toString());
+                }
+                //Add what to do when clicking
+                Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
+            }
+        };
     }
 
     public void goToDrive(View view){
@@ -27,131 +85,48 @@ public class DanceMoves extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void danceMove1(View view){
-         final CheckBox danceMove1 = findViewById(R.id.danceMove1);
-        if(danceMove1.isChecked()){
-            danceMoves.add("danceMove1");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove1");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-
-        }
-    }
-
-    public void danceMove2(View view){
-        final CheckBox danceMove2 = findViewById(R.id.danceMove2);
-        if(danceMove2.isChecked()){
-            danceMoves.add("danceMove2");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove2");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }
-    }
-
-    public void danceMove3(View view){
-        final CheckBox danceMove3 = findViewById(R.id.danceMove3);
-        if(danceMove3.isChecked()){
-            danceMoves.add("danceMove3");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove3");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }
-    }
-
-
-    public void danceMove4(View view){
-        final CheckBox danceMove4 = findViewById(R.id.danceMove4);
-        if(danceMove4.isChecked()){
-            danceMoves.add("danceMove4");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove4");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }
-    }
-
-    public void danceMove5(View view){
-        final CheckBox danceMove5 = findViewById(R.id.danceMove4);
-        if(danceMove5.isChecked()){
-            danceMoves.add("danceMove5");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove5");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }
-    }
-
-    public void danceMove6(View view){
-        final CheckBox danceMove6 = findViewById(R.id.danceMove4);
-        if(danceMove6.isChecked()){
-            danceMoves.add("danceMove6");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove6");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }
-    }
-
-    public void danceMove7(View view){
-        final CheckBox danceMove7 = findViewById(R.id.danceMove4);
-        if(danceMove7.isChecked()){
-            danceMoves.add("danceMove7");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove7");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }
-    }
-
-    public void danceMove8(View view){
-        final CheckBox danceMove8 = findViewById(R.id.danceMove4);
-        if(danceMove8.isChecked()){
-            danceMoves.add("danceMove8");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove8");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }
-    }
-    public void danceMove9(View view){
-        final CheckBox danceMove9 = findViewById(R.id.danceMove4);
-        if(danceMove9.isChecked()){
-            danceMoves.add("danceMove9");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }else{
-            danceMoves.remove("danceMove9");
-            TextView current = findViewById(R.id.currentDances);
-            current.setText(danceMoves.toString());
-        }
-    }
     public void createChoreography(View view){
-        //Add to Choreography list later
-
+        if(!selectedDance.isEmpty()) {
+            lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
+            int id = 1;
+            checkBox = new CheckBox(this);
+            checkBox.setId(id);
+            checkBox.setText("New Chor!!!");
+            checkBox.setOnClickListener(getOnClickDoSomething(checkBox));
+            lLayout.addView(checkBox);
+            Toast.makeText(this, "Choreography successfully created ", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Please select a dance move", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    public void createDanceMove(View view) {
-        Intent intent = new Intent(this, MainActivity.class);
+    public void goBackToDanceMenu(View view){
+        Intent intent = new Intent(this, DanceMode.class);
         startActivity(intent);
     }
 
-}
+    public void makeCarDance(View view){
+        //Send message via broker of what dance to preform..
+        //mgtt.pup(Smarcar/Dance/dance2)
+    }
+
+    public void addNewDance(View view){
+        if(!selectedDance.isEmpty()) {
+            lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
+            checkBox = new CheckBox(this);
+            int id = 1;
+            checkBox.setId(id);
+            checkBox.setText("New dance!!!");
+            checkBox.setOnClickListener(getOnClickDoSomething(checkBox));
+            lLayout.addView(checkBox);
+            Toast.makeText(this, "Choreography successfully created ", Toast.LENGTH_SHORT).show();
+            DaneMoveObject newDance = new DaneMoveObject("newD", 10);
+            danceMoves.add(newDance);
+        }else{
+            Toast.makeText(this, "Please select a dance move", Toast.LENGTH_SHORT).show();
+        }
+        }
+
+
+    }
+
