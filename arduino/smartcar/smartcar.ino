@@ -26,9 +26,12 @@ boolean anglePress = false;
 boolean speedPress = false;
 
 
+
 const int TRIGGER_PIN           = 6; // D6
 const int ECHO_PIN              = 7; // D7
 const unsigned int MAX_DISTANCE = 100;
+const int carSpeed         = 10; // 80% of the max speed
+const int GYROSCOPE_OFFSET = 37;
 
 ArduinoRuntime arduinoRuntime;
 BrushedMotor leftMotor(arduinoRuntime, smartcarlib::pins::v2::leftMotorPins);
