@@ -131,6 +131,7 @@
         app:srcCompat="@drawable/stopbutton" />
 
 
+
     <Button
         android:id="@+id/button1"
         android:layout_width="70dp"
