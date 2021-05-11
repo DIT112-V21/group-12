@@ -324,3 +324,154 @@ boolean handleObstacle(){
       return false;
   }
 }
+
+void moonWalk(int speed)
+{
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(-speed);
+  delay(1000);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+}
+
+void showOff(int speed)
+{
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  delay(500);
+  rotateOnSpot(360, speed);
+  rotateOnSpot(140,speed);
+  car.setSpeed(speed);
+  delay(2000);
+  car.setSpeed(0);
+}
+
+void sideKick(int speed) 
+{
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(90,speed);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,speed);
+  car.setSpeed(speed);
+  delay(1000);
+  rotateOnSpot(90,speed);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,speed);
+  car.setSpeed(speed);
+  delay(2000);
+  car.setSpeed(0);
+}
+
+void cha(int speed)
+{
+  rotateOnSpot(-90,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(120,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+}
+/**
+   Rotate the car on spot at the specified degrees with the certain speed
+   @param degrees   The degrees to rotate on spot. Positive values for clockwise
+                    negative for counter-clockwise.
+   @param speed     The speed to rotate
+*/
+void rotateOnSpot(int targetDegrees, int speed)
+{
+    speed = smartcarlib::utils::getAbsolute(speed);
+  
+    int degreesRotatedSoFar = 0;
+
+    car.update();
+    int previousHeading = car.getHeading();
+
+    if(targetDegrees>0)
+    {
+      car.overrideMotorSpeed(-speed, speed);
+    }
+    else
+    {
+      car.overrideMotorSpeed(speed, -speed);
+    }
+
+    while(degreesRotatedSoFar < abs(targetDegrees))
+    {
+      car.update();
+      int currentHeading = car.getHeading();
+      int delta = fmin(abs(currentHeading - previousHeading), abs(currentHeading - previousHeading + 360));
+      degreesRotatedSoFar += delta;
+      previousHeading = currentHeading;
+    }
+    car.setSpeed(0); // we have reached the target, so stop the car
+}
+void handleInput()
+{
+  if(Serial.available())
+  {
+    String input = Serial.readStringUntil('\n');
+    if(input.startsWith("r")){
+      int delimiterIndex = input.indexOf(",");
+      if(delimiterIndex != -1)
+      {
+        int degreesToRotate = input.substring(1, delimiterIndex).toInt();
+        int cSpeed = input.substring(delimiterIndex + 1).toInt();
+        rotateOnSpot(degreesToRotate, cSpeed);
+      }
+      else
+      {
+        int degreesToRotate = input.substring(1).toInt();
+        rotateOnSpot(degreesToRotate, carSpeed);
+      }
+    }
+    else if (input.startsWith("m")){
+      int danceSpeed = input.substring(1).toInt();
+      moonWalk(danceSpeed);
+    }
+    else if(input.startsWith("sh")){
+      int danceSpeed=input.substring(2).toInt();
+      showOff(danceSpeed);
+    }
+    else if(input.startsWith("ch")){
+      int danceSpeed=input.substring(2).toInt();
+      cha(danceSpeed);
+    }
+    else if (input.startsWith("si")){
+      int danceSpeed=input.substring(2).toInt();
+      sideKick(danceSpeed);
+    }
+  }
+}
