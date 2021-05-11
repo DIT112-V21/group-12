@@ -7,7 +7,7 @@
 WiFiClient net;
 #endif
 MQTTClient mqtt;
-File myFile;
+//File myFile;
 
 /*
 The skeleton for this code is derived from [https://platisd.github.io/smartcar_shield/manual_control_8ino-example.html]
@@ -29,7 +29,6 @@ boolean speedPress = false;
 const int TRIGGER_PIN           = 6; // D6
 const int ECHO_PIN              = 7; // D7
 const unsigned int MAX_DISTANCE = 100;
-const int carSpeed         = 10; // 80% of the max speed
 const int GYROSCOPE_OFFSET = 37;
 
 ArduinoRuntime arduinoRuntime;
@@ -41,7 +40,6 @@ GY50 gyroscope(arduinoRuntime, GYROSCOPE_OFFSET);
 
 HeadingCar car(control, gyroscope);
 
-SimpleCar car(control);
 
 SR04 front(arduinoRuntime, TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
@@ -189,9 +187,10 @@ Invalid input will still get passed to setCarSpeed which will cause the car to s
 
 void handleInput(){
   if (Serial.available()){
-    char input = Serial.read();
+    String inputCommand = Serial.readStringUntil('\n');
+    char oneCharCommand = inputCommand.charAt(0);
     String value;
-        switch (input)
+        switch (oneCharCommand)
         {
         case 'l': // Set steering angle to negative number(lDegrees/left).
           car.setAngle(lDegrees);
@@ -270,8 +269,41 @@ void handleInput(){
         default: // if you receive something that you don't know, just stop
           car.setSpeed(0);
           car.setAngle(0);
-        }
+        }   
+
+      if(inputCommand.startsWith("r"))
+      {
+          int delimiterIndex = inputCommand.indexOf(",");
+          if(delimiterIndex != -1)
+          {
+            int degreesToRotate = inputCommand.substring(1, delimiterIndex).toInt();
+            int cSpeed = inputCommand.substring(delimiterIndex + 1).toInt();
+            rotateOnSpot(degreesToRotate, cSpeed);
+          }
+          else
+          {
+            int degreesToRotate = inputCommand.substring(1).toInt();
+            rotateOnSpot(degreesToRotate, 80);
+          }
+      }
+      else if (inputCommand.startsWith("m")){
+        int danceSpeed = inputCommand.substring(1).toInt();
+        moonWalk(danceSpeed);
+      }
+      else if(inputCommand.startsWith("sh")){
+        int danceSpeed=inputCommand.substring(2).toInt();
+        showOff(danceSpeed);
+      }
+      else if(inputCommand.startsWith("ch")){
+        int danceSpeed=inputCommand.substring(2).toInt();
+        cha(danceSpeed);
+      }
+      else if (inputCommand.startsWith("si")){
+        int danceSpeed=inputCommand.substring(2).toInt();
+        sideKick(danceSpeed);
+      }
     }
+    
  }
 
 void carBraking(double brakeMode){
@@ -304,7 +336,8 @@ void steeringAngle(int angle){
   }
 }
 
-void carSpeed(int carSpeed){
+void carSpeed(int carSpeed)
+{
   if (forward == true){
      fSpeed = carSpeed;
      bSpeed = carSpeed * -1;
@@ -425,14 +458,8 @@ void rotateOnSpot(int targetDegrees, int speed)
     car.update();
     int previousHeading = car.getHeading();
 
-    if(targetDegrees>0)
-    {
-      car.overrideMotorSpeed(-speed, speed);
-    }
-    else
-    {
-      car.overrideMotorSpeed(speed, -speed);
-    }
+    if(targetDegrees>0) { car.overrideMotorSpeed(-speed, speed); }
+    else { car.overrideMotorSpeed(speed, -speed); }
 
     while(degreesRotatedSoFar < abs(targetDegrees))
     {
@@ -443,41 +470,4 @@ void rotateOnSpot(int targetDegrees, int speed)
       previousHeading = currentHeading;
     }
     car.setSpeed(0); // we have reached the target, so stop the car
-}
-void handleInput()
-{
-  if(Serial.available())
-  {
-    String input = Serial.readStringUntil('\n');
-    if(input.startsWith("r")){
-      int delimiterIndex = input.indexOf(",");
-      if(delimiterIndex != -1)
-      {
-        int degreesToRotate = input.substring(1, delimiterIndex).toInt();
-        int cSpeed = input.substring(delimiterIndex + 1).toInt();
-        rotateOnSpot(degreesToRotate, cSpeed);
-      }
-      else
-      {
-        int degreesToRotate = input.substring(1).toInt();
-        rotateOnSpot(degreesToRotate, carSpeed);
-      }
-    }
-    else if (input.startsWith("m")){
-      int danceSpeed = input.substring(1).toInt();
-      moonWalk(danceSpeed);
-    }
-    else if(input.startsWith("sh")){
-      int danceSpeed=input.substring(2).toInt();
-      showOff(danceSpeed);
-    }
-    else if(input.startsWith("ch")){
-      int danceSpeed=input.substring(2).toInt();
-      cha(danceSpeed);
-    }
-    else if (input.startsWith("si")){
-      int danceSpeed=input.substring(2).toInt();
-      sideKick(danceSpeed);
-    }
-  }
 }
