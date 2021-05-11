@@ -353,10 +353,9 @@ boolean handleObstacle(){
 
 void sendSpeed(){
    #ifndef __SMCE__
-     mqtt.publish("smartcar/odometerSpeed", car.getSpeed(), 12, false, 0);
+     mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()), false, 0);
    #else
      mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()));
    #endif
 }
-
 
