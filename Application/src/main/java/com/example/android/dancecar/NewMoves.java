@@ -452,4 +452,5 @@ public class NewMoves extends AppCompatActivity {
             right.setColorFilter(Color.TRANSPARENT);
         }
     }
+
 }
