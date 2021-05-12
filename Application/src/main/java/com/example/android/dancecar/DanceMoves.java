@@ -125,13 +125,11 @@ public class DanceMoves extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Please select a dance move", Toast.LENGTH_SHORT).show();
         }
-        }
+    }
 
-        public void recordNewDance(View view){
+        public void recordNewMove(View view){
             Intent intent = new Intent(this, NewMoves.class);
             startActivity(intent);
         }
-
-
     }
 

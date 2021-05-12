@@ -416,7 +416,7 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void colorImageButton(ImageButton button){
-        button.setColorFilter(Color.parseColor("#ED7D9F88"));
+        button.setColorFilter(Color.parseColor("#8BC34A"));
     }
 
     public void colorButton(Button button){
@@ -425,32 +425,31 @@ public class NewMoves extends AppCompatActivity {
 
     public void uncolorButtons(String type) {
         if (type.equals("mode")) {
-            speed.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            angle.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            brake.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            speed.setBackgroundColor(Color.parseColor("#8BC34A"));
+            angle.setBackgroundColor(Color.parseColor("#8BC34A"));
+            brake.setBackgroundColor(Color.parseColor("#8BC34A"));
         } else if (type.equals("number")) {
-            one.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            two.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            three.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            four.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            one.setBackgroundColor(Color.parseColor("#8BC34A"));
+            two.setBackgroundColor(Color.parseColor("#8BC34A"));
+            three.setBackgroundColor(Color.parseColor("#8BC34A"));
+            four.setBackgroundColor(Color.parseColor("#8BC34A"));
         } else if (type.equals("arrow")) {
             forward.setColorFilter(Color.TRANSPARENT);
             backward.setColorFilter(Color.TRANSPARENT);
             left.setColorFilter(Color.TRANSPARENT);
             right.setColorFilter(Color.TRANSPARENT);
         } else {
-            speed.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            angle.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            brake.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            one.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            two.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            three.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            four.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            speed.setBackgroundColor(Color.parseColor("#8BC34A"));
+            angle.setBackgroundColor(Color.parseColor("#8BC34A"));
+            brake.setBackgroundColor(Color.parseColor("#8BC34A"));
+            one.setBackgroundColor(Color.parseColor("#8BC34A"));
+            two.setBackgroundColor(Color.parseColor("#8BC34A"));
+            three.setBackgroundColor(Color.parseColor("#8BC34A"));
+            four.setBackgroundColor(Color.parseColor("#8BC34A"));
             forward.setColorFilter(Color.TRANSPARENT);
             backward.setColorFilter(Color.TRANSPARENT);
             left.setColorFilter(Color.TRANSPARENT);
             right.setColorFilter(Color.TRANSPARENT);
         }
     }
-
 }
