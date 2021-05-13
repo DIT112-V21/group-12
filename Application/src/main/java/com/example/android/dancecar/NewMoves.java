@@ -4,25 +4,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class NewMoves extends AppCompatActivity {
@@ -34,28 +30,34 @@ public class NewMoves extends AppCompatActivity {
     private String direction;
     private String currentSpeed;
 
-    Mode speedMode = new Mode("speed");
-    Mode angleMode = new Mode("angle");
-    Mode brakeMode = new Mode("brake");
+    private CountDownTimer countDownTimer;
+    private long timeLeft = 10000;
+    private boolean timerIsRunning = false;
+    private String timerText = "";
 
-    ImageButton forward;
-    ImageButton backward;
-    ImageButton left;
-    ImageButton right;
+    private Mode speedMode = new Mode("speed");
+    private Mode angleMode = new Mode("angle");
+    private Mode brakeMode = new Mode("brake");
 
-    Button speed;
-    Button angle;
-    Button brake;
-    Button one;
-    Button two;
-    Button three;
-    Button four;
-    Button currentSpeedMode;
-    Button currentAngleMode;
-    Button currentBrakeMode;
-    Button speedometer;
-    Button save;
-    Button recordingTimer;
+    private ImageButton forward;
+    private ImageButton backward;
+    private ImageButton left;
+    private ImageButton right;
+
+    private Button speed;
+    private Button angle;
+    private Button brake;
+    private Button one;
+    private Button two;
+    private Button three;
+    private Button four;
+    private Button currentSpeedMode;
+    private Button currentAngleMode;
+    private Button currentBrakeMode;
+    private Button speedometer;
+    private TextView recordingTimer;
+
+    private ToggleButton startStop;
 
     EditText move_name, instructions, duration;
     DBHelper DB;
@@ -92,66 +94,65 @@ public class NewMoves extends AppCompatActivity {
          */
 
         //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
-        ToggleButton toggle = findViewById(R.id.startstopButton);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        startStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                if (!isChecked) {
                     // Start recording
+                    startStop();
 
                 } else {
                     // Stop recording
+                    startStop();
 
                 }
             }
         });
     }
 
-    public void startDance(View view) throws InterruptedException {
-        //String timer = "timer";
-        //recordingTimer.setText(timer);
-        //int countdown = 10;
-        //recordingTimer.setText(Integer.toString(countdown));
-        //new startTimer(10);
-        countdown();
-    }
-
     public void saveDance(View view){
     }
 
-    public void countdown() throws InterruptedException {
-        for (int countdown = 10; countdown >= 1; countdown--) {
-            //recordingTimer.setText(Integer.toString(countdown));
-            recordingTimer.setText(countdown);
-            TimeUnit.SECONDS.sleep(1);
+
+    // Timer code partially derived from https://www.youtube.com/watch?v=zmjfAcnosS0
+    public void startStop () {
+        if (timerIsRunning) {
+            stopTimer();
+        } else {
+            countDown();
         }
-
-
-
-        //timer.cancel(); //Terminate the timer thread
     }
 
-    /*public class startTimer {
-        Timer timer;
+    public void stopTimer () {
+        countDownTimer.cancel();
+        timerIsRunning = false;
+        timeLeft = 10000;
+        timerText = "";
+        recordingTimer.setText(timerText);
+    }
 
-        public startTimer(int seconds) {
-
-            timer = new Timer();
-
-            timer.schedule(new StartMoves(), seconds * 1000);
-        }
-
-        class StartMoves extends TimerTask {
-            int countdown = 10;
-
-            public void run() {
-                countdown = countdown - 1;
-                recordingTimer.setText(Integer.toString(countdown));
-                timer.cancel(); //Terminate the timer thread
+    public void countDown() {
+        timerIsRunning = true;
+        countDownTimer = new CountDownTimer(timeLeft, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeft = millisUntilFinished;
+                updateTimer();
             }
-        }
+
+            @Override
+            public void onFinish() {
+                startStop.setChecked(true);
+                stopTimer();
+            }
+        };
+        countDownTimer.start();
     }
 
-     */
+    public void updateTimer() {
+        int seconds = (int) timeLeft % 10000 / 1000;
+        timerText = seconds + " sec";
+        recordingTimer.setText(timerText);
+    }
 
     @Override
     protected void onResume() {
@@ -245,6 +246,7 @@ public class NewMoves extends AppCompatActivity {
         currentBrakeMode = findViewById(R.id.currentBrakeMode);
         speedometer = findViewById(R.id.currentSpeed);
         recordingTimer = findViewById(R.id.recordingTimer);
+        startStop = findViewById(R.id.startstopButton);
     }
 
     public void driveForward(View view){
