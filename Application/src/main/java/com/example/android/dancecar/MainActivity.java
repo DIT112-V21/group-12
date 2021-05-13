@@ -16,6 +16,7 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
@@ -403,7 +404,10 @@ public class MainActivity extends AppCompatActivity {
     public void goToDance(View view){
         Intent intent = new Intent(this, DanceMode.class);
         startActivity(intent);
+    }
 
+    public void sendMessage(ArrayList danceList) {
+        mMqttClient.publish("samrtcar/makeCarDance", "1", 1, null);
     }
 
 }

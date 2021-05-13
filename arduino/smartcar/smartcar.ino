@@ -170,8 +170,9 @@ void setup()
           brakePress = false;
           anglePress = true;
           braking = false;
-        }
-        else{
+        }else if(topic == "smartcar/makeCarDance"){
+              selectedDance(message);
+        }else{
           Serial.println(topic + " " + message);
         }
       });
@@ -503,4 +504,16 @@ void sendSpeed(){
    #else
      mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()));
    #endif
+}
+
+void selectedDance(String message){
+        if(message == "1"){
+              moonWalk(50);
+        }else if(message == "2"){
+              sideKick(50);
+        }else if(message == "3"){
+              showOff(50);
+        }else if (message == "4"){
+              cha(50);
+        }
 }
