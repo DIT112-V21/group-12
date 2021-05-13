@@ -1,15 +1,19 @@
 package com.example.android.dancecar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -19,6 +23,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.xml.transform.Source;
 
 
 public class NewMoves extends AppCompatActivity {
@@ -47,6 +53,8 @@ public class NewMoves extends AppCompatActivity {
     Button currentAngleMode;
     Button currentBrakeMode;
     Button speedometer;
+    Button startstopRecord;
+    Button saveRecord;
     EditText move_name, instructions, duration;
     Button save;
     DBHelper DB;
@@ -54,15 +62,17 @@ public class NewMoves extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_new_moves);
+
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
         initialiseButtons();
 
-        setContentView(R.layout.activity_new_moves);
+        //TODO: Database to be implemented
+        /*
+        //mMqttClient.publish("smartcar/", "instructions", 1, null);
+        //mMqttClient.publish("smartcar/", "duration", 1, null);
 
-        mMqttClient.publish("smartcar/", "instructions", 1, null);
-        mMqttClient.publish("smartcar/", "duration", 1, null);
 
         DB = new DBHelper(this);
 
@@ -80,14 +90,23 @@ public class NewMoves extends AppCompatActivity {
                     Toast.makeText(NewMoves.this, "New move not inserted!", Toast.LENGTH_SHORT).show();
             }
         });
+         */
+
+        //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
+        ToggleButton toggle = findViewById(R.id.startstopButton);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Start recording
+
+                } else {
+                    // Stop recording
+
+                }
+            }
+        });
     }
 
-    public void startDance(View view){
-        new startTimer(5);
-    }
-
-    public void saveDance(View view){
-    }
 
     public class startTimer {
         Timer timer;
@@ -196,6 +215,7 @@ public class NewMoves extends AppCompatActivity {
         currentAngleMode  = findViewById(R.id.currentAngleMode);
         currentBrakeMode  = findViewById(R.id.currentBrakeMode);
         speedometer  = findViewById(R.id.currentSpeed);
+        saveRecord  = findViewById(R.id.saveDance);
     }
 
     public void driveForward(View view){
@@ -446,10 +466,16 @@ public class NewMoves extends AppCompatActivity {
             two.setBackgroundColor(Color.parseColor("#8BC34A"));
             three.setBackgroundColor(Color.parseColor("#8BC34A"));
             four.setBackgroundColor(Color.parseColor("#8BC34A"));
+            saveRecord.setBackgroundColor(Color.parseColor("#8BC34A"));
+            startstopRecord.setBackgroundColor(Color.parseColor("#8BC34A"));
             forward.setColorFilter(Color.TRANSPARENT);
             backward.setColorFilter(Color.TRANSPARENT);
             left.setColorFilter(Color.TRANSPARENT);
             right.setColorFilter(Color.TRANSPARENT);
         }
     }
+
+    public void saveDance(View view){
+    }
+
 }

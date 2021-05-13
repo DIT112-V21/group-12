@@ -145,6 +145,7 @@
         android:layout_marginBottom="331dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
+        android:focusable="true"
         android:onClick="driveStop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -374,8 +375,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/startStop"
+    <ToggleButton
+        android:id="@+id/startstopButton"
         android:layout_width="110dp"
         android:layout_height="54dp"
         android:layout_marginStart="74dp"
@@ -384,8 +385,11 @@
         android:layout_marginEnd="227dp"
         android:layout_marginRight="227dp"
         android:layout_marginBottom="148dp"
-        android:onClick="startDance"
-        android:text="Start"
+        android:background="#8BC34A"
+        android:checked="true"
+        android:textColor="#F8F5F5"
+        android:textOff="Stop"
+        android:textOn="Start"
         android:textSize="20dp"
         app:backgroundTint="#8BC34A"
         app:layout_constraintBottom_toBottomOf="parent"

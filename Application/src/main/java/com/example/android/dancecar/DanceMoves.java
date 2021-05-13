@@ -3,7 +3,6 @@ package com.example.android.dancecar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -23,7 +22,6 @@ public class DanceMoves extends AppCompatActivity {
     LinearLayout lLayout;
     LinearLayout rLayout;
     CheckBox checkBox;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,9 +125,10 @@ public class DanceMoves extends AppCompatActivity {
         }
     }
 
-        public void recordNewMove(View view){
-            Intent intent = new Intent(this, NewMoves.class);
-            startActivity(intent);
-        }
+    public void recordNewMove(View view){
+        Intent intent = new Intent(DanceMoves.this, NewMoves.class);
+        startActivity(intent);
     }
+}
+
 
