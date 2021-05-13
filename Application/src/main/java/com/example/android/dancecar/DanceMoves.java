@@ -26,8 +26,11 @@ import java.util.ArrayList;
 
 public class DanceMoves extends AppCompatActivity {
     ArrayList<DaneMoveObject> danceMoves = new ArrayList<DaneMoveObject>();
-    ArrayList<DaneMoveObject> choreography = new ArrayList<DaneMoveObject>();
-    ArrayList<DaneMoveObject> selectedDance = new ArrayList<DaneMoveObject>();
+    ArrayList<ChorMoves> chorMoves = new ArrayList<ChorMoves>();
+    ArrayList<ChorMoves> selectedChorMoves = new ArrayList<ChorMoves>();
+    ArrayList selectedChorMovesText = new ArrayList();
+    ArrayList<DaneMoveObject> selectedMove = new ArrayList<DaneMoveObject>();
+    ArrayList selectedMoveText = new ArrayList();
     LinearLayout lLayout;
     LinearLayout rLayout;
     CheckBox checkBox;
@@ -65,40 +68,11 @@ public class DanceMoves extends AppCompatActivity {
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
         rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
         createChor = findViewById(R.id.createChoreography);
-        createNewDance = findViewById(R.id.createNewDanceMove);
-        createNewDance.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder myDialog = new AlertDialog.Builder(DanceMoves.this);
-                myDialog.setTitle("Name");
-
-                final EditText name = new EditText(DanceMoves.this);
-                name.setInputType(InputType.TYPE_CLASS_TEXT);
-                myDialog.setView(name);
-
-                myDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        myText = name.getText().toString();
-                        addNewDance(myText);
-                    }
-                });
-
-                myDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-                myDialog.show();
-            }
-        });
-
         createChor.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
+
                 AlertDialog.Builder myDialog = new AlertDialog.Builder(DanceMoves.this);
                 myDialog.setTitle("Name");
 
@@ -129,35 +103,41 @@ public class DanceMoves extends AppCompatActivity {
             checkBox = new CheckBox(this);
             checkBox.setId(dance.getId());
             checkBox.setText(dance.getDanceName());
-            checkBox.setOnClickListener(getOnClickDoSomething(checkBox, dance));
+            checkBox.setOnClickListener(checkBoxMove(checkBox, dance));
             lLayout.addView(checkBox);
         }
 
-        for (int i = 0; i < choreography.size(); i++) {
-            DaneMoveObject dance = choreography.get(i);
+        for (int i = 0; i < chorMoves.size(); i++) {
+            ChorMoves chor = chorMoves.get(i);
             checkBox = new CheckBox(this);
-            checkBox.setId(dance.getId());
-            checkBox.setText(dance.getDanceName());
-            checkBox.setOnClickListener(getOnClickDoSomething(checkBox, dance));
+            checkBox.setId(chor.getChorMoveID());
+            checkBox.setText(chor.getChorName());
+            checkBox.setOnClickListener(checkBoxDance(checkBox, chor));
             rLayout.addView(checkBox);
         }
     }
 
-
-
-    View.OnClickListener getOnClickDoSomething(final CheckBox checkBox, final DaneMoveObject dance){
+    View.OnClickListener checkBoxMove(final CheckBox checkBox, final DaneMoveObject dance){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(checkBox.isChecked()){
-                    selectedDance.add(dance);
+                    selectedMove.add(dance);
                     TextView current = findViewById(R.id.currentDances);
-                    current.setText(selectedDance.toString());
+                    for(int i = 0; i < selectedMove.size(); i++){
+                        String name = selectedMove.get(i).getDanceName();
+                        if(!selectedMoveText.contains(name)){
+                            selectedMoveText.add(name);
+                        }
+                        current.setText(selectedMoveText.toString());
+                    }
                 }else{
-                    selectedDance.remove(dance);
+                    String removeName = dance.getDanceName();
+                    selectedMove.remove(dance);
                     TextView current = findViewById(R.id.currentDances);
-                    current.setText(selectedDance.toString());
-                }
+                    selectedMoveText.remove(removeName);
+                    current.setText(selectedMoveText.toString());
+                    }
                 Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
             }
         };
@@ -169,15 +149,19 @@ public class DanceMoves extends AppCompatActivity {
     }
 
     public void createChoreography(String name){
-        if(!selectedDance.isEmpty() && selectedDance.size() > 1 && selectedDance.size() < 101) {
-            DaneMoveObject newChor = new DaneMoveObject(name, 11);
-            choreography.add(newChor);
+        if(!selectedMove.isEmpty() && selectedMove.size() > 1 && selectedMove.size() < 101) {
+            ArrayList<DaneMoveObject> fullChor = new ArrayList<DaneMoveObject>();
+            for(int i = 0; i < selectedMove.size(); i++){
+                fullChor.add(selectedMove.get(i));
+            }
+            ChorMoves newChor = new ChorMoves(fullChor, 10, name);
+            chorMoves.add(newChor);
             lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
             int id = 1;
             checkBox = new CheckBox(this);
             checkBox.setId(id);
             checkBox.setText(name);
-            checkBox.setOnClickListener(getOnClickDoSomething(checkBox, newChor));
+            checkBox.setOnClickListener(checkBoxDance(checkBox, newChor));
             lLayout.addView(checkBox);
             Toast.makeText(DanceMoves.this, myText + " was created", Toast.LENGTH_LONG).show();
         }else{
@@ -191,38 +175,62 @@ public class DanceMoves extends AppCompatActivity {
     }
 
     public void makeCarDance(View view){
-        if(selectedDance.size() > 0){
-            for(int i = 0; i < selectedDance.size(); i++){
-                DaneMoveObject dance = selectedDance.get(i);
+        if(selectedMove.size() > 0){
+            for(int i = 0; i < selectedMove.size(); i++){
+                DaneMoveObject dance = selectedMove.get(i);
                 int id = dance.getId();
                 String newID = Integer.toString(id);
                 mMqttClient.publish("smartcar/makeCarDance", newID , 1, null);
+            }
+        }
+         else if(selectedChorMoves.size() > 0){
+            for(int i = 0; i <selectedChorMoves.size(); i++){
+                ChorMoves chor = selectedChorMoves.get(i);
+                ArrayList<DaneMoveObject> fullDance = chor.getSelectedDances();
+                Log.d(TAG, "makeCarDance: fulldance is " + fullDance.toString());
+                for(int j = 0; j <fullDance.size(); j++){
+                    DaneMoveObject dance = fullDance.get(j);
+                    int moveID = dance.getId();
+                    String newMoveID = Integer.toString(moveID);
+                    mMqttClient.publish("smartcar/makeCarDance", newMoveID , 1, null);
+                }
             }
         }else{
             Toast.makeText(this, "You need to select a dance", Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void addNewDance(String name){
-        if(!selectedDance.isEmpty() && selectedDance.size() > 1 && selectedDance.size() < 101) {
-            DaneMoveObject newDance = new DaneMoveObject(name, 10);
-            danceMoves.add(newDance);
-            lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
-            checkBox = new CheckBox(this);
-            int id = 1;
-            checkBox.setId(id);
-            checkBox.setText(name);
-            checkBox.setOnClickListener(getOnClickDoSomething(checkBox, newDance));
-            lLayout.addView(checkBox);
-            Toast.makeText(DanceMoves.this, myText + " was created", Toast.LENGTH_LONG).show();
-        }else{
-            Toast.makeText(this, "Please select a dance move", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     public void recordNewMove(View view){
         Intent intent = new Intent(DanceMoves.this, NewMoves.class);
         startActivity(intent);
+    }
+
+    View.OnClickListener checkBoxDance(final CheckBox checkBox, final ChorMoves chor){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkBox.isChecked()){
+                    selectedChorMoves.add(chor);
+                    Log.d(TAG, "onClick: Added to the selectedChorMoves");
+                    TextView current = findViewById(R.id.currentDances);
+                    for(int i = 0; i < selectedChorMoves.size(); i++){
+                        String name = selectedChorMoves.get(i).getChorName();
+                        if(!selectedChorMovesText.contains(name)){
+                            selectedChorMovesText.add(name);
+                        }
+                        current.setText(selectedChorMovesText.toString());
+                    }
+                }else{
+                    String removeName = chor.getChorName();
+                    selectedChorMoves.remove(chor);
+                    TextView current = findViewById(R.id.currentDances);
+                    selectedChorMovesText.remove(removeName);
+                    current.setText(selectedChorMovesText.toString());
+                    Log.d(TAG, "onClick: removed to the selectedChorMoves");
+                }
+                Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
+            }
+        };
     }
 
 
