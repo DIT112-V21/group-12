@@ -1,10 +1,10 @@
 package com.example.android.dancecar;
 
-public class DanceMove {
+public class DaneMoveObject {
     String name;
     int id;
 
-    public DanceMove(String danceName, int id) {
+    public DaneMoveObject(String danceName, int id) {
         this.name = danceName;
         this.id = id;
     }
