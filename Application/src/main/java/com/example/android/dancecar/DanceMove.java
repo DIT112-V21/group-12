@@ -1,13 +1,20 @@
 package com.example.android.dancecar;
 
-public class DaneMoveObject {
+public class DanceMove {
     String name;
     int id;
 
-    public DaneMoveObject(String danceName, int id) {
+    public DanceMove(String danceName, int id) {
         this.name = danceName;
         this.id = id;
     }
+
+    /* TODO: new constructor for user's created moves
+    public DanceMove(String danceName, int id, ArrayList) {
+        this.name = danceName;
+        this.id = id;
+    }
+     */
 
     public String getDanceName() {
         return name;

@@ -19,6 +19,8 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import java.util.ArrayList;
+import jServe.Core.StopWatch;
 
 
 public class NewMoves extends AppCompatActivity {
@@ -27,13 +29,15 @@ public class NewMoves extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"; //Coonnect local
     private MqttClient mMqttClient;
     private boolean isConnected = false;
-    private String direction;
+    private String direction = "";
+    private String lastDirection = "";
     private String currentSpeed;
 
     private CountDownTimer countDownTimer;
     private long timeLeft = 10000;
-    private boolean timerIsRunning = false;
+    private boolean isRecording = false;
     private String timerText = "";
+    private long duration;
 
     private Mode speedMode = new Mode("speed");
     private Mode angleMode = new Mode("angle");
@@ -55,11 +59,17 @@ public class NewMoves extends AppCompatActivity {
     private Button currentAngleMode;
     private Button currentBrakeMode;
     private Button speedometer;
+
     private TextView recordingTimer;
+    private TextView test;
 
     private ToggleButton startStop;
 
-    EditText move_name, instructions, duration;
+    private ArrayList<IndividualMove> danceSequence = new ArrayList<>();
+
+    StopWatch stopWatch = new StopWatch();
+
+    //EditText move_name, instructions, duration;
     DBHelper DB;
 
     @Override
@@ -112,47 +122,6 @@ public class NewMoves extends AppCompatActivity {
     public void saveDance(View view){
     }
 
-
-    // Timer code partially derived from https://www.youtube.com/watch?v=zmjfAcnosS0
-    public void startStopTimer() {
-        if (timerIsRunning) {
-            stopTimer();
-        } else {
-            countDown();
-        }
-    }
-
-    public void stopTimer () {
-        countDownTimer.cancel();
-        timerIsRunning = false;
-        timeLeft = 10000;
-        timerText = "";
-        recordingTimer.setText(timerText);
-    }
-
-    public void countDown() {
-        timerIsRunning = true;
-        countDownTimer = new CountDownTimer(timeLeft, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                timeLeft = millisUntilFinished;
-                updateTimer();
-            }
-
-            @Override
-            public void onFinish() {
-                startStop.setChecked(true);
-                stopTimer();
-            }
-        };
-        countDownTimer.start();
-    }
-
-    public void updateTimer() {
-        int seconds = (int) timeLeft % 10000 / 1000;
-        timerText = seconds + " sec";
-        recordingTimer.setText(timerText);
-    }
 
     @Override
     protected void onResume() {
@@ -247,13 +216,80 @@ public class NewMoves extends AppCompatActivity {
         speedometer = findViewById(R.id.currentSpeed);
         recordingTimer = findViewById(R.id.recordingTimer);
         startStop = findViewById(R.id.startstopButton);
+        test = findViewById(R.id.test);
+    }
+
+    // Timer code partially derived from https://www.youtube.com/watch?v=zmjfAcnosS0
+    public void startStopTimer() {
+        if (isRecording) {
+            stopTimer();
+        } else {
+            countDown();
+        }
+    }
+
+    public void stopTimer () {
+        countDownTimer.cancel();
+        isRecording = false;
+        timeLeft = 10000;
+        timerText = "";
+        recordingTimer.setText(timerText);
+        uncolorButtons("arrow");
+        direction = "";
+        lastDirection = "";
+        stopWatch.stop();
+    }
+
+    public void countDown() {
+        isRecording = true;
+        countDownTimer = new CountDownTimer(timeLeft, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeLeft = millisUntilFinished;
+                updateTimer();
+            }
+
+            @Override
+            public void onFinish() {
+                startStop.setChecked(true);
+                stopTimer();
+            }
+        };
+        countDownTimer.start();
+    }
+
+    public void updateTimer() {
+        int seconds = (int) timeLeft % 10000 / 1000;
+        timerText = seconds + " sec";
+        recordingTimer.setText(timerText);
+    }
+
+    public void saveIndividualMove() {
+        //TODO: remove text view for testing
+        stopWatch.stop();
+        duration = stopWatch.elapsed();
+        IndividualMove individualMove = new IndividualMove(lastDirection, duration);
+        danceSequence.add(individualMove);
+        String dur = Long.toString(duration);
+        test.setText(dur);
+        stopWatch.start();
+        lastDirection = direction;
     }
 
     public void driveForward(View view){
         int message = 0;
         direction = "forward";
+        //String dir = "forward";
         colorArrowButtons(direction);
         mMqttClient.publish("smartcar/forward", Integer.toString(message), 1, null);
+            // First time the user presses an arrow button
+        if (isRecording && !stopWatch.isRunning() && !lastDirection.equals(direction) && lastDirection.equals("")) {
+            stopWatch.start();
+            lastDirection = direction;
+            // When the user presses the next arrow button, the individual move will be saved
+        } else if (isRecording && stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+            saveIndividualMove();
+        } // TODO: when not recording, should we disallow the user to drive and stop the car?
     }
 
     public void driveBackward(View view){
@@ -261,6 +297,14 @@ public class NewMoves extends AppCompatActivity {
         direction = "backward";
         colorArrowButtons(direction);
         mMqttClient.publish("smartcar/backward", Integer.toString(message),1, null );
+            // First time the user presses an arrow button
+        if (isRecording && !stopWatch.isRunning() && !lastDirection.equals(direction) && lastDirection.equals("")) {
+            stopWatch.start();
+            lastDirection = direction;
+            // When the user presses the next arrow button, the individual move will be saved
+        } else if (isRecording && stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+            saveIndividualMove();
+        }
     }
 
     public void driveLeft(View view){
@@ -268,6 +312,14 @@ public class NewMoves extends AppCompatActivity {
         direction = "left";
         colorArrowButtons(direction);
         mMqttClient.publish("smartcar/left", Integer.toString(message), 1, null);
+            // First time the user presses an arrow button
+        if (isRecording && !stopWatch.isRunning() && !lastDirection.equals(direction) && lastDirection.equals("")) {
+            stopWatch.start();
+            lastDirection = direction;
+            // When the user presses the next arrow button, the individual move will be saved
+        } else if (isRecording && stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+            saveIndividualMove();
+        }
     }
 
     public void driveRight(View view){
@@ -275,6 +327,14 @@ public class NewMoves extends AppCompatActivity {
         direction = "right";
         colorArrowButtons(direction);
         mMqttClient.publish("smartcar/right", Integer.toString(message), 1, null);
+            // First time the user presses an arrow button
+        if (isRecording && !stopWatch.isRunning() && !lastDirection.equals(direction) && lastDirection.equals("")) {
+            stopWatch.start();
+            lastDirection = direction;
+            // When the user presses the next arrow button, the individual move will be saved
+        } else if (isRecording && stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+            saveIndividualMove();
+        }
     }
 
     public void driveStop(View view){

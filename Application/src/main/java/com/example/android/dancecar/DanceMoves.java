@@ -25,9 +25,9 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
 
 public class DanceMoves extends AppCompatActivity {
-    ArrayList<DaneMoveObject> danceMoves = new ArrayList<DaneMoveObject>();
-    ArrayList<DaneMoveObject> choreography = new ArrayList<DaneMoveObject>();
-    ArrayList<DaneMoveObject> selectedDance = new ArrayList<DaneMoveObject>();
+    ArrayList<DanceMove> danceMoves = new ArrayList<DanceMove>();
+    ArrayList<DanceMove> choreography = new ArrayList<DanceMove>();
+    ArrayList<DanceMove> selectedDance = new ArrayList<DanceMove>();
     LinearLayout lLayout;
     LinearLayout rLayout;
     CheckBox checkBox;
@@ -54,13 +54,13 @@ public class DanceMoves extends AppCompatActivity {
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
 
-        DaneMoveObject dance1  = new DaneMoveObject("Testing",1);
+        DanceMove dance1  = new DanceMove("Testing",1);
         danceMoves.add(dance1);
-        DaneMoveObject dance2  = new DaneMoveObject("Dance 2",2);
+        DanceMove dance2  = new DanceMove("Dance 2",2);
         danceMoves.add(dance2);
-        DaneMoveObject dance3  = new DaneMoveObject("Dance 3",3);
+        DanceMove dance3  = new DanceMove("Dance 3",3);
         danceMoves.add(dance3);
-        DaneMoveObject dance4  = new DaneMoveObject("Dance 4",4);
+        DanceMove dance4  = new DanceMove("Dance 4",4);
         danceMoves.add(dance4);
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
         rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
@@ -125,7 +125,7 @@ public class DanceMoves extends AppCompatActivity {
         });
 
         for (int i = 0; i < danceMoves.size(); i++) {
-            DaneMoveObject dance = danceMoves.get(i);
+            DanceMove dance = danceMoves.get(i);
             checkBox = new CheckBox(this);
             checkBox.setId(dance.getId());
             checkBox.setText(dance.getDanceName());
@@ -134,7 +134,7 @@ public class DanceMoves extends AppCompatActivity {
         }
 
         for (int i = 0; i < choreography.size(); i++) {
-            DaneMoveObject dance = choreography.get(i);
+            DanceMove dance = choreography.get(i);
             checkBox = new CheckBox(this);
             checkBox.setId(dance.getId());
             checkBox.setText(dance.getDanceName());
@@ -145,7 +145,7 @@ public class DanceMoves extends AppCompatActivity {
 
 
 
-    View.OnClickListener getOnClickDoSomething(final CheckBox checkBox, final DaneMoveObject dance){
+    View.OnClickListener getOnClickDoSomething(final CheckBox checkBox, final DanceMove dance){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -170,7 +170,7 @@ public class DanceMoves extends AppCompatActivity {
 
     public void createChoreography(String name){
         if(!selectedDance.isEmpty() && selectedDance.size() > 1 && selectedDance.size() < 101) {
-            DaneMoveObject newChor = new DaneMoveObject(name, 11);
+            DanceMove newChor = new DanceMove(name, 11);
             choreography.add(newChor);
             lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
             int id = 1;
@@ -193,7 +193,7 @@ public class DanceMoves extends AppCompatActivity {
     public void makeCarDance(View view){
         if(selectedDance.size() > 0){
             for(int i = 0; i < selectedDance.size(); i++){
-                DaneMoveObject dance = selectedDance.get(i);
+                DanceMove dance = selectedDance.get(i);
                 int id = dance.getId();
                 String newID = Integer.toString(id);
                 mMqttClient.publish("smartcar/makeCarDance", newID , 1, null);
@@ -205,7 +205,7 @@ public class DanceMoves extends AppCompatActivity {
 
     public void addNewDance(String name){
         if(!selectedDance.isEmpty() && selectedDance.size() > 1 && selectedDance.size() < 101) {
-            DaneMoveObject newDance = new DaneMoveObject(name, 10);
+            DanceMove newDance = new DanceMove(name, 10);
             danceMoves.add(newDance);
             lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
             checkBox = new CheckBox(this);
