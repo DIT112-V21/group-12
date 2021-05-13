@@ -396,7 +396,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+    <TextView
         android:id="@+id/recordingTimer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -407,8 +407,8 @@
         android:layout_marginRight="292dp"
         android:layout_marginBottom="260dp"
         android:text=""
+        android:textSize="30dp"
         android:textColor="#8BC34A"
-        android:background="?android:attr/selectableItemBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
