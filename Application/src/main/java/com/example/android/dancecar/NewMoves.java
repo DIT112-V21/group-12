@@ -98,11 +98,11 @@ public class NewMoves extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
                     // Start recording
-                    startStop();
+                    startStopTimer();
 
                 } else {
                     // Stop recording
-                    startStop();
+                    startStopTimer();
 
                 }
             }
@@ -114,7 +114,7 @@ public class NewMoves extends AppCompatActivity {
 
 
     // Timer code partially derived from https://www.youtube.com/watch?v=zmjfAcnosS0
-    public void startStop () {
+    public void startStopTimer() {
         if (timerIsRunning) {
             stopTimer();
         } else {
