@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import android.widget.ToggleButton;
+
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -87,6 +90,20 @@ public class NewMoves extends AppCompatActivity {
         });
 
          */
+
+        //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
+        ToggleButton toggle = findViewById(R.id.startstopButton);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Start recording
+
+                } else {
+                    // Stop recording
+
+                }
+            }
+        });
     }
 
     public void startDance(View view) throws InterruptedException {
