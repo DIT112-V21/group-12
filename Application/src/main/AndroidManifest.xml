@@ -13,7 +13,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/DarkThemeApp">
-        <activity android:name=".Choreographies"></activity>
+        <activity android:name=".NewMoves"></activity>
         <activity android:name=".DanceMode" />
         <activity android:name=".DanceMoves" />
         <activity

@@ -1,19 +1,16 @@
 package com.example.android.dancecar;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.widget.ToggleButton;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -24,8 +21,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.xml.transform.Source;
-
 
 public class NewMoves extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
@@ -35,13 +30,16 @@ public class NewMoves extends AppCompatActivity {
     private boolean isConnected = false;
     private String direction;
     private String currentSpeed;
+
     Mode speedMode = new Mode("speed");
     Mode angleMode = new Mode("angle");
     Mode brakeMode = new Mode("brake");
+
     ImageButton forward;
     ImageButton backward;
     ImageButton left;
     ImageButton right;
+
     Button speed;
     Button angle;
     Button brake;
@@ -53,26 +51,23 @@ public class NewMoves extends AppCompatActivity {
     Button currentAngleMode;
     Button currentBrakeMode;
     Button speedometer;
-    Button startstopRecord;
-    Button saveRecord;
-    EditText move_name, instructions, duration;
     Button save;
+    Button recordingTimer;
+
+    EditText move_name, instructions, duration;
     DBHelper DB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_moves);
-
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
         initialiseButtons();
 
-        //TODO: Database to be implemented
         /*
-        //mMqttClient.publish("smartcar/", "instructions", 1, null);
-        //mMqttClient.publish("smartcar/", "duration", 1, null);
-
+        mMqttClient.publish("smartcar/", "instructions", 1, null);
+        mMqttClient.publish("smartcar/", "duration", 1, null);
 
         DB = new DBHelper(this);
 
@@ -90,39 +85,56 @@ public class NewMoves extends AppCompatActivity {
                     Toast.makeText(NewMoves.this, "New move not inserted!", Toast.LENGTH_SHORT).show();
             }
         });
+
          */
-
-        //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
-        ToggleButton toggle = findViewById(R.id.startstopButton);
-        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // Start recording
-
-                } else {
-                    // Stop recording
-
-                }
-            }
-        });
     }
 
+    public void startDance(View view) throws InterruptedException {
+        //String timer = "timer";
+        //recordingTimer.setText(timer);
+        //int countdown = 10;
+        //recordingTimer.setText(Integer.toString(countdown));
+        //new startTimer(10);
+        countdown();
+    }
 
-    public class startTimer {
+    public void saveDance(View view){
+    }
+
+    public void countdown() throws InterruptedException {
+        for (int countdown = 10; countdown >= 1; countdown--) {
+            //recordingTimer.setText(Integer.toString(countdown));
+            recordingTimer.setText(countdown);
+            TimeUnit.SECONDS.sleep(1);
+        }
+
+
+
+        //timer.cancel(); //Terminate the timer thread
+    }
+
+    /*public class startTimer {
         Timer timer;
 
         public startTimer(int seconds) {
+
             timer = new Timer();
+
             timer.schedule(new StartMoves(), seconds * 1000);
         }
 
         class StartMoves extends TimerTask {
+            int countdown = 10;
+
             public void run() {
-                System.out.println("Time's up!");
+                countdown = countdown - 1;
+                recordingTimer.setText(Integer.toString(countdown));
                 timer.cancel(); //Terminate the timer thread
             }
         }
     }
+
+     */
 
     @Override
     protected void onResume() {
@@ -200,22 +212,22 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void initialiseButtons() {
-        forward  = findViewById(R.id.arrowUp);
-        backward  = findViewById(R.id.arrowDown);
-        left  = findViewById(R.id.arrowLeft);
-        right  = findViewById(R.id.arrowRight);
+        forward = findViewById(R.id.arrowUp);
+        backward = findViewById(R.id.arrowDown);
+        left = findViewById(R.id.arrowLeft);
+        right = findViewById(R.id.arrowRight);
         speed = findViewById(R.id.speed);
         angle = findViewById(R.id.angle);
         brake = findViewById(R.id.brake);
         one = findViewById(R.id.button1);
-        two  = findViewById(R.id.button2);
+        two = findViewById(R.id.button2);
         three = findViewById(R.id.button3);
         four = findViewById(R.id.button4);
-        currentSpeedMode  = findViewById(R.id.currentSpeedMode);
-        currentAngleMode  = findViewById(R.id.currentAngleMode);
-        currentBrakeMode  = findViewById(R.id.currentBrakeMode);
-        speedometer  = findViewById(R.id.currentSpeed);
-        saveRecord  = findViewById(R.id.saveDance);
+        currentSpeedMode = findViewById(R.id.currentSpeedMode);
+        currentAngleMode = findViewById(R.id.currentAngleMode);
+        currentBrakeMode = findViewById(R.id.currentBrakeMode);
+        speedometer = findViewById(R.id.currentSpeed);
+        recordingTimer = findViewById(R.id.recordingTimer);
     }
 
     public void driveForward(View view){
@@ -466,16 +478,10 @@ public class NewMoves extends AppCompatActivity {
             two.setBackgroundColor(Color.parseColor("#8BC34A"));
             three.setBackgroundColor(Color.parseColor("#8BC34A"));
             four.setBackgroundColor(Color.parseColor("#8BC34A"));
-            saveRecord.setBackgroundColor(Color.parseColor("#8BC34A"));
-            startstopRecord.setBackgroundColor(Color.parseColor("#8BC34A"));
             forward.setColorFilter(Color.TRANSPARENT);
             backward.setColorFilter(Color.TRANSPARENT);
             left.setColorFilter(Color.TRANSPARENT);
             right.setColorFilter(Color.TRANSPARENT);
         }
     }
-
-    public void saveDance(View view){
-    }
-
 }
