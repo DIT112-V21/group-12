@@ -170,8 +170,8 @@ void setup()
           brakePress = false;
           anglePress = true;
           braking = false;
-        }else if(topic == "smartcar/makeCarDance"){
-              selectedDance(message);
+        }else if(topic == "smartcar/makeCarDance/#"){
+              selectedDance(topic);
         }else{
           Serial.println(topic + " " + message);
         }
@@ -392,6 +392,7 @@ boolean handleObstacle(){
 
 void moonWalk(int speed)
 {
+  
   car.setSpeed(speed);
   delay(1000);
   car.setSpeed(-speed);
@@ -438,6 +439,7 @@ void sideKick(int speed)
 
 void cha(int speed)
 {
+  while(braking == false)
   rotateOnSpot(-90,90);
   car.setSpeed(speed);
   delay(1000);
@@ -506,14 +508,14 @@ void sendSpeed(){
    #endif
 }
 
-void selectedDance(String message){
-        if(message == "1"){
+void selectedDance(String topic){
+        if(topic == "smartcar/makeCarDance/Moon Walk"){
               moonWalk(50);
-        }else if(message == "2"){
+        }else if(topic == "smartcar/makeCarDance/Side Kick"){
               sideKick(50);
-        }else if(message == "3"){
+        }else if(topic == "smartcar/makeCarDance/Show Off"){
               showOff(50);
-        }else if (message == "4"){
+        }else if (topic == "smartcar/makeCarDance/Cha Cha Cha"){
               cha(50);
         }
 }

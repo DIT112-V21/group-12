@@ -1,15 +1,18 @@
 package com.example.android.dancecar;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 public class ChorMoves {
     ArrayList<DaneMoveObject> selectedDances;
     int chorMoveID;
     String chorName;
+    Random random = new Random();
 
-    public ChorMoves(ArrayList<DaneMoveObject> selectedDances, int chorMoveID, String chorName) {
+    public ChorMoves(ArrayList<DaneMoveObject> selectedDances,  String chorName) {
         this.selectedDances = selectedDances;
-        this.chorMoveID = chorMoveID;
+        this.chorMoveID = random.nextInt();
         this.chorName = chorName;
     }
 

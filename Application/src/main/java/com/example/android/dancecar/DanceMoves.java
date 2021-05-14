@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
@@ -34,15 +35,10 @@ public class DanceMoves extends AppCompatActivity {
     LinearLayout lLayout;
     LinearLayout rLayout;
     CheckBox checkBox;
-    private AlertDialog.Builder dialogBuilder;
-    private AlertDialog dialog;
-    private EditText name;
-    private Button save;
-    private Button cancel;
+
+
     private  Button createChor;
     private String myText;
-    private Button createNewDance;
-
     private boolean isConnected = false;
     private MqttClient mMqttClient;
     private static final String TAG = "SmartcarMqttController";
@@ -53,18 +49,17 @@ public class DanceMoves extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dance_moves);
-
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
-
-        DaneMoveObject dance1  = new DaneMoveObject("Testing",1);
+        DaneMoveObject dance1  = new DaneMoveObject("Moon Walk");
         danceMoves.add(dance1);
-        DaneMoveObject dance2  = new DaneMoveObject("Dance 2",2);
+        DaneMoveObject dance2  = new DaneMoveObject("Side Kick");
         danceMoves.add(dance2);
-        DaneMoveObject dance3  = new DaneMoveObject("Dance 3",3);
+        DaneMoveObject dance3  = new DaneMoveObject("Show Off");
         danceMoves.add(dance3);
-        DaneMoveObject dance4  = new DaneMoveObject("Dance 4",4);
+        DaneMoveObject dance4  = new DaneMoveObject("Cha Cha Cha");
         danceMoves.add(dance4);
+        Log.d(TAG, "onCreate: DanceMoves holds: " + danceMoves.toString());
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
         rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
         createChor = findViewById(R.id.createChoreography);
@@ -72,14 +67,11 @@ public class DanceMoves extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-
                 AlertDialog.Builder myDialog = new AlertDialog.Builder(DanceMoves.this);
                 myDialog.setTitle("Name");
-
                 final EditText name = new EditText(DanceMoves.this);
                 name.setInputType(InputType.TYPE_CLASS_TEXT);
                 myDialog.setView(name);
-
                 myDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -105,6 +97,7 @@ public class DanceMoves extends AppCompatActivity {
             checkBox.setText(dance.getDanceName());
             checkBox.setOnClickListener(checkBoxMove(checkBox, dance));
             lLayout.addView(checkBox);
+
         }
 
         for (int i = 0; i < chorMoves.size(); i++) {
@@ -123,6 +116,7 @@ public class DanceMoves extends AppCompatActivity {
             public void onClick(View v) {
                 if(checkBox.isChecked()){
                     selectedMove.add(dance);
+                    Log.d(TAG, "onClick: id is: " + dance.getId());
                     TextView current = findViewById(R.id.currentDances);
                     for(int i = 0; i < selectedMove.size(); i++){
                         String name = selectedMove.get(i).getDanceName();
@@ -154,10 +148,10 @@ public class DanceMoves extends AppCompatActivity {
             for(int i = 0; i < selectedMove.size(); i++){
                 fullChor.add(selectedMove.get(i));
             }
-            ChorMoves newChor = new ChorMoves(fullChor, 10, name);
+            ChorMoves newChor = new ChorMoves(fullChor,  name);
             chorMoves.add(newChor);
             lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
-            int id = 1;
+            int id = 1;  ///TODO add new id!!!!!!
             checkBox = new CheckBox(this);
             checkBox.setId(id);
             checkBox.setText(name);
@@ -178,9 +172,9 @@ public class DanceMoves extends AppCompatActivity {
         if(selectedMove.size() > 0){
             for(int i = 0; i < selectedMove.size(); i++){
                 DaneMoveObject dance = selectedMove.get(i);
-                int id = dance.getId();
-                String newID = Integer.toString(id);
-                mMqttClient.publish("smartcar/makeCarDance", newID , 1, null);
+                String name = dance.getDanceName();
+
+                mMqttClient.publish("smartcar/makeCarDance/" + name ,"", 1, null);
             }
         }
          else if(selectedChorMoves.size() > 0){
@@ -190,9 +184,8 @@ public class DanceMoves extends AppCompatActivity {
                 Log.d(TAG, "makeCarDance: fulldance is " + fullDance.toString());
                 for(int j = 0; j <fullDance.size(); j++){
                     DaneMoveObject dance = fullDance.get(j);
-                    int moveID = dance.getId();
-                    String newMoveID = Integer.toString(moveID);
-                    mMqttClient.publish("smartcar/makeCarDance", newMoveID , 1, null);
+                    String name = dance.getDanceName();
+                    mMqttClient.publish("smartcar/makeCarDance/"+ name , "", 1, null);
                 }
             }
         }else{
@@ -211,7 +204,7 @@ public class DanceMoves extends AppCompatActivity {
             public void onClick(View v) {
                 if(checkBox.isChecked()){
                     selectedChorMoves.add(chor);
-                    Log.d(TAG, "onClick: Added to the selectedChorMoves");
+                    Log.d(TAG, "onClick: id is: " + chor.getChorMoveID());
                     TextView current = findViewById(R.id.currentDances);
                     for(int i = 0; i < selectedChorMoves.size(); i++){
                         String name = selectedChorMoves.get(i).getChorName();
@@ -232,7 +225,6 @@ public class DanceMoves extends AppCompatActivity {
             }
         };
     }
-
 
     private void connectToMqttBroker() {
         if (!isConnected) {
