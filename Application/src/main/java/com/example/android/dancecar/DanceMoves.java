@@ -51,13 +51,13 @@ public class DanceMoves extends AppCompatActivity {
         setContentView(R.layout.activity_dance_moves);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
-        DaneMoveObject dance1  = new DaneMoveObject("Moon Walk");
+        DaneMoveObject dance1  = new DaneMoveObject("MoonWalk");
         danceMoves.add(dance1);
-        DaneMoveObject dance2  = new DaneMoveObject("Side Kick");
+        DaneMoveObject dance2  = new DaneMoveObject("SideKick");
         danceMoves.add(dance2);
-        DaneMoveObject dance3  = new DaneMoveObject("Show Off");
+        DaneMoveObject dance3  = new DaneMoveObject("ShowOff");
         danceMoves.add(dance3);
-        DaneMoveObject dance4  = new DaneMoveObject("Cha Cha Cha");
+        DaneMoveObject dance4  = new DaneMoveObject("ChaChaCha");
         danceMoves.add(dance4);
         Log.d(TAG, "onCreate: DanceMoves holds: " + danceMoves.toString());
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
@@ -174,7 +174,7 @@ public class DanceMoves extends AppCompatActivity {
                 DaneMoveObject dance = selectedMove.get(i);
                 String name = dance.getDanceName();
 
-                mMqttClient.publish("smartcar/makeCarDance/" + name ,"", 1, null);
+                mMqttClient.publish("smartcar/makeCarDance/" + name ,"1", 1, null);
             }
         }
          else if(selectedChorMoves.size() > 0){
@@ -185,7 +185,7 @@ public class DanceMoves extends AppCompatActivity {
                 for(int j = 0; j <fullDance.size(); j++){
                     DaneMoveObject dance = fullDance.get(j);
                     String name = dance.getDanceName();
-                    mMqttClient.publish("smartcar/makeCarDance/"+ name , "", 1, null);
+                    mMqttClient.publish("smartcar/makeCarDance/" + name ,"1",  1, null);
                 }
             }
         }else{
