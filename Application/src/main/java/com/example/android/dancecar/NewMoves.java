@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -34,7 +33,7 @@ public class NewMoves extends AppCompatActivity {
     private String currentSpeed;
 
     private CountDownTimer countDownTimer;
-    private long timeLeft = 30000;
+    private long timeLeft = 15000;
     private boolean isRecording = false;
     private String timerText = "";
     private long duration;
@@ -45,13 +44,14 @@ public class NewMoves extends AppCompatActivity {
     private ImageButton right;
 
     private Button speedometer;
+    private Button save;
 
     private TextView recordingTimer;
-    private TextView test;
+    private TextView saveMessage;
 
     private ToggleButton startStop;
 
-    private ArrayList<IndividualMove> danceSequence = new ArrayList<>();
+    private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
 
     StopWatch stopWatch = new StopWatch();
 
@@ -94,10 +94,14 @@ public class NewMoves extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (!isChecked) {
                     // Start recording
+                    startStop.setBackgroundColor(Color.parseColor("#FFC34A4E"));
+                    save.setVisibility(View.GONE);
+                    saveMessage.setText("");
                     startStopTimer();
 
                 } else {
                     // Stop recording
+                    startStop.setBackgroundColor(Color.parseColor("#8BC34A"));
                     startStopTimer();
 
                 }
@@ -106,6 +110,16 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void saveDance(View view){
+        if (individualMoves.size() >= 2 && !isRecording) {
+            DaneMoveObject danceMove = new DaneMoveObject(individualMoves);
+            // TODO: dance move naming
+            //danceMove.setDanceName(name);
+            String message = "Dance move saved";
+            saveMessage.setText(message);
+        } else {
+            String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
+            saveMessage.setText(error);
+        }
     }
 
 
@@ -192,7 +206,8 @@ public class NewMoves extends AppCompatActivity {
         speedometer = findViewById(R.id.currentSpeed);
         recordingTimer = findViewById(R.id.recordingTimer);
         startStop = findViewById(R.id.startstopButton);
-        test = findViewById(R.id.test);
+        saveMessage = findViewById(R.id.saveMessage);
+        save = findViewById(R.id.saveDance);
     }
 
     // Timer code partially derived from https://www.youtube.com/watch?v=zmjfAcnosS0
@@ -205,9 +220,13 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void stopTimer () {
+        duration = stopWatch.elapsed();
+        IndividualMove individualMove = new IndividualMove(lastDirection, duration);
+        individualMoves.add(individualMove);
+        save.setVisibility(View.VISIBLE);
         countDownTimer.cancel();
         isRecording = false;
-        timeLeft = 10000;
+        timeLeft = 15000;
         timerText = "";
         recordingTimer.setText(timerText);
         uncolorButtons();
@@ -235,21 +254,22 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void updateTimer() {
-        int seconds = (int) timeLeft % 10000 / 1000;
+        int seconds = (int) timeLeft % 15000 / 1000;
         timerText = seconds + " sec";
         recordingTimer.setText(timerText);
     }
 
     public void saveIndividualMove() {
-        //TODO: remove text view for testing
         stopWatch.stop();
-        duration = stopWatch.elapsed();
-        IndividualMove individualMove = new IndividualMove(lastDirection, duration);
-        danceSequence.add(individualMove);
-        String dur = Long.toString(duration);
-        test.setText(dur);
-        stopWatch.start();
-        lastDirection = direction;
+        if (individualMoves.size() <= 20) {
+            duration = stopWatch.elapsed();
+            IndividualMove individualMove = new IndividualMove(lastDirection, duration);
+            individualMoves.add(individualMove);
+            stopWatch.start();
+            lastDirection = direction;
+        } else {
+            stopTimer();
+        }
     }
 
     public void driveForward(View view){
