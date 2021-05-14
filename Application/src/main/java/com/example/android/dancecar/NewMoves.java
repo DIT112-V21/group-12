@@ -277,70 +277,90 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void driveForward(View view){
-        int message = 0;
-        direction = "forward";
-        //String dir = "forward";
-        colorArrowButtons(direction);
-        mMqttClient.publish("smartcar/forward", Integer.toString(message), 1, null);
+        if (isRecording) {
+            int message = 0;
+            direction = "forward";
+            //String dir = "forward";
+            colorArrowButtons(direction);
+            mMqttClient.publish("smartcar/forward", Integer.toString(message), 1, null);
             // First time the user presses an arrow button
-        if (isRecording && !stopWatch.isRunning() && !lastDirection.equals(direction) && lastDirection.equals("")) {
-            stopWatch.start();
-            lastDirection = direction;
-            // When the user presses the next arrow button, the individual move will be saved
-        } else if (isRecording && stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
-            saveIndividualMove();
-        } // TODO: when not recording, should we disallow the user to drive and stop the car?
+
+            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+                stopWatch.start();
+                lastDirection = direction;
+                // When the user presses the next arrow button, the individual move will be saved
+            } else if (stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+                saveIndividualMove();
+            }
+        }
     }
 
     public void driveBackward(View view){
-        int message = 0;
-        direction = "backward";
-        colorArrowButtons(direction);
-        mMqttClient.publish("smartcar/backward", Integer.toString(message),1, null );
+        if (isRecording) {
+            int message = 0;
+            direction = "backward";
+            colorArrowButtons(direction);
+            mMqttClient.publish("smartcar/backward", Integer.toString(message), 1, null);
             // First time the user presses an arrow button
-        if (isRecording && !stopWatch.isRunning() && !lastDirection.equals(direction) && lastDirection.equals("")) {
-            stopWatch.start();
-            lastDirection = direction;
-            // When the user presses the next arrow button, the individual move will be saved
-        } else if (isRecording && stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
-            saveIndividualMove();
+            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+                stopWatch.start();
+                lastDirection = direction;
+                // When the user presses the next arrow button, the individual move will be saved
+            } else if (stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+                saveIndividualMove();
+            }
         }
     }
 
     public void driveLeft(View view){
-        int message = 0;
-        direction = "left";
-        colorArrowButtons(direction);
-        mMqttClient.publish("smartcar/left", Integer.toString(message), 1, null);
+        if (isRecording) {
+            int message = 0;
+            direction = "left";
+            colorArrowButtons(direction);
+            mMqttClient.publish("smartcar/left", Integer.toString(message), 1, null);
             // First time the user presses an arrow button
-        if (isRecording && !stopWatch.isRunning() && !lastDirection.equals(direction) && lastDirection.equals("")) {
-            stopWatch.start();
-            lastDirection = direction;
-            // When the user presses the next arrow button, the individual move will be saved
-        } else if (isRecording && stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
-            saveIndividualMove();
+            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+                stopWatch.start();
+                lastDirection = direction;
+                // When the user presses the next arrow button, the individual move will be saved
+            } else if (stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+                saveIndividualMove();
+            }
         }
     }
 
     public void driveRight(View view){
-        int message = 0;
-        direction = "right";
-        colorArrowButtons(direction);
-        mMqttClient.publish("smartcar/right", Integer.toString(message), 1, null);
+        if (isRecording) {
+            int message = 0;
+            direction = "right";
+            colorArrowButtons(direction);
+            mMqttClient.publish("smartcar/right", Integer.toString(message), 1, null);
             // First time the user presses an arrow button
-        if (isRecording && !stopWatch.isRunning() && !lastDirection.equals(direction) && lastDirection.equals("")) {
-            stopWatch.start();
-            lastDirection = direction;
-            // When the user presses the next arrow button, the individual move will be saved
-        } else if (isRecording && stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
-            saveIndividualMove();
+            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+                stopWatch.start();
+                lastDirection = direction;
+                // When the user presses the next arrow button, the individual move will be saved
+            } else if (stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+                saveIndividualMove();
+            }
         }
     }
 
     public void driveStop(View view){
-        int message = 0;
-        mMqttClient.publish("smartcar/stop", Integer.toString(message), 1, null);
+        if (isRecording) {
+            int message = 0;
+            direction = "stop";
+            mMqttClient.publish("smartcar/stop", Integer.toString(message), 1, null);
+            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+                stopWatch.start();
+                lastDirection = direction;
+                // When the user presses the next arrow button, the individual move will be saved
+            } else if (stopWatch.isRunning() && !lastDirection.equals(direction) && !lastDirection.equals("")) {
+                saveIndividualMove();
+            }
+        }
     }
+
 
     /*
     Only one arrow button can show as pressed/color at a time.
