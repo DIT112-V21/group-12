@@ -2,10 +2,12 @@
 #include <MQTT.h>
 #include <WiFi.h>
 
+
 #ifndef __SMCE__
 WiFiClient net;
 #endif
 MQTTClient mqtt;
+//File myFile;
 
 /*
 The skeleton for this code is derived from [https://platisd.github.io/smartcar_shield/manual_control_8ino-example.html]
@@ -62,8 +64,10 @@ void setup()
    #endif
     if (mqtt.connect("arduino", "public", "public")){
       mqtt.subscribe("smartcar/#", 1);
+      
       mqtt.onMessage([](String topic, String message){
-        if (topic == "smartcar/forward"){
+        Serial.println(topic);
+      if (topic == "smartcar/forward"){
           if (fSpeed == 0) {
             fSpeed = 20;
           }
@@ -168,14 +172,20 @@ void setup()
           brakePress = false;
           anglePress = true;
           braking = false;
-        }
-        else{
+        }else if(topic == "smartcar/makeCarDance/MoonWalk"){
+          moonWalk(50);
+        }else if(topic == "smartcar/makeCarDance/SideKick"){
+              sideKick(50);
+        }else if(topic == "smartcar/makeCarDance/ShowOff"){
+              showOff(50);
+        }else if (topic == "smartcar/makeCarDance/ChaChaCha"){
+              cha(50);  
+        }else{
           Serial.println(topic + " " + message);
         }
-      });
+    });
     }
-}
-
+   }
 
 void loop()
 {
@@ -191,6 +201,8 @@ void loop()
     }
     handleOutput();
 }
+
+  
 
 
 void handleOutput(){
@@ -209,9 +221,10 @@ Invalid input will still get passed to setCarSpeed which will cause the car to s
 
 void handleInput(){
   if (Serial.available()){
-    char input = Serial.read();
+    String inputCommand = Serial.readStringUntil('\n');
+    char oneCharCommand = inputCommand.charAt(0);
     String value;
-        switch (input)
+        switch (oneCharCommand)
         {
         case 'l': // Set steering angle to negative number(lDegrees/left).
           car.setAngle(lDegrees);
@@ -291,7 +304,40 @@ void handleInput(){
           car.setSpeed(0);
           car.setAngle(0);
         }
+
+      if(inputCommand.startsWith("r"))
+      {
+          int delimiterIndex = inputCommand.indexOf(",");
+          if(delimiterIndex != -1)
+          {
+            int degreesToRotate = inputCommand.substring(1, delimiterIndex).toInt();
+            int cSpeed = inputCommand.substring(delimiterIndex + 1).toInt();
+            rotateOnSpot(degreesToRotate, cSpeed);
+          }
+          else
+          {
+            int degreesToRotate = inputCommand.substring(1).toInt();
+            rotateOnSpot(degreesToRotate, 80);
+          }
+      }
+      else if (inputCommand.startsWith("m")){
+        int danceSpeed = inputCommand.substring(1).toInt();
+        moonWalk(danceSpeed);
+      }
+      else if(inputCommand.startsWith("sh")){
+        int danceSpeed=inputCommand.substring(2).toInt();
+        showOff(danceSpeed);
+      }
+      else if(inputCommand.startsWith("ch")){
+        int danceSpeed=inputCommand.substring(2).toInt();
+        cha(danceSpeed);
+      }
+      else if (inputCommand.startsWith("si")){
+        int danceSpeed=inputCommand.substring(2).toInt();
+        sideKick(danceSpeed);
+      }
     }
+
  }
 
 void carBraking(double brakeMode){
@@ -306,8 +352,9 @@ void carBraking(double brakeMode){
     }
     else if(left == true){
         car.setAngle(lDegrees);
-    } else if (right == true)
+    } else if (right == true){
         car.setAngle(rDegrees);
+    }
   }
 }
 
@@ -323,7 +370,8 @@ void steeringAngle(int angle){
   }
 }
 
-void carSpeed(int carSpeed){
+void carSpeed(int carSpeed)
+{
   if (forward == true){
      fSpeed = carSpeed;
      bSpeed = carSpeed * -1;
@@ -351,6 +399,115 @@ boolean handleObstacle(){
 
 }
 
+void moonWalk(int speed)
+{
+  
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(-speed);
+  delay(1000);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+}
+
+void showOff(int speed)
+{
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  delay(500);
+  rotateOnSpot(360, speed);
+  rotateOnSpot(140,speed);
+  car.setSpeed(speed);
+  delay(2000);
+  car.setSpeed(0);
+}
+
+void sideKick(int speed)
+{
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(90,speed);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,speed);
+  car.setSpeed(speed);
+  delay(1000);
+  rotateOnSpot(90,speed);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,speed);
+  car.setSpeed(speed);
+  delay(2000);
+  car.setSpeed(0);
+}
+
+void cha(int speed)
+{
+  rotateOnSpot(-90,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(120,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+  rotateOnSpot(180,90);
+  car.setSpeed(speed);
+  delay(1000);
+  car.setSpeed(0);
+}
+/**
+   Rotate the car on spot at the specified degrees with the certain speed
+   @param degrees   The degrees to rotate on spot. Positive values for clockwise
+                    negative for counter-clockwise.
+   @param speed     The speed to rotate
+*/
+void rotateOnSpot(int targetDegrees, int speed)
+{
+    speed = smartcarlib::utils::getAbsolute(speed);
+
+    int degreesRotatedSoFar = 0;
+
+    car.update();
+    int previousHeading = car.getHeading();
+
+    if(targetDegrees>0) { car.overrideMotorSpeed(-speed, speed); }
+    else { car.overrideMotorSpeed(speed, -speed); }
+
+    while(degreesRotatedSoFar < abs(targetDegrees))
+    {
+      car.update();
+      int currentHeading = car.getHeading();
+      int delta = fmin(abs(currentHeading - previousHeading), abs(currentHeading - previousHeading + 360));
+      degreesRotatedSoFar += delta;
+      previousHeading = currentHeading;
+    }
+    car.setSpeed(0); // we have reached the target, so stop the car
+}
+
 void sendSpeed(){
    #ifndef __SMCE__
      mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()), false, 0);
@@ -358,4 +515,3 @@ void sendSpeed(){
      mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()));
    #endif
 }
-

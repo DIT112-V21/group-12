@@ -2,6 +2,7 @@ package com.example.android.dancecar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,8 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
@@ -362,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void colorImageButton(ImageButton button){
-        button.setColorFilter(Color.parseColor("#ED7D9F88"));
+        button.setColorFilter(Color.parseColor("#8BC34A"));
     }
 
     public void colorButton(Button button){
@@ -371,31 +374,40 @@ public class MainActivity extends AppCompatActivity {
 
     public void uncolorButtons(String type) {
         if (type.equals("mode")) {
-            speed.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            angle.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            brake.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            speed.setBackgroundColor(Color.parseColor("#8BC34A"));
+            angle.setBackgroundColor(Color.parseColor("#8BC34A"));
+            brake.setBackgroundColor(Color.parseColor("#8BC34A"));
         } else if (type.equals("number")) {
-            one.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            two.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            three.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            four.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            one.setBackgroundColor(Color.parseColor("#8BC34A"));
+            two.setBackgroundColor(Color.parseColor("#8BC34A"));
+            three.setBackgroundColor(Color.parseColor("#8BC34A"));
+            four.setBackgroundColor(Color.parseColor("#8BC34A"));
         } else if (type.equals("arrow")) {
             forward.setColorFilter(Color.TRANSPARENT);
             backward.setColorFilter(Color.TRANSPARENT);
             left.setColorFilter(Color.TRANSPARENT);
             right.setColorFilter(Color.TRANSPARENT);
         } else {
-            speed.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            angle.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            brake.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            one.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            two.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            three.setBackgroundColor(Color.parseColor("#ED7D9F88"));
-            four.setBackgroundColor(Color.parseColor("#ED7D9F88"));
+            speed.setBackgroundColor(Color.parseColor("#8BC34A"));
+            angle.setBackgroundColor(Color.parseColor("#8BC34A"));
+            brake.setBackgroundColor(Color.parseColor("#8BC34A"));
+            one.setBackgroundColor(Color.parseColor("#8BC34A"));
+            two.setBackgroundColor(Color.parseColor("#8BC34A"));
+            three.setBackgroundColor(Color.parseColor("#8BC34A"));
+            four.setBackgroundColor(Color.parseColor("#8BC34A"));
             forward.setColorFilter(Color.TRANSPARENT);
             backward.setColorFilter(Color.TRANSPARENT);
             left.setColorFilter(Color.TRANSPARENT);
             right.setColorFilter(Color.TRANSPARENT);
         }
     }
+    public void goToDance(View view){
+        Intent intent = new Intent(this, DanceMode.class);
+        startActivity(intent);
+    }
+
+    public void sendMessage(ArrayList danceList) {
+        mMqttClient.publish("samrtcar/makeCarDance", "1", 1, null);
+    }
+
 }
