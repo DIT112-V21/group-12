@@ -12,13 +12,10 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -30,7 +27,7 @@ import java.util.ArrayList;
 import jServe.Core.StopWatch;
 
 
-public class NewMoves extends AppCompatActivity {
+public class CreateDanceMoveActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"; //Coonnect local
@@ -61,7 +58,7 @@ public class NewMoves extends AppCompatActivity {
 
     private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
 
-    DanceMoves dance = new DanceMoves();
+    DancingActivity dance = new DancingActivity();
 
     StopWatch stopWatch = new StopWatch();
 
@@ -71,7 +68,7 @@ public class NewMoves extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_moves);
+        setContentView(R.layout.activity_created_dance_move);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
         initialiseButtons();
@@ -83,16 +80,16 @@ public class NewMoves extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder myDialog = new AlertDialog.Builder(NewMoves.this);
+                AlertDialog.Builder myDialog = new AlertDialog.Builder(CreateDanceMoveActivity.this);
                 myDialog.setTitle("Name");
-                final EditText name = new EditText(NewMoves.this);
+                final EditText name = new EditText(CreateDanceMoveActivity.this);
                 name.setInputType(InputType.TYPE_CLASS_TEXT);
                 myDialog.setView(name);
                 myDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
-                            NewDanceMoves danceMove = new NewDanceMoves(individualMoves, name.toString());
+                            CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.toString());
                             String message = "Dance move saved";
                             saveMessage.setText(message);
                             createNewDance(name.toString());
@@ -157,10 +154,11 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void createNewDance(String name){
-        DaneMoveObject newDance = new DaneMoveObject(name);
+        DanceMove newDance = new DanceMove(name);
         dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
     }
 
+    /*
     public void saveDance(View view){
         if (individualMoves.size() >= 2 && !isRecording) {
             DaneMoveObject danceMove = new DaneMoveObject(individualMoves);
@@ -177,8 +175,9 @@ public class NewMoves extends AppCompatActivity {
             saveMessage.setText(error);
         }
     }
+     */
 
-    public void makeCarDanceCustom(DaneMoveObject danceMove){
+    public void makeCarDanceCustom(DanceMove danceMove){
         //TODO: update makeCarDance method to check for DanceCarObject attributes
         for (IndividualMove individualMove : individualMoves) {
             String carInstruction = individualMove.getCarInstruction();
@@ -448,7 +447,7 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void goBackToDanceMenu(View view){
-        Intent intent = new Intent(this, DanceMoves.class);
+        Intent intent = new Intent(this, DancingActivity.class);
         startActivity(intent);
     }
 

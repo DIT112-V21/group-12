@@ -6,12 +6,12 @@ import java.util.Random.*;
 
 import java.util.ArrayList;
 
-public class DaneMoveObject {
+public class DanceMove {
     String danceName;
     int id;
     Random random = new Random();
 
-    public DaneMoveObject(String danceName) {
+    public DanceMove(String danceName) {
         this.danceName = danceName;
         this.id = random.nextInt();
     }

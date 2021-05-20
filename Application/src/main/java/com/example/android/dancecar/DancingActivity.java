@@ -25,12 +25,12 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 
-public class DanceMoves extends AppCompatActivity {
-    ArrayList<DaneMoveObject> danceMoves = new ArrayList<DaneMoveObject>();
-    ArrayList<ChorMoves> chorMoves = new ArrayList<ChorMoves>();
-    ArrayList<ChorMoves> selectedChorMoves = new ArrayList<ChorMoves>();
+public class DancingActivity extends AppCompatActivity {
+    ArrayList<DanceMove> danceMoves = new ArrayList<DanceMove>();
+    ArrayList<Choreography> chorMoves = new ArrayList<Choreography>();
+    ArrayList<Choreography> selectedChorMoves = new ArrayList<Choreography>();
     ArrayList selectedChorMovesText = new ArrayList();
-    ArrayList<DaneMoveObject> selectedMove = new ArrayList<DaneMoveObject>();
+    ArrayList<DanceMove> selectedMove = new ArrayList<DanceMove>();
     ArrayList selectedMoveText = new ArrayList();
     LinearLayout lLayout;
     LinearLayout rLayout;
@@ -48,16 +48,16 @@ public class DanceMoves extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dance_moves);
+        setContentView(R.layout.activity_dancing);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
-        DaneMoveObject dance1  = new DaneMoveObject("MoonWalk");
+        DanceMove dance1  = new DanceMove("MoonWalk");
         danceMoves.add(dance1);
-        DaneMoveObject dance2  = new DaneMoveObject("SideKick");
+        DanceMove dance2  = new DanceMove("SideKick");
         danceMoves.add(dance2);
-        DaneMoveObject dance3  = new DaneMoveObject("ShowOff");
+        DanceMove dance3  = new DanceMove("ShowOff");
         danceMoves.add(dance3);
-        DaneMoveObject dance4  = new DaneMoveObject("ChaChaCha");
+        DanceMove dance4  = new DanceMove("ChaChaCha");
         danceMoves.add(dance4);
         Log.d(TAG, "onCreate: DanceMoves holds: " + danceMoves.toString());
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
@@ -67,9 +67,9 @@ public class DanceMoves extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder myDialog = new AlertDialog.Builder(DanceMoves.this);
+                AlertDialog.Builder myDialog = new AlertDialog.Builder(DancingActivity.this);
                 myDialog.setTitle("Name");
-                final EditText name = new EditText(DanceMoves.this);
+                final EditText name = new EditText(DancingActivity.this);
                 name.setInputType(InputType.TYPE_CLASS_TEXT);
                 myDialog.setView(name);
                 myDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
@@ -91,7 +91,7 @@ public class DanceMoves extends AppCompatActivity {
         });
 
         for (int i = 0; i < danceMoves.size(); i++) {
-            DaneMoveObject dance = danceMoves.get(i);
+            DanceMove dance = danceMoves.get(i);
             checkBox = new CheckBox(this);
             checkBox.setId(dance.getId());
             checkBox.setText(dance.getDanceName());
@@ -101,7 +101,7 @@ public class DanceMoves extends AppCompatActivity {
         }
 
         for (int i = 0; i < chorMoves.size(); i++) {
-            ChorMoves chor = chorMoves.get(i);
+            Choreography chor = chorMoves.get(i);
             checkBox = new CheckBox(this);
             checkBox.setId(chor.getChorMoveID());
             checkBox.setText(chor.getChorName());
@@ -110,7 +110,7 @@ public class DanceMoves extends AppCompatActivity {
         }
     }
 
-    View.OnClickListener checkBoxMove(final CheckBox checkBox, final DaneMoveObject dance){
+    View.OnClickListener checkBoxMove(final CheckBox checkBox, final DanceMove dance){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,17 +138,17 @@ public class DanceMoves extends AppCompatActivity {
     }
 
     public void goToDrive(View view){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, DrivingActivity.class);
         startActivity(intent);
     }
 
     public void createChoreography(String name){
         if(!selectedMove.isEmpty() && selectedMove.size() > 1 && selectedMove.size() < 101) {
-            ArrayList<DaneMoveObject> fullChor = new ArrayList<DaneMoveObject>();
+            ArrayList<DanceMove> fullChor = new ArrayList<DanceMove>();
             for(int i = 0; i < selectedMove.size(); i++){
                 fullChor.add(selectedMove.get(i));
             }
-            ChorMoves newChor = new ChorMoves(fullChor,  name);
+            Choreography newChor = new Choreography(fullChor,  name);
             chorMoves.add(newChor);
             lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
             int id = 1;  ///TODO add new id!!!!!!
@@ -157,21 +157,21 @@ public class DanceMoves extends AppCompatActivity {
             checkBox.setText(name);
             checkBox.setOnClickListener(checkBoxDance(checkBox, newChor));
             lLayout.addView(checkBox);
-            Toast.makeText(DanceMoves.this, myText + " was created", Toast.LENGTH_LONG).show();
+            Toast.makeText(DancingActivity.this, myText + " was created", Toast.LENGTH_LONG).show();
         }else{
             Toast.makeText(this, "Please select at least 2 moves but you can choose 100 :) ", Toast.LENGTH_SHORT).show();
         }
     }
 
     public void goBackToDanceMenu(View view){
-        Intent intent = new Intent(this, DanceMode.class);
+        Intent intent = new Intent(this, DanceModeActivity.class);
         startActivity(intent);
     }
 
     public void makeCarDance(View view){
         if(selectedMove.size() > 0){
             for(int i = 0; i < selectedMove.size(); i++){
-                DaneMoveObject dance = selectedMove.get(i);
+                DanceMove dance = selectedMove.get(i);
                 String name = dance.getDanceName();
 
                 mMqttClient.publish("smartcar/makeCarDance/" + name ,"1", 1, null);
@@ -179,11 +179,11 @@ public class DanceMoves extends AppCompatActivity {
         }
          else if(selectedChorMoves.size() > 0){
             for(int i = 0; i <selectedChorMoves.size(); i++){
-                ChorMoves chor = selectedChorMoves.get(i);
-                ArrayList<DaneMoveObject> fullDance = chor.getSelectedDances();
+                Choreography chor = selectedChorMoves.get(i);
+                ArrayList<DanceMove> fullDance = chor.getSelectedDances();
                 Log.d(TAG, "makeCarDance: fulldance is " + fullDance.toString());
                 for(int j = 0; j <fullDance.size(); j++){
-                    DaneMoveObject dance = fullDance.get(j);
+                    DanceMove dance = fullDance.get(j);
                     String name = dance.getDanceName();
                     mMqttClient.publish("smartcar/makeCarDance/" + name ,"1",  1, null);
                 }
@@ -194,11 +194,11 @@ public class DanceMoves extends AppCompatActivity {
     }
 
     public void recordNewMove(View view){
-        Intent intent = new Intent(DanceMoves.this, NewMoves.class);
+        Intent intent = new Intent(DancingActivity.this, CreateDanceMoveActivity.class);
         startActivity(intent);
     }
 
-    View.OnClickListener checkBoxDance(final CheckBox checkBox, final ChorMoves chor){
+    View.OnClickListener checkBoxDance(final CheckBox checkBox, final Choreography chor){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {

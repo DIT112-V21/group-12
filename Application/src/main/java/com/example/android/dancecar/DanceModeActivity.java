@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class DanceMode extends AppCompatActivity {
+public class DanceModeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,12 +15,12 @@ public class DanceMode extends AppCompatActivity {
     }
 
     public void goToDrive(View view){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, DrivingActivity.class);
         startActivity(intent);
     }
 
     public void danceMovesPage(View view){
-        Intent intent = new Intent(this,DanceMoves.class);
+        Intent intent = new Intent(this, DancingActivity.class);
         startActivity(intent);
     }
 }

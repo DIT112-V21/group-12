@@ -2,11 +2,11 @@ package com.example.android.dancecar;
 
 import java.util.ArrayList;
 
-public class NewDanceMoves {
+public class CreatedDanceMove {
     public ArrayList<IndividualMove> individualMoves = new ArrayList();
     String newDanceName;
 
-    public NewDanceMoves(ArrayList<IndividualMove> individualMoves, String newDanceName) {
+    public CreatedDanceMove(ArrayList<IndividualMove> individualMoves, String newDanceName) {
         this.individualMoves = individualMoves;
         this.newDanceName = newDanceName;
     }

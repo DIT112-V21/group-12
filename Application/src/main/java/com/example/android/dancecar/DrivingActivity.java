@@ -18,7 +18,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class DrivingActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"; //Coonnect local
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_driving);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
         initialiseButtons();
@@ -402,7 +402,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void goToDance(View view){
-        Intent intent = new Intent(this, DanceMode.class);
+        Intent intent = new Intent(this, DanceModeActivity.class);
         startActivity(intent);
     }
 
