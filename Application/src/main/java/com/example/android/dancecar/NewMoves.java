@@ -2,15 +2,23 @@ package com.example.android.dancecar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -53,6 +61,8 @@ public class NewMoves extends AppCompatActivity {
 
     private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
 
+    DanceMoves dance = new DanceMoves();
+
     StopWatch stopWatch = new StopWatch();
 
     //EditText move_name, instructions, duration;
@@ -65,6 +75,43 @@ public class NewMoves extends AppCompatActivity {
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
         initialiseButtons();
+
+
+
+        Button saveDance = findViewById(R.id.saveDance);
+        saveDance.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder myDialog = new AlertDialog.Builder(NewMoves.this);
+                myDialog.setTitle("Name");
+                final EditText name = new EditText(NewMoves.this);
+                name.setInputType(InputType.TYPE_CLASS_TEXT);
+                myDialog.setView(name);
+                myDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (individualMoves.size() >= 2 && !isRecording) {
+                            NewDanceMoves danceMove = new NewDanceMoves(individualMoves, name.toString());
+                            String message = "Dance move saved";
+                            saveMessage.setText(message);
+                            createNewDance(name.toString());
+                        } else {
+                            String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
+                            saveMessage.setText(error);
+                        }
+                    }
+                });
+
+                myDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                myDialog.show();
+            }
+        });
 
         /*
         mMqttClient.publish("smartcar/", "instructions", 1, null);
@@ -107,6 +154,11 @@ public class NewMoves extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void createNewDance(String name){
+        DaneMoveObject newDance = new DaneMoveObject(name);
+        dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
     }
 
     public void saveDance(View view){
@@ -393,6 +445,11 @@ public class NewMoves extends AppCompatActivity {
 
     public void showSpeed(String message){
         speedometer.setText(message);
+    }
+
+    public void goBackToDanceMenu(View view){
+        Intent intent = new Intent(this, DanceMoves.class);
+        startActivity(intent);
     }
 
     public void resetSettings(){

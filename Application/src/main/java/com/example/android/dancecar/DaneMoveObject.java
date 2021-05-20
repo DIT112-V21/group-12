@@ -1,35 +1,42 @@
 package com.example.android.dancecar;
 
+import java.util.Random;
+import java.util.UUID;
+import java.util.Random.*;
+
 import java.util.ArrayList;
 
 public class DaneMoveObject {
-    private String name;
-    private int id;
-    private ArrayList<IndividualMove> individualMoves = new ArrayList();
+    String danceName;
+    int id;
+    Random random = new Random();
 
-    public DaneMoveObject(String danceName, int id) {
-        this.name = danceName;
-        this.id = id;
+    public DaneMoveObject(String danceName) {
+        this.danceName = danceName;
+        this.id = random.nextInt();
     }
-
-    public DaneMoveObject(ArrayList<IndividualMove> individualMoves) {
-        this.individualMoves = individualMoves;
-    }
-
 
     public String getDanceName() {
-        return name;
+        return danceName;
+    }
+
+    public void setDanceName(String danceName) {
+        this.danceName = danceName;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setDanceName(String name) {
-        this.name = name;
-    }
-
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+
+    public void setRandom(Random random) {
+        this.random = random;
     }
 }

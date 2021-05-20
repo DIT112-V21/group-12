@@ -4,9 +4,11 @@ public class IndividualMove {
     private String carInstruction;
     private long duration;
 
+
     public IndividualMove(String carInstruction, long duration) {
         this.carInstruction = carInstruction;
         this.duration = duration;
+
     }
 
     public String getCarInstruction() {
@@ -24,4 +26,5 @@ public class IndividualMove {
     public void setDuration(long duration) {
         this.duration = duration;
     }
+
 }

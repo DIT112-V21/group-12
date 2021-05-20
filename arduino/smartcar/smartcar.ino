@@ -64,8 +64,10 @@ void setup()
    #endif
     if (mqtt.connect("arduino", "public", "public")){
       mqtt.subscribe("smartcar/#", 1);
+      
       mqtt.onMessage([](String topic, String message){
-        if (topic == "smartcar/forward"){
+        Serial.println(topic);
+      if (topic == "smartcar/forward"){
           if (fSpeed == 0) {
             fSpeed = 20;
           }
@@ -170,15 +172,20 @@ void setup()
           brakePress = false;
           anglePress = true;
           braking = false;
-        }else if(topic == "smartcar/makeCarDance"){
-              selectedDance(message);
+        }else if(topic == "smartcar/makeCarDance/MoonWalk"){
+          moonWalk(50);
+        }else if(topic == "smartcar/makeCarDance/SideKick"){
+              sideKick(50);
+        }else if(topic == "smartcar/makeCarDance/ShowOff"){
+              showOff(50);
+        }else if (topic == "smartcar/makeCarDance/ChaChaCha"){
+              cha(50);  
         }else{
           Serial.println(topic + " " + message);
         }
-      });
+    });
     }
-}
-
+   }
 
 void loop()
 {
@@ -194,6 +201,8 @@ void loop()
     }
     handleOutput();
 }
+
+  
 
 
 void handleOutput(){
@@ -392,6 +401,7 @@ boolean handleObstacle(){
 
 void moonWalk(int speed)
 {
+  
   car.setSpeed(speed);
   delay(1000);
   car.setSpeed(-speed);
@@ -504,16 +514,4 @@ void sendSpeed(){
    #else
      mqtt.publish("smartcar/odometerSpeed", String(car.getSpeed()));
    #endif
-}
-
-void selectedDance(String message){
-        if(message == "1"){
-              moonWalk(50);
-        }else if(message == "2"){
-              sideKick(50);
-        }else if(message == "3"){
-              showOff(50);
-        }else if (message == "4"){
-              cha(50);
-        }
 }
