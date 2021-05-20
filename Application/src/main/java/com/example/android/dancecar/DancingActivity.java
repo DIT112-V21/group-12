@@ -194,7 +194,7 @@ public class DancingActivity extends AppCompatActivity {
     }
 
     public void recordNewMove(View view){
-        Intent intent = new Intent(DancingActivity.this, CreateDanceMoveActivity.class);
+        Intent intent = new Intent(DancingActivity.this, RecordDanceMoveActivity.class);
         startActivity(intent);
     }
 

@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import jServe.Core.StopWatch;
 
 
-public class CreateDanceMoveActivity extends AppCompatActivity {
+public class RecordDanceMoveActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"; //Coonnect local
@@ -80,9 +80,9 @@ public class CreateDanceMoveActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder myDialog = new AlertDialog.Builder(CreateDanceMoveActivity.this);
+                AlertDialog.Builder myDialog = new AlertDialog.Builder(RecordDanceMoveActivity.this);
                 myDialog.setTitle("Name");
-                final EditText name = new EditText(CreateDanceMoveActivity.this);
+                final EditText name = new EditText(RecordDanceMoveActivity.this);
                 name.setInputType(InputType.TYPE_CLASS_TEXT);
                 myDialog.setView(name);
                 myDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
