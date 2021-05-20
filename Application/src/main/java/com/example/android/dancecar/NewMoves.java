@@ -114,11 +114,25 @@ public class NewMoves extends AppCompatActivity {
             DaneMoveObject danceMove = new DaneMoveObject(individualMoves);
             // TODO: dance move naming
             //danceMove.setDanceName(name);
+            //DanceMoves danceMoves = new DanceMoves();
+            //danceMoves.setDanceMoves(danceMove);
+            makeCarDanceCustom(danceMove);
+            individualMoves.clear();
             String message = "Dance move saved";
             saveMessage.setText(message);
         } else {
             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
             saveMessage.setText(error);
+        }
+    }
+
+    public void makeCarDanceCustom(DaneMoveObject danceMove){
+        //TODO: update makeCarDance method to check for DanceCarObject attributes
+        for (IndividualMove individualMove : individualMoves) {
+            String carInstruction = individualMove.getCarInstruction();
+            long duration = individualMove.getDuration();
+            mMqttClient.publish("smartcar/carInstruction", carInstruction, 1, null);
+            mMqttClient.publish("smartcar/carInstruction", Long.toString(duration), 1, null);
         }
     }
 
@@ -220,9 +234,11 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void stopTimer () {
-        duration = stopWatch.elapsed();
-        IndividualMove individualMove = new IndividualMove(lastDirection, duration);
-        individualMoves.add(individualMove);
+        if (!lastDirection.equals("")) {
+            duration = stopWatch.elapsed();
+            IndividualMove individualMove = new IndividualMove(lastDirection, duration);
+            individualMoves.add(individualMove);
+        }
         save.setVisibility(View.VISIBLE);
         countDownTimer.cancel();
         isRecording = false;
