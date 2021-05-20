@@ -1,2 +1,2 @@
-
+include ':spotify-app'
 include 'Application'
