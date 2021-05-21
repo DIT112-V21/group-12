@@ -26,6 +26,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
 
 public class DancingActivity extends AppCompatActivity {
+
+    //the list should be in the on create. Why is not private?
     ArrayList<DanceMove> danceMoves = new ArrayList<DanceMove>();
     ArrayList<Choreography> chorMoves = new ArrayList<Choreography>();
     ArrayList<Choreography> selectedChorMoves = new ArrayList<Choreography>();
@@ -36,6 +38,7 @@ public class DancingActivity extends AppCompatActivity {
     LinearLayout rLayout;
     CheckBox checkBox;
 
+    private DBHelper dbHelper;
 
     private  Button createChor;
     private String myText;
@@ -59,6 +62,7 @@ public class DancingActivity extends AppCompatActivity {
         danceMoves.add(dance3);
         DanceMove dance4  = new DanceMove("ChaChaCha");
         danceMoves.add(dance4);
+        //danceMoves.add(dbHelper);
         Log.d(TAG, "onCreate: DanceMoves holds: " + danceMoves.toString());
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
         rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);

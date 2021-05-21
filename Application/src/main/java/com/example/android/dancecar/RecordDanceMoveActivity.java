@@ -24,6 +24,8 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
+import java.util.UUID;
+
 import jServe.Core.StopWatch;
 
 
@@ -62,8 +64,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     StopWatch stopWatch = new StopWatch();
 
-    //EditText move_name, instructions, duration;
-    DBHelper DB;
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +74,11 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         connectToMqttBroker();
         initialiseButtons();
 
-
+        // creating a new dbHelper class and passing our context to it.
+        dbHelper = new DBHelper(RecordDanceMoveActivity.this);
 
         Button saveDance = findViewById(R.id.saveDance);
         saveDance.setOnClickListener(new View.OnClickListener(){
-
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder myDialog = new AlertDialog.Builder(RecordDanceMoveActivity.this);
@@ -89,10 +90,13 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
-                            CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.toString());
+                            CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.getText().toString());
                             String message = "Dance move saved";
                             saveMessage.setText(message);
-                            createNewDance(name.toString());
+                            createNewDance(name.getText().toString());
+                            String danceName = danceMove.getNewDanceName();
+                            dbHelper.insertData(danceName, individualMoves);
+                            System.out.println(individualMoves);
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
                             saveMessage.setText(error);
@@ -109,29 +113,6 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                 myDialog.show();
             }
         });
-
-        /*
-        mMqttClient.publish("smartcar/", "instructions", 1, null);
-        mMqttClient.publish("smartcar/", "duration", 1, null);
-
-        DB = new DBHelper(this);
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String move_nameTXT = move_name.getText().toString();
-                String directionTXT = instructions.getText().toString();
-                int durationINT = Integer.parseInt(duration.getText().toString());
-
-                boolean checkInsertData = DB.saveMove(move_nameTXT, directionTXT, durationINT);
-                if(checkInsertData)
-                    Toast.makeText(NewMoves.this, "New move inserted!", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(NewMoves.this, "New move not inserted!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-         */
 
         //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
         startStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -155,7 +136,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
-        dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
+        dance.danceMoves.add(newDance); //TODO why is it not sorted correctly?
     }
 
     /*
@@ -287,7 +268,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     public void stopTimer () {
         if (!lastDirection.equals("")) {
             duration = stopWatch.elapsed();
-            IndividualMove individualMove = new IndividualMove(lastDirection, duration);
+            IndividualMove individualMove = new IndividualMove(lastDirection, (int) duration);
             individualMoves.add(individualMove);
         }
         save.setVisibility(View.VISIBLE);
@@ -330,7 +311,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         stopWatch.stop();
         if (individualMoves.size() <= 20) {
             duration = stopWatch.elapsed();
-            IndividualMove individualMove = new IndividualMove(lastDirection, duration);
+            IndividualMove individualMove = new IndividualMove(lastDirection, (int) duration);
             individualMoves.add(individualMove);
             stopWatch.start();
             lastDirection = direction;
