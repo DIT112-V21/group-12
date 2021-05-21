@@ -47,8 +47,9 @@ dependencies {
 
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.0.0'
 
-    implementation "com.google.code.gson:gson:2.8.5"
     implementation project(':spotify-app')
+    implementation "com.google.code.gson:gson:2.8.5"
+
 
 }
 
