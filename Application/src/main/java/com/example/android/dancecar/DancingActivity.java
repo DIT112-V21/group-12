@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 public class DancingActivity extends AppCompatActivity {
     ArrayList<DanceMove> danceMoves = new ArrayList<DanceMove>();
+    ArrayList<CreatedDanceMove> createdDanceMoves = new ArrayList<CreatedDanceMove>();
     ArrayList<Choreography> chorMoves = new ArrayList<Choreography>();
     ArrayList<Choreography> selectedChorMoves = new ArrayList<Choreography>();
     ArrayList selectedChorMovesText = new ArrayList();
@@ -169,12 +170,20 @@ public class DancingActivity extends AppCompatActivity {
     }
 
     public void makeCarDance(View view){
-        if(selectedMove.size() > 0){
-            for(int i = 0; i < selectedMove.size(); i++){
+        if(selectedMove.size() > 0) {
+            for (int i = 0; i < selectedMove.size(); i++) {
                 DanceMove dance = selectedMove.get(i);
                 String name = dance.getDanceName();
 
-                mMqttClient.publish("smartcar/makeCarDance/" + name ,"1", 1, null);
+                if (dance.isCreated()) {
+                    for (CreatedDanceMove createdDance : createdDanceMoves)
+                        if (dance.getDanceName().equals(createdDance.getNewDanceName())) {
+                            // TODO: add connection to mqtt
+                        }
+                } else {
+                    mMqttClient.publish("smartcar/makeCarDance/" + name, "1", 1, null);
+
+                }
             }
         }
          else if(selectedChorMoves.size() > 0){

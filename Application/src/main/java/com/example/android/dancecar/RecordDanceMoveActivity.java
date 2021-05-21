@@ -91,8 +91,11 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                         if (individualMoves.size() >= 2 && !isRecording) {
                             CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.toString());
                             String message = "Dance move saved";
-                            saveMessage.setText(message);
                             createNewDance(name.toString());
+                            dance.createdDanceMoves.add(danceMove);
+                            saveMessage.setText(message);
+                            makeCarDanceCustom();
+                            individualMoves.clear();
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
                             saveMessage.setText(error);
@@ -155,6 +158,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
+        newDance.setCreated(true);
         dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
     }
 
@@ -177,14 +181,15 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     }
      */
 
-    public void makeCarDanceCustom(DanceMove danceMove){
+    public void makeCarDanceCustom() {
         //TODO: update makeCarDance method to check for DanceCarObject attributes
         for (IndividualMove individualMove : individualMoves) {
             String carInstruction = individualMove.getCarInstruction();
             long duration = individualMove.getDuration();
-            mMqttClient.publish("smartcar/carInstruction", carInstruction, 1, null);
-            mMqttClient.publish("smartcar/carInstruction", Long.toString(duration), 1, null);
+            mMqttClient.publish("smartcar/duration", Long.toString(duration), 1, null);
+            mMqttClient.publish("smartcar/direction", carInstruction, 1, null);
         }
+        mMqttClient.publish("smartcar/stopDance", "0", 1, null);
     }
 
 
@@ -285,7 +290,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     }
 
     public void stopTimer () {
-        if (!lastDirection.equals("")) {
+        if (!lastDirection.equals("") && individualMoves.size() <= 20) {
             duration = stopWatch.elapsed();
             IndividualMove individualMove = new IndividualMove(lastDirection, duration);
             individualMoves.add(individualMove);
@@ -300,6 +305,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         direction = "";
         lastDirection = "";
         stopWatch.stop();
+        mMqttClient.publish("smartcar/stopDance", "0", 1, null);
     }
 
     public void countDown() {
@@ -348,7 +354,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
             mMqttClient.publish("smartcar/forward", Integer.toString(message), 1, null);
             // First time the user presses an arrow button
 
-            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+            if (lastDirection.equals("")) {
                 stopWatch.start();
                 lastDirection = direction;
                 // When the user presses the next arrow button, the individual move will be saved
