@@ -53,6 +53,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     private TextView recordingTimer;
     private TextView saveMessage;
+    private TextView testDuration;
 
     private ToggleButton startStop;
 
@@ -185,7 +186,8 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         //TODO: update makeCarDance method to check for DanceCarObject attributes
         for (IndividualMove individualMove : individualMoves) {
             String carInstruction = individualMove.getCarInstruction();
-            long duration = individualMove.getDuration();
+            long duration = individualMove.getDuration() / 1000000;
+            testDuration.setText(Long.toString(duration));
             mMqttClient.publish("smartcar/duration", Long.toString(duration), 1, null);
             mMqttClient.publish("smartcar/direction", carInstruction, 1, null);
         }
@@ -278,6 +280,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         startStop = findViewById(R.id.startstopButton);
         saveMessage = findViewById(R.id.saveMessage);
         save = findViewById(R.id.saveDance);
+        testDuration = findViewById(R.id.duration);
     }
 
     // Timer code partially derived from https://www.youtube.com/watch?v=zmjfAcnosS0
@@ -371,7 +374,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
             colorArrowButtons(direction);
             mMqttClient.publish("smartcar/backward", Integer.toString(message), 1, null);
             // First time the user presses an arrow button
-            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+            if (lastDirection.equals("")) {
                 stopWatch.start();
                 lastDirection = direction;
                 // When the user presses the next arrow button, the individual move will be saved

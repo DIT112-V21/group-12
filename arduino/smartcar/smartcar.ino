@@ -24,7 +24,7 @@ boolean braking = false;
 boolean brakePress = false;
 boolean anglePress = false;
 boolean speedPress = false;
-long duration = 2000;
+long duration;
 
 
 const int TRIGGER_PIN           = 6; // D6
@@ -69,29 +69,29 @@ void setup() {
             Serial.println(topic);
             if (topic == "smartcar/forward"){
                 if (fSpeed == 0) {
-                    fSpeed = 20;
+                    fSpeed = 60;
                 }
-                car.setSpeed(fSpeed);
-                car.setAngle(0);
                 right = false;
                 left = false;
                 forward = true;
                 backward = false;
-            } else if (topic == "smartcar/backward"){
-                car.setSpeed(bSpeed);
+                car.setSpeed(fSpeed);
                 car.setAngle(0);
+            } else if (topic == "smartcar/backward"){
                 left = false;
                 right = false;
                 backward = true;
                 forward = false;
+                car.setSpeed(bSpeed);
+                car.setAngle(0);
             } else if (topic == "smartcar/left"){
                 car.setAngle(lDegrees);
                 left = true;
                 right = false;
             } else if (topic == "smartcar/right"){
-                car.setAngle(rDegrees);
                 left = false;
                 right = true;
+                car.setAngle(rDegrees);
             } else if (topic == "smartcar/stop"){
                 braking = true;
                 forward = false;
@@ -181,7 +181,7 @@ void setup() {
             } else if (topic == "smartcar/makeCarDance/ChaChaCha"){
                 cha(50);
             } else if (topic == "smartcar/duration"){
-                //duration = atol(message.c_str());
+                duration = atol(message.c_str());
             } else if (topic == "smartcar/direction"){
                 replayDance(message);
             } else if (topic == "smartcar/stopDance") {
@@ -344,22 +344,26 @@ void handleInput(){
 void replayDance(String message) {
     defaultDirections();
     if (message.equals("forward")) {
+        forward = true;
+        backward = false;
         car.setAngle(0);
-        carSpeed(fSpeed);
+        car.setSpeed(fSpeed);
         delay(duration);
     } else if (message.equals("backward")) {
+        backward = true;
+        forward = false;
         car.setAngle(0);
-        carSpeed(bSpeed);
+        car.setSpeed(bSpeed);
         delay(duration);
     } else if (message.equals("left")) {
         left = true;
         right = false;
-        steeringAngle(lDegrees);
+        car.setAngle(lDegrees);
         delay(duration);
     } else if (message.equals("right")) {
         right = true;
         left = false;
-        steeringAngle(rDegrees);
+        car.setAngle(rDegrees);
         delay(duration);
     }
 }
@@ -367,7 +371,7 @@ void replayDance(String message) {
 void defaultDirections() {
     fSpeed = 60;
     bSpeed = -60;
-    lDegrees = 75;
+    lDegrees = -75;
     rDegrees =75;
 }
 
