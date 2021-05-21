@@ -7,13 +7,15 @@ import java.util.Random.*;
 import java.util.ArrayList;
 
 public class DanceMove {
-    String danceName;
-    int id;
-    Random random = new Random();
+    private String danceName;
+    private int id;
+    private Random random = new Random();
+    private boolean isCreated;
 
     public DanceMove(String danceName) {
         this.danceName = danceName;
         this.id = random.nextInt();
+        this.isCreated = isCreated();
     }
 
     public String getDanceName() {
@@ -39,4 +41,8 @@ public class DanceMove {
     public void setRandom(Random random) {
         this.random = random;
     }
+
+    public boolean isCreated() { return isCreated; }
+
+    public void setCreated(boolean created) { isCreated = created; }
 }
