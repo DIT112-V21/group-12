@@ -99,7 +99,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                             String danceName = danceMove.getNewDanceName();
                             dbHelper.insertData(danceName, individualMoves);
                             System.out.println(individualMoves);
-                            makeCarDanceCustom();
+                            //makeCarDanceCustom();
                             individualMoves.clear();
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
