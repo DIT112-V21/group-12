@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.android.dancecar.spotifyservice.TrackPlayerStateTask;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
@@ -42,7 +43,7 @@ public class DanceMoves extends AppCompatActivity {
     LinearLayout rLayout;
     CheckBox checkBox;
     private static final String CLIENT_ID = "764ef5ad07284dd499fcb8bb5604bc26";
-    private static final String REDIRECT_URI = "dancing-car-app://callback";
+    private static final String REDIRECT_URI = "http://localhost:8888/callback";
     private SpotifyAppRemote mSpotifyAppRemote;
 
 
@@ -53,6 +54,8 @@ public class DanceMoves extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
+    TextView displaySong;
+    TextView displayPlaybackPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,9 @@ public class DanceMoves extends AppCompatActivity {
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
         rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
         createChor = findViewById(R.id.createChoreography);
+        displaySong = findViewById((R.id.displayTextSong));
+        displayPlaybackPosition = findViewById((R.id.displayTextPlaybackPosition));
+        
         createChor.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -219,6 +225,7 @@ public class DanceMoves extends AppCompatActivity {
                 // Now you can start interacting with App Remote
                 connected();
 
+
             }
 
             public void onFailure(Throwable throwable) {
@@ -245,8 +252,11 @@ public class DanceMoves extends AppCompatActivity {
                     final Track track = playerState.track;
                     if (track != null) {
                         Log.d("MainActivity", track.name + " by " + track.artist.name);
+                        displaySong.setText(track.name + " by " + track.artist.name);
                     }
                 });
+        TrackPlayerStateTask trackTask = new TrackPlayerStateTask();
+        trackTask.execute(mSpotifyAppRemote, displayPlaybackPosition);
     }
 
 
