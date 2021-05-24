@@ -12,6 +12,7 @@ public class IndividualMove {
 
     }
 
+
     @NonNull
     @Override
     public String toString() {

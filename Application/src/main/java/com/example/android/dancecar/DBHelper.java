@@ -134,6 +134,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
      */
 
+
+
     // this method is use to add new course to our sqlite database.
     public void insertData(String danceName, ArrayList<IndividualMove> individualMoves) {
 
