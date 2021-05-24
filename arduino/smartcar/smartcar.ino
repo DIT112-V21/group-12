@@ -185,7 +185,7 @@ void setup() {
             } else if (topic == "smartcar/direction"){
                 replayDance(message);
             } else if (topic == "smartcar/stopDance") {
-                carSpeed(0);
+                car.setSpeed(0);
             } else {
                 Serial.println(topic + " " + message);
             }

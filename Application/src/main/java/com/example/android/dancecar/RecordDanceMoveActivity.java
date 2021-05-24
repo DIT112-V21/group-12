@@ -66,6 +66,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     StopWatch stopWatch = new StopWatch();
 
+    private IndividualMove individualMove;
     private DBHelper dbHelper;
 
     @Override
@@ -98,9 +99,9 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                             saveMessage.setText(message);
                             createNewDance(name.getText().toString());
                             String danceName = danceMove.getNewDanceName();
-                            dbHelper.insertData(danceName, individualMoves);
+                            dbHelper.insertMove(danceName, individualMoves);
+                            //dbHelper.insertIndividualMove();
                             System.out.println(individualMoves);
-                            makeCarDanceCustom();
                             individualMoves.clear();
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
@@ -164,6 +165,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     }
      */
 
+    /*
     public void makeCarDanceCustom() {
         //TODO: update makeCarDance method to check for DanceCarObject attributes
         for (IndividualMove individualMove : individualMoves) {
@@ -175,6 +177,8 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         }
         mMqttClient.publish("smartcar/stopDance", "0", 1, null);
     }
+*/
+
 
 
     @Override
@@ -279,6 +283,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
             duration = stopWatch.elapsed();
             IndividualMove individualMove = new IndividualMove(lastDirection, (int) duration);
             individualMoves.add(individualMove);
+
         }
         save.setVisibility(View.VISIBLE);
         countDownTimer.cancel();
