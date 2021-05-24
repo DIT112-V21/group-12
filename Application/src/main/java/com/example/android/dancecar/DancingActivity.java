@@ -176,17 +176,23 @@ public class DancingActivity extends AppCompatActivity {
                 String name = dance.getDanceName();
 
                 if (dance.isCreated()) {
-                    for (CreatedDanceMove createdDance : createdDanceMoves)
+                    for (CreatedDanceMove createdDance : createdDanceMoves) {
                         if (dance.getDanceName().equals(createdDance.getNewDanceName())) {
                             // TODO: add connection to mqtt
+                            for (IndividualMove individualMove : createdDance.getIndividualMoves()) {
+                                String carInstruction = individualMove.getCarInstruction();
+                                long duration = individualMove.getDuration() / 1000000;
+                                mMqttClient.publish("smartcar/duration", Long.toString(duration), 1, null);
+                                mMqttClient.publish("smartcar/direction", carInstruction, 1, null);
+                            }
+                            mMqttClient.publish("smartcar/stopDance", "0", 1, null);
+                        } else {
+                            mMqttClient.publish("smartcar/makeCarDance/" + name, "1", 1, null);
                         }
-                } else {
-                    mMqttClient.publish("smartcar/makeCarDance/" + name, "1", 1, null);
-
+                    }
                 }
             }
-        }
-         else if(selectedChorMoves.size() > 0){
+        } else if(selectedChorMoves.size() > 0){
             for(int i = 0; i <selectedChorMoves.size(); i++){
                 Choreography chor = selectedChorMoves.get(i);
                 ArrayList<DanceMove> fullDance = chor.getSelectedDances();

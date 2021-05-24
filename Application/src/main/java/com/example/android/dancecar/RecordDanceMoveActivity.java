@@ -91,11 +91,12 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
                             CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.toString());
+                            // TODO store to database
                             String message = "Dance move saved";
                             createNewDance(name.toString());
                             dance.createdDanceMoves.add(danceMove);
                             saveMessage.setText(message);
-                            makeCarDanceCustom();
+                            //makeCarDanceCustom();
                             individualMoves.clear();
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
@@ -182,6 +183,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     }
      */
 
+    /*
     public void makeCarDanceCustom() {
         //TODO: update makeCarDance method to check for DanceCarObject attributes
         for (IndividualMove individualMove : individualMoves) {
@@ -193,6 +195,8 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         }
         mMqttClient.publish("smartcar/stopDance", "0", 1, null);
     }
+*/
+
 
 
     @Override
