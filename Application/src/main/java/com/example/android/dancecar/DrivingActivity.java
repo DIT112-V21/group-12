@@ -26,24 +26,24 @@ public class DrivingActivity extends AppCompatActivity {
     private boolean isConnected = false;
     private String direction;
     private String currentSpeed;
-    Mode speedMode = new Mode("speed");
-    Mode angleMode = new Mode("angle");
-    Mode brakeMode = new Mode("brake");
-    ImageButton forward;
-    ImageButton backward;
-    ImageButton left;
-    ImageButton right;
-    Button speed;
-    Button angle;
-    Button brake;
-    Button one;
-    Button two;
-    Button three;
-    Button four;
-    Button currentSpeedMode;
-    Button currentAngleMode;
-    Button currentBrakeMode;
-    Button speedometer;
+    private Mode speedMode = new Mode("speed");
+    private Mode angleMode = new Mode("angle");
+    private Mode brakeMode = new Mode("brake");
+    private ImageButton forward;
+    private ImageButton backward;
+    private ImageButton left;
+    private ImageButton right;
+    private Button speed;
+    private Button angle;
+    private Button brake;
+    private Button one;
+    private Button two;
+    private Button three;
+    private Button four;
+    private Button currentSpeedMode;
+    private Button currentAngleMode;
+    private Button currentBrakeMode;
+    private Button speedometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

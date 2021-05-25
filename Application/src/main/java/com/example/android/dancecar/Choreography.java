@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Choreography {
-    ArrayList<DanceMove> selectedDances;
-    int chorMoveID;
-    String chorName;
-    Random random = new Random();
+    private ArrayList<DanceMove> selectedDances;
+    private int chorMoveID;
+    private String chorName;
+    private Random random = new Random();
 
     public Choreography(ArrayList<DanceMove> selectedDances, String chorName) {
         this.selectedDances = selectedDances;

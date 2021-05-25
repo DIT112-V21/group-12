@@ -3,8 +3,8 @@ package com.example.android.dancecar;
 import java.util.ArrayList;
 
 public class CreatedDanceMove {
-    public ArrayList<IndividualMove> individualMoves = new ArrayList();
-    String newDanceName;
+    private ArrayList<IndividualMove> individualMoves = new ArrayList();
+    private String newDanceName;
 
     public CreatedDanceMove(ArrayList<IndividualMove> individualMoves, String newDanceName) {
         this.individualMoves = individualMoves;

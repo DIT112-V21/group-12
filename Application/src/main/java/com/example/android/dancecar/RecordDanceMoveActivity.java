@@ -94,8 +94,8 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
-                            if (!dance.createdDanceMoves.isEmpty()){
-                                for (CreatedDanceMove createdDanceMove : dance.createdDanceMoves){
+                            if (!dance.getCreatedDanceMoves().isEmpty()){
+                                for (CreatedDanceMove createdDanceMove : dance.getCreatedDanceMoves()){
                                     inputText = name.getText().toString();
                                     if (inputText.equals(createdDanceMove.getName())){
                                         String message = "A dance move with this name already exists.";
@@ -148,7 +148,7 @@ public void createDanceMove(String name){
         System.out.println("Create Dance name " + name);
         CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name);
         createNewDance(name);
-        dance.createdDanceMoves.add(danceMove);
+        dance.getCreatedDanceMoves().add(danceMove);
         dbHelper.insertMove(name, individualMoves);
         //dbHelper.insertIndividualMove();
         String message = "Dance move saved";
@@ -159,7 +159,7 @@ public void createDanceMove(String name){
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
         newDance.setCreated(true);
-        dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
+        dance.getDanceMoves().add(newDance); //TODO why is it not sored correctly?
     }
 
     /*
