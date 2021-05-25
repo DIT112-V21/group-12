@@ -57,6 +57,14 @@ public class DancingActivity extends AppCompatActivity {
         return danceMoves;
     }
 
+    public void setDanceMoves(DanceMove danceMove) {
+        danceMoves.add(danceMove);
+    }
+
+    public void setCreatedDanceMoves(CreatedDanceMove createdDanceMove) {
+        createdDanceMoves.add(createdDanceMove);
+    }
+
     public DancingActivity(){
         danceMoves = new ArrayList<>();
         createdDanceMoves = new ArrayList<>();

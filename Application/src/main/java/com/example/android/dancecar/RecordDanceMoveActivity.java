@@ -148,7 +148,7 @@ public void createDanceMove(String name){
         System.out.println("Create Dance name " + name);
         CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name);
         createNewDance(name);
-        dance.getCreatedDanceMoves().add(danceMove);
+        dance.setCreatedDanceMoves(danceMove);
         dbHelper.insertMove(name, individualMoves);
         //dbHelper.insertIndividualMove();
         String message = "Dance move saved";
@@ -159,7 +159,7 @@ public void createDanceMove(String name){
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
         newDance.setCreated(true);
-        dance.getDanceMoves().add(newDance); //TODO why is it not sored correctly?
+        dance.setDanceMoves(newDance); //TODO why is it not sored correctly?
     }
 
     /*
