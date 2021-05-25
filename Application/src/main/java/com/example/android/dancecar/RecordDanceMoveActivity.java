@@ -2,10 +2,12 @@ package com.example.android.dancecar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.InputType;
@@ -38,6 +40,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     private String direction = "";
     private String lastDirection = "";
     private String currentSpeed;
+    private String inputText;
 
     private CountDownTimer countDownTimer;
     private long timeLeft = 15000;
@@ -61,11 +64,12 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
 
-    DancingActivity dance = new DancingActivity();
+    private DancingActivity dance = new DancingActivity();
 
-    StopWatch stopWatch = new StopWatch();
+    private StopWatch stopWatch = new StopWatch();
 
-    private IndividualMove individualMove;
+    IndividualMove individualMove = new IndividualMove();
+
     private DBHelper dbHelper;
 
     @Override
@@ -93,15 +97,19 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
-                            CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.getText().toString());
-                            String message = "Dance move saved";
-                            saveMessage.setText(message);
-                            createNewDance(name.getText().toString());
-                            String danceName = danceMove.getNewDanceName();
-                            dbHelper.insertMove(danceName, individualMoves);
-                            //dbHelper.insertIndividualMove();
-                            System.out.println(individualMoves);
-                            individualMoves.clear();
+                            if (!dance.getCreatedDanceMoves().isEmpty()){
+                                for (CreatedDanceMove createdDanceMove : dance.getCreatedDanceMoves()){
+                                    inputText = name.getText().toString();
+                                    if (inputText.equals(createdDanceMove.getName())){
+                                        String message = "A dance move with this name already exists.";
+                                        saveMessage.setText(message);
+                                    } else {
+                                        createDanceMove(inputText);
+                                    }
+                                }
+                            } else {
+                                createDanceMove(name.getText().toString());
+                            }
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
                             saveMessage.setText(error);
@@ -139,10 +147,35 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         });
     }
 
+    public void createDanceMove(String name){
+        System.out.println("Create Dance name " + name);
+        CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name);
+        createNewDance(name);
+        dance.setCreatedDanceMoves(danceMove);
+        long moveDuration;
+        String carInstruction;
+        int order = 0;
+        dbHelper.insertMove(name);
+        for (IndividualMove individualMove : individualMoves){
+            moveDuration = individualMove.getDuration() / 1000000;
+            carInstruction = individualMove.getCarInstruction();
+            order++;
+            dbHelper.insertIndividualMove(name, carInstruction, moveDuration, order);
+            System.out.println(carInstruction +  moveDuration + order);
+        }
+        //save(danceMove);
+        //long moveDuration = individualMove.getDuration() / 1000000;
+        //dbHelper.insertMove(name, individualMoves, moveDuration);
+        //dbHelper.insertIndividualMove(individualMove.getCarInstruction(), moveDuration);
+        String message = "Dance move saved";
+        saveMessage.setText(message);
+        individualMoves.clear();
+    }
+
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
         newDance.setCreated(true);
-        dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
+        dance.setDanceMoves(newDance); //TODO why is it not sorted correctly?
     }
 
     /*
@@ -177,8 +210,6 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         mMqttClient.publish("smartcar/stopDance", "0", 1, null);
     }
 */
-
-
 
     @Override
     protected void onResume() {
@@ -280,9 +311,8 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     public void stopTimer () {
         if (!lastDirection.equals("") && individualMoves.size() <= 20) {
             duration = stopWatch.elapsed();
-            IndividualMove individualMove = new IndividualMove(lastDirection, (int) duration);
+            IndividualMove individualMove = new IndividualMove(lastDirection, duration);
             individualMoves.add(individualMove);
-
         }
         save.setVisibility(View.VISIBLE);
         countDownTimer.cancel();
@@ -450,6 +480,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         uncolorButtons();
     }
 
+    @TargetApi(Build.VERSION_CODES.FROYO)
     public void colorImageButton(ImageButton button){
         button.setColorFilter(Color.parseColor("#8BC34A"));
     }
@@ -458,6 +489,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         button.setBackgroundColor(Color.parseColor("#ED2E3C34"));
     }
 
+    @TargetApi(Build.VERSION_CODES.FROYO)
     public void uncolorButtons() {
         forward.setColorFilter(Color.TRANSPARENT);
         backward.setColorFilter(Color.TRANSPARENT);
