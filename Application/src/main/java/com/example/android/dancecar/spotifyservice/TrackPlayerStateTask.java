@@ -16,11 +16,11 @@ public class TrackPlayerStateTask extends AsyncTask<Object, Void, Void> {
             spotifyAppRemote.getPlayerApi().getPlayerState()
                     .setResultCallback(playerState -> {
                         // have fun with playerState
-                        Log.d("MainActivity", playerState.track.name + " by "   +   playerState.track.artist.name + " (Playback position: " + playerState.playbackPosition+ ")");
+                        //Log.d("MainActivity", playerState.track.name + " by "   +   playerState.track.artist.name + " (Playback position: " + playerState.playbackPosition+ ")");
                         long positionMilliseconds = playerState.playbackPosition;
                         long minutes = positionMilliseconds / 60000;
                         long seconds = (positionMilliseconds % 60000) / 1000;
-                        displayText.setText("Playback position: " + minutes + ":" + seconds);
+                        displayText.setText(minutes + ":" + seconds);
                     })
                     .setErrorCallback(throwable -> {
                         // =(
