@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -23,6 +25,7 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class DancingActivity extends AppCompatActivity {
@@ -32,6 +35,7 @@ public class DancingActivity extends AppCompatActivity {
     ArrayList<CreatedDanceMove> createdDanceMoves = new ArrayList<CreatedDanceMove>();
     ArrayList<Choreography> chorMoves = new ArrayList<Choreography>();
     ArrayList<Choreography> selectedChorMoves = new ArrayList<Choreography>();
+
     ArrayList selectedChorMovesText = new ArrayList();
     ArrayList<DanceMove> selectedMove = new ArrayList<DanceMove>();
     ArrayList selectedMoveText = new ArrayList();
@@ -40,6 +44,8 @@ public class DancingActivity extends AppCompatActivity {
     CheckBox checkBox;
 
     private DBHelper dbHelper;
+    private Choreography choreography;
+    private DanceMove danceMove;
 
     private  Button createChor;
     private String myText;
@@ -52,6 +58,7 @@ public class DancingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final DBHelper myDB = new DBHelper(this);
         setContentView(R.layout.activity_dancing);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
@@ -78,12 +85,16 @@ public class DancingActivity extends AppCompatActivity {
                 name.setInputType(InputType.TYPE_CLASS_TEXT);
                 myDialog.setView(name);
                 myDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        myText = name.getText().toString();
-                        createChoreography(myText);
-                    }
-                });
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                myText = name.getText().toString();
+
+                                createChoreography(myText);
+
+                                myDB.insertChorMove(selectedMove, myText);
+                            }
+                        });
+
 
                 myDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -112,6 +123,10 @@ public class DancingActivity extends AppCompatActivity {
             checkBox.setText(chor.getChorName());
             checkBox.setOnClickListener(checkBoxDance(checkBox, chor));
             rLayout.addView(checkBox);
+
+
+
+
         }
     }
 
@@ -127,6 +142,8 @@ public class DancingActivity extends AppCompatActivity {
                         String name = selectedMove.get(i).getDanceName();
                         if(!selectedMoveText.contains(name)){
                             selectedMoveText.add(name);
+
+
                         }
                         current.setText(selectedMoveText.toString());
                     }
@@ -155,6 +172,7 @@ public class DancingActivity extends AppCompatActivity {
             }
             Choreography newChor = new Choreography(fullChor,  name);
             chorMoves.add(newChor);
+
             lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
             int id = 1;  ///TODO add new id!!!!!!
             checkBox = new CheckBox(this);
@@ -162,7 +180,10 @@ public class DancingActivity extends AppCompatActivity {
             checkBox.setText(name);
             checkBox.setOnClickListener(checkBoxDance(checkBox, newChor));
             lLayout.addView(checkBox);
+
             Toast.makeText(DancingActivity.this, myText + " was created", Toast.LENGTH_LONG).show();
+
+
         }else{
             Toast.makeText(this, "Please select at least 2 moves but you can choose 100 :) ", Toast.LENGTH_SHORT).show();
         }

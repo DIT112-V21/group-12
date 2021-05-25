@@ -46,7 +46,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
  */
 
-import android.annotation.SuppressLint;
 import android.database.sqlite.SQLiteStatement;
 import android.os.Build;
 
@@ -74,7 +73,17 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_COL_DURATION = "individual_duration";
     private static final String DATABASE_COL_ORDER = "instruction_order";
 
+    private static final String DATABASE_TABLE_3 = "chorMoves_table";
+    private static final String DATABASE_COL_CHORMOVES_ID = "chor_id";
+    private static final String DATABASE_COL_CHORMOVESNAME = "chor_name";
+    private static final String DATABASE_COL_SET_OF_MOVES = "set_of_moves";
+
+
+
+
     private IndividualMove individualMove;
+    private DancingActivity danceActivity;
+    private Choreography choreography;
 
     public DBHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -96,8 +105,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DATABASE_COL_ORDER +" INTEGER NOT NULL, " +
                 "FOREIGN KEY ("+ DATABASE_COL_ID +") REFERENCES "+ DATABASE_TABLE_1 +");");
 
+        SQLiteStatement chorMovesData = db.compileStatement("CREATE TABLE "+DATABASE_TABLE_3 +" ("
+                + DATABASE_COL_CHORMOVES_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
+                + DATABASE_COL_SET_OF_MOVES + " VARCHAR NOT NULL, "
+                + DATABASE_COL_CHORMOVESNAME +" VARCHAR NOT NULL" + "); ");
+        //"FOREIGN KEY ("+ DATABASE_COL_ID +") REFERENCES "+ DATABASE_TABLE_1  +");"
+
         moveData1.execute();
         individualMoveData2.execute();
+        chorMovesData.execute();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -113,9 +129,12 @@ public class DBHelper extends SQLiteOpenHelper {
         */
         db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_1);
         db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_2);
-
+        db.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_3);
         onCreate(db);
     }
+
+
+
 
     // this method is use to add new move to our sqlite database.
     public void insertMove(String danceName, ArrayList<IndividualMove> individualMoves) {
@@ -157,4 +176,21 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-}
+    public void insertChorMove(ArrayList<DanceMove> fullChor, String chor_name  ) {
+
+        SQLiteDatabase db = getWritableDatabase();
+
+        ContentValues chorValues = new ContentValues();
+
+        chorValues.put(DATABASE_COL_SET_OF_MOVES, String.valueOf(fullChor));
+        chorValues.put(DATABASE_COL_CHORMOVESNAME, chor_name);
+
+        db.insert(DATABASE_TABLE_3, null, chorValues);
+
+        db.close();
+    }
+
+
+    }
+
+

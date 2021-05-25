@@ -1,5 +1,7 @@
 package com.example.android.dancecar;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -14,6 +16,8 @@ public class Choreography {
         this.chorMoveID = random.nextInt();
         this.chorName = chorName;
     }
+
+
 
     public ArrayList<DanceMove> getSelectedDances() {
         return selectedDances;

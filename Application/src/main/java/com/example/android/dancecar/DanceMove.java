@@ -1,5 +1,7 @@
 package com.example.android.dancecar;
 
+import androidx.annotation.NonNull;
+
 import java.util.Random;
 import java.util.UUID;
 import java.util.Random.*;
@@ -17,6 +19,13 @@ public class DanceMove {
         this.id = random.nextInt();
         this.isCreated = isCreated();
     }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return danceName;
+    }
+
 
     public String getDanceName() {
         return danceName;
