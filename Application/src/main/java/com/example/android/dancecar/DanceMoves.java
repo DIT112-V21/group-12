@@ -209,8 +209,6 @@ public class DanceMoves extends AppCompatActivity {
 
     public void goToSpotify(View view){
         ConnectionParams connectionParams = new ConnectionParams.Builder(CLIENT_ID).setRedirectUri(REDIRECT_URI).showAuthView(true).build();
-
-        Log.d(TAG, "onStart: blabla : " + connectionParams);
         SpotifyAppRemote.connect(getApplicationContext(), connectionParams, new Connector.ConnectionListener() {
 
             public void onConnected(SpotifyAppRemote spotifyAppRemote) {
