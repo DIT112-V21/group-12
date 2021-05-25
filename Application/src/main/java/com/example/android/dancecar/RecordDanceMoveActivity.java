@@ -147,22 +147,35 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         });
     }
 
-public void createDanceMove(String name){
+    public void createDanceMove(String name){
         System.out.println("Create Dance name " + name);
         CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name);
         createNewDance(name);
         dance.setCreatedDanceMoves(danceMove);
-        dbHelper.insertMove(name, individualMoves);
-        //dbHelper.insertIndividualMove();
+        long moveDuration;
+        String carInstruction;
+        int order = 0;
+        dbHelper.insertMove(name);
+        for (IndividualMove individualMove : individualMoves){
+            moveDuration = individualMove.getDuration() / 1000000;
+            carInstruction = individualMove.getCarInstruction();
+            order++;
+            dbHelper.insertIndividualMove(name, carInstruction, moveDuration, order);
+            System.out.println(carInstruction +  moveDuration + order);
+        }
+        //save(danceMove);
+        //long moveDuration = individualMove.getDuration() / 1000000;
+        //dbHelper.insertMove(name, individualMoves, moveDuration);
+        //dbHelper.insertIndividualMove(individualMove.getCarInstruction(), moveDuration);
         String message = "Dance move saved";
         saveMessage.setText(message);
         individualMoves.clear();
-        }
+    }
 
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
         newDance.setCreated(true);
-        dance.setDanceMoves(newDance); //TODO why is it not sored correctly?
+        dance.setDanceMoves(newDance); //TODO why is it not sorted correctly?
     }
 
     /*
@@ -197,8 +210,6 @@ public void createDanceMove(String name){
         mMqttClient.publish("smartcar/stopDance", "0", 1, null);
     }
 */
-
-
 
     @Override
     protected void onResume() {
@@ -302,11 +313,6 @@ public void createDanceMove(String name){
             duration = stopWatch.elapsed();
             IndividualMove individualMove = new IndividualMove(lastDirection, duration);
             individualMoves.add(individualMove);
-            long moveDuration = individualMove.getDuration() / 1000000;
-            System.out.println(moveDuration);
-            //dbHelper.insertMove(name, individualMoves, moveDuration);
-            //dbHelper.insertIndividualMove(individualMove.getCarInstruction(), moveDuration);
-
         }
         save.setVisibility(View.VISIBLE);
         countDownTimer.cancel();
