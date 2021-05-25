@@ -31,7 +31,6 @@ import java.util.UUID;
 import jServe.Core.StopWatch;
 
 
-
 public class RecordDanceMoveActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
@@ -41,6 +40,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     private String direction = "";
     private String lastDirection = "";
     private String currentSpeed;
+    private String inputText;
 
     private CountDownTimer countDownTimer;
     private long timeLeft = 15000;
@@ -64,9 +64,9 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
 
-    DancingActivity dance = new DancingActivity();
+    private DancingActivity dance = new DancingActivity();
 
-    StopWatch stopWatch = new StopWatch();
+    private StopWatch stopWatch = new StopWatch();
 
     IndividualMove individualMove = new IndividualMove();
 
@@ -86,7 +86,6 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         Button saveDance = findViewById(R.id.saveDance);
         saveDance.setOnClickListener(new View.OnClickListener(){
 
-            @TargetApi(Build.VERSION_CODES.CUPCAKE)
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder myDialog = new AlertDialog.Builder(RecordDanceMoveActivity.this);
@@ -98,15 +97,19 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
-                            CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.getText().toString());
-                            IndividualMove singleMove = new IndividualMove(individualMove.getCarInstruction(), individualMove.getDuration());
-                            String message = "Dance move saved";
-                            saveMessage.setText(message);
-                            createNewDance(name.getText().toString());
-                            String danceName = danceMove.getNewDanceName();
-
-                            System.out.println(individualMoves);
-                            individualMoves.clear();
+                            if (!dance.getCreatedDanceMoves().isEmpty()){
+                                for (CreatedDanceMove createdDanceMove : dance.getCreatedDanceMoves()){
+                                    inputText = name.getText().toString();
+                                    if (inputText.equals(createdDanceMove.getName())){
+                                        String message = "A dance move with this name already exists.";
+                                        saveMessage.setText(message);
+                                    } else {
+                                        createDanceMove(inputText);
+                                    }
+                                }
+                            } else {
+                                createDanceMove(name.getText().toString());
+                            }
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
                             saveMessage.setText(error);
@@ -144,10 +147,22 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         });
     }
 
+public void createDanceMove(String name){
+        System.out.println("Create Dance name " + name);
+        CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name);
+        createNewDance(name);
+        dance.setCreatedDanceMoves(danceMove);
+        dbHelper.insertMove(name, individualMoves);
+        //dbHelper.insertIndividualMove();
+        String message = "Dance move saved";
+        saveMessage.setText(message);
+        individualMoves.clear();
+        }
+
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
         newDance.setCreated(true);
-        dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
+        dance.setDanceMoves(newDance); //TODO why is it not sored correctly?
     }
 
     /*

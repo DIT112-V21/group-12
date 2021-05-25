@@ -3,8 +3,8 @@ package com.example.android.dancecar;
 import java.util.ArrayList;
 
 public class CreatedDanceMove {
-    public ArrayList<IndividualMove> individualMoves = new ArrayList();
-    String newDanceName;
+    private ArrayList<IndividualMove> individualMoves = new ArrayList();
+    private String newDanceName;
 
     public CreatedDanceMove(ArrayList<IndividualMove> individualMoves, String newDanceName) {
         this.individualMoves = individualMoves;
@@ -19,11 +19,19 @@ public class CreatedDanceMove {
         this.individualMoves = individualMoves;
     }
 
-    public String getNewDanceName() {
+    public String getName() {
         return newDanceName;
     }
 
     public void setNewDanceName(String newDanceName) {
         this.newDanceName = newDanceName;
+    }
+
+    @Override
+    public String toString() {
+        return "CreatedDanceMove{" +
+                "individualMoves=" + individualMoves +
+                ", newDanceName='" + newDanceName + '\'' +
+                '}';
     }
 }

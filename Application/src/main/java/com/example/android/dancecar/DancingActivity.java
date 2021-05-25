@@ -29,16 +29,16 @@ public class DancingActivity extends AppCompatActivity {
 
     //TODO: ASK AT THE STAND UP
     //the list should be in the on create. Why is not private?
-    ArrayList<DanceMove> danceMoves = new ArrayList<DanceMove>();
-    ArrayList<CreatedDanceMove> createdDanceMoves = new ArrayList<CreatedDanceMove>();
-    ArrayList<Choreography> chorMoves = new ArrayList<Choreography>();
-    ArrayList<Choreography> selectedChorMoves = new ArrayList<Choreography>();
-    ArrayList selectedChorMovesText = new ArrayList();
-    ArrayList<DanceMove> selectedMove = new ArrayList<DanceMove>();
-    ArrayList selectedMoveText = new ArrayList();
-    LinearLayout lLayout;
-    LinearLayout rLayout;
-    CheckBox checkBox;
+    private ArrayList<DanceMove> danceMoves;
+    private ArrayList<CreatedDanceMove> createdDanceMoves;
+    private ArrayList<Choreography> chorMoves;
+    private ArrayList<Choreography> selectedChorMoves;
+    private ArrayList<String> selectedChorMovesText;
+    private ArrayList<DanceMove> selectedMoves;
+    private ArrayList<String> selectedMoveText;
+    private LinearLayout lLayout;
+    private LinearLayout rLayout;
+    private CheckBox checkBox;
 
     private DBHelper dbHelper;
 
@@ -50,12 +50,39 @@ public class DancingActivity extends AppCompatActivity {
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
 
+    public ArrayList<CreatedDanceMove> getCreatedDanceMoves() {
+        return createdDanceMoves;
+    }
+
+    public ArrayList<DanceMove> getDanceMoves() {
+        return danceMoves;
+    }
+
+    public void setDanceMoves(DanceMove danceMove) {
+        danceMoves.add(danceMove);
+    }
+
+    public void setCreatedDanceMoves(CreatedDanceMove createdDanceMove) {
+        createdDanceMoves.add(createdDanceMove);
+    }
+
+    public DancingActivity(){
+        danceMoves = new ArrayList<>();
+        createdDanceMoves = new ArrayList<>();
+        chorMoves = new ArrayList<>();
+        selectedChorMoves = new ArrayList<>();
+        selectedChorMovesText = new ArrayList<>();
+        selectedMoves = new ArrayList<>();
+        selectedMoveText = new ArrayList<>();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dancing);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
+
         DanceMove dance1  = new DanceMove("MoonWalk");
         danceMoves.add(dance1);
         DanceMove dance2  = new DanceMove("SideKick");
@@ -96,6 +123,39 @@ public class DancingActivity extends AppCompatActivity {
             }
         });
 
+        createDanceMovesCheckboxes();
+
+        createChoreographyCheckboxes();
+    }
+
+    View.OnClickListener checkBoxMove(final CheckBox checkBox, final DanceMove dance){
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(checkBox.isChecked()){
+                    selectedMoves.add(dance);
+                    Log.d(TAG, "onClick: id is: " + dance.getId());
+                    TextView current = findViewById(R.id.currentDances);
+                    for(int i = 0; i < selectedMoves.size(); i++){
+                        String name = selectedMoves.get(i).getDanceName();
+                        if(!selectedMoveText.contains(name)){
+                            selectedMoveText.add(name);
+                        }
+                        current.setText(selectedMoveText.toString());
+                    }
+                }else{
+                    String removeName = dance.getDanceName();
+                    selectedMoves.remove(dance);
+                    TextView current = findViewById(R.id.currentDances);
+                    selectedMoveText.remove(removeName);
+                    current.setText(selectedMoveText.toString());
+                    }
+                Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
+            }
+        };
+    }
+
+    public void createDanceMovesCheckboxes() {
         for (int i = 0; i < danceMoves.size(); i++) {
             DanceMove dance = danceMoves.get(i);
             checkBox = new CheckBox(this);
@@ -103,9 +163,10 @@ public class DancingActivity extends AppCompatActivity {
             checkBox.setText(dance.getDanceName());
             checkBox.setOnClickListener(checkBoxMove(checkBox, dance));
             lLayout.addView(checkBox);
-
         }
+    }
 
+    public void createChoreographyCheckboxes() {
         for (int i = 0; i < chorMoves.size(); i++) {
             Choreography chor = chorMoves.get(i);
             checkBox = new CheckBox(this);
@@ -116,43 +177,16 @@ public class DancingActivity extends AppCompatActivity {
         }
     }
 
-    View.OnClickListener checkBoxMove(final CheckBox checkBox, final DanceMove dance){
-        return new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(checkBox.isChecked()){
-                    selectedMove.add(dance);
-                    Log.d(TAG, "onClick: id is: " + dance.getId());
-                    TextView current = findViewById(R.id.currentDances);
-                    for(int i = 0; i < selectedMove.size(); i++){
-                        String name = selectedMove.get(i).getDanceName();
-                        if(!selectedMoveText.contains(name)){
-                            selectedMoveText.add(name);
-                        }
-                        current.setText(selectedMoveText.toString());
-                    }
-                }else{
-                    String removeName = dance.getDanceName();
-                    selectedMove.remove(dance);
-                    TextView current = findViewById(R.id.currentDances);
-                    selectedMoveText.remove(removeName);
-                    current.setText(selectedMoveText.toString());
-                    }
-                Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
-            }
-        };
-    }
-
     public void goToDrive(View view){
         Intent intent = new Intent(this, DrivingActivity.class);
         startActivity(intent);
     }
 
     public void createChoreography(String name){
-        if(!selectedMove.isEmpty() && selectedMove.size() > 1 && selectedMove.size() < 101) {
+        if(!selectedMoves.isEmpty() && selectedMoves.size() > 1 && selectedMoves.size() < 101) {
             ArrayList<DanceMove> fullChor = new ArrayList<DanceMove>();
-            for(int i = 0; i < selectedMove.size(); i++){
-                fullChor.add(selectedMove.get(i));
+            for(int i = 0; i < selectedMoves.size(); i++){
+                fullChor.add(selectedMoves.get(i));
             }
             Choreography newChor = new Choreography(fullChor,  name);
             chorMoves.add(newChor);
@@ -175,14 +209,14 @@ public class DancingActivity extends AppCompatActivity {
     }
 
     public void makeCarDance(View view){
-        if(selectedMove.size() > 0) {
-            for (int i = 0; i < selectedMove.size(); i++) {
-                DanceMove dance = selectedMove.get(i);
+        if(selectedMoves.size() > 0) {
+            for (int i = 0; i < selectedMoves.size(); i++) {
+                DanceMove dance = selectedMoves.get(i);
                 String name = dance.getDanceName();
 
                 if (dance.isCreated()) {
                     for (CreatedDanceMove createdDance : createdDanceMoves) {
-                        if (dance.getDanceName().equals(createdDance.getNewDanceName())) {
+                        if (dance.getDanceName().equals(createdDance.getName())) {
                             // TODO: add connection to mqtt
                             for (IndividualMove individualMove : createdDance.getIndividualMoves()) {
                                 String carInstruction = individualMove.getCarInstruction();
