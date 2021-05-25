@@ -1,19 +1,18 @@
 package com.example.android.dancecar;
 
-import androidx.annotation.NonNull;
-
 public class IndividualMove {
     private String carInstruction;
-    private int duration;
+    private long duration;
 
-    public IndividualMove(String carInstruction, int duration) {
+    public IndividualMove(String carInstruction, long duration) {
         this.carInstruction = carInstruction;
         this.duration = duration;
+    }
+
+    public IndividualMove() {
 
     }
 
-
-    @NonNull
     @Override
     public String toString() {
         return carInstruction;
@@ -27,11 +26,11 @@ public class IndividualMove {
         this.carInstruction = carInstruction;
     }
 
-    public int getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 

@@ -2,10 +2,12 @@ package com.example.android.dancecar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.InputType;
@@ -66,7 +68,8 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     StopWatch stopWatch = new StopWatch();
 
-    private IndividualMove individualMove;
+    IndividualMove individualMove = new IndividualMove();
+
     private DBHelper dbHelper;
 
     @Override
@@ -83,6 +86,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         Button saveDance = findViewById(R.id.saveDance);
         saveDance.setOnClickListener(new View.OnClickListener(){
 
+            @TargetApi(Build.VERSION_CODES.CUPCAKE)
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder myDialog = new AlertDialog.Builder(RecordDanceMoveActivity.this);
@@ -95,12 +99,12 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
                             CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.getText().toString());
+                            IndividualMove singleMove = new IndividualMove(individualMove.getCarInstruction(), individualMove.getDuration());
                             String message = "Dance move saved";
                             saveMessage.setText(message);
                             createNewDance(name.getText().toString());
                             String danceName = danceMove.getNewDanceName();
-                            dbHelper.insertMove(danceName, individualMoves);
-                            //dbHelper.insertIndividualMove();
+
                             System.out.println(individualMoves);
                             individualMoves.clear();
                         } else {
@@ -281,8 +285,12 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     public void stopTimer () {
         if (!lastDirection.equals("") && individualMoves.size() <= 20) {
             duration = stopWatch.elapsed();
-            IndividualMove individualMove = new IndividualMove(lastDirection, (int) duration);
+            IndividualMove individualMove = new IndividualMove(lastDirection, duration);
             individualMoves.add(individualMove);
+            long moveDuration = individualMove.getDuration() / 1000000;
+            System.out.println(moveDuration);
+            //dbHelper.insertMove(name, individualMoves, moveDuration);
+            //dbHelper.insertIndividualMove(individualMove.getCarInstruction(), moveDuration);
 
         }
         save.setVisibility(View.VISIBLE);
@@ -451,6 +459,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         uncolorButtons();
     }
 
+    @TargetApi(Build.VERSION_CODES.FROYO)
     public void colorImageButton(ImageButton button){
         button.setColorFilter(Color.parseColor("#8BC34A"));
     }
@@ -459,6 +468,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         button.setBackgroundColor(Color.parseColor("#ED2E3C34"));
     }
 
+    @TargetApi(Build.VERSION_CODES.FROYO)
     public void uncolorButtons() {
         forward.setColorFilter(Color.TRANSPARENT);
         backward.setColorFilter(Color.TRANSPARENT);
