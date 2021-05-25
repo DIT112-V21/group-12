@@ -117,8 +117,9 @@ public class DancingActivity extends AppCompatActivity {
                                 myText = name.getText().toString();
 
                                 createChoreography(myText);
+                                System.out.println("done");
 
-                                myDB.insertChorMove(selectedMove, myText);
+                                myDB.insertChorMove(selectedMoves, myText);
                             }
                         });
 
