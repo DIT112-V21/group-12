@@ -38,6 +38,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     private String direction = "";
     private String lastDirection = "";
     private String currentSpeed;
+    private String inputText;
 
     private CountDownTimer countDownTimer;
     private long timeLeft = 15000;
@@ -61,9 +62,9 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
 
     private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
 
-    DancingActivity dance = new DancingActivity();
+    private DancingActivity dance = new DancingActivity();
 
-    StopWatch stopWatch = new StopWatch();
+    private StopWatch stopWatch = new StopWatch();
 
     private IndividualMove individualMove;
     private DBHelper dbHelper;
@@ -93,15 +94,19 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
-                            CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name.getText().toString());
-                            String message = "Dance move saved";
-                            saveMessage.setText(message);
-                            createNewDance(name.getText().toString());
-                            String danceName = danceMove.getNewDanceName();
-                            dbHelper.insertMove(danceName, individualMoves);
-                            //dbHelper.insertIndividualMove();
-                            System.out.println(individualMoves);
-                            individualMoves.clear();
+                            if (!dance.createdDanceMoves.isEmpty()){
+                                for (CreatedDanceMove createdDanceMove : dance.createdDanceMoves){
+                                    inputText = name.getText().toString();
+                                    if (inputText.equals(createdDanceMove.getName())){
+                                        String message = "A dance move with this name already exists.";
+                                        saveMessage.setText(message);
+                                    } else {
+                                        createDanceMove(inputText);
+                                    }
+                                }
+                            } else {
+                                createDanceMove(name.getText().toString());
+                            }
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
                             saveMessage.setText(error);
@@ -138,6 +143,18 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
             }
         });
     }
+
+public void createDanceMove(String name){
+        System.out.println("Create Dance name " + name);
+        CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name);
+        createNewDance(name);
+        dance.createdDanceMoves.add(danceMove);
+        dbHelper.insertMove(name, individualMoves);
+        //dbHelper.insertIndividualMove();
+        String message = "Dance move saved";
+        saveMessage.setText(message);
+        individualMoves.clear();
+        }
 
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);

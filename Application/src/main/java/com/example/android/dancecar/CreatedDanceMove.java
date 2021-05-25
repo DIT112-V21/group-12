@@ -19,11 +19,19 @@ public class CreatedDanceMove {
         this.individualMoves = individualMoves;
     }
 
-    public String getNewDanceName() {
+    public String getName() {
         return newDanceName;
     }
 
     public void setNewDanceName(String newDanceName) {
         this.newDanceName = newDanceName;
+    }
+
+    @Override
+    public String toString() {
+        return "CreatedDanceMove{" +
+                "individualMoves=" + individualMoves +
+                ", newDanceName='" + newDanceName + '\'' +
+                '}';
     }
 }

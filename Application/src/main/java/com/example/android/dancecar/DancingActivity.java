@@ -181,7 +181,7 @@ public class DancingActivity extends AppCompatActivity {
 
                 if (dance.isCreated()) {
                     for (CreatedDanceMove createdDance : createdDanceMoves) {
-                        if (dance.getDanceName().equals(createdDance.getNewDanceName())) {
+                        if (dance.getDanceName().equals(createdDance.getName())) {
                             // TODO: add connection to mqtt
                             for (IndividualMove individualMove : createdDance.getIndividualMoves()) {
                                 String carInstruction = individualMove.getCarInstruction();
