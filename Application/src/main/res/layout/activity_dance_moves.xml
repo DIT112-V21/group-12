@@ -305,7 +305,6 @@
         android:layout_marginBottom="206dp"
         android:background="@color/cardview_dark_background"
         android:onClick="nextSong"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -374,7 +373,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/play" />
+        android:src="@drawable/play" />
 
     <ImageButton
         android:id="@+id/pause"
@@ -388,7 +387,6 @@
         android:layout_marginBottom="238dp"
         android:background="@color/cardview_dark_background"
         android:onClick="makeCarPause"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -408,7 +406,6 @@
         android:layout_marginBottom="206dp"
         android:background="@color/cardview_dark_background"
         android:onClick="previousSong"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

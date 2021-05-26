@@ -218,7 +218,6 @@ public class DanceMoves extends AppCompatActivity {
 
     public void makeCarPause(View view){
         mSpotifyAppRemote.getPlayerApi().pause();
-        //TODO add code that stops the car dancing aswell!
     }
 
     public void nextSong(View view){
@@ -282,12 +281,12 @@ public class DanceMoves extends AppCompatActivity {
                         String trackId = split[2];
                         Log.d("MainActivity", track.name + " by " + track.artist.name + " (" + trackId + ")");
                         displaySong.setText(track.name + " by " + track.artist.name);
-                        AudioAnalysis analysis = spotifyService.getAudioAnalysisForTrack_Async(trackId);
-                        if(analysis != null)
-                        {
-                            Log.d("MainActivity", "Tempo: " + analysis.getTrack().getTempo());
+                        //AudioAnalysis analysis = spotifyService.getAudioAnalysisForTrack_Async(trackId);
+                        //if(analysis != null)
+                        //{
+                        //    Log.d("MainActivity", "Tempo: " + analysis.getTrack().getTempo());
                             //analysis.
-                        }
+                        //}
 
                     }
                 });

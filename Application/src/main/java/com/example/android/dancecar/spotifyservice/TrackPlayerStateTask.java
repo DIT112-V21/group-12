@@ -25,13 +25,13 @@ public class TrackPlayerStateTask extends AsyncTask<Object, Void, Void> {
                     .setErrorCallback(throwable -> {
                         // =(
                     });
-            /*try
+            try
             {
                 Thread.sleep(1000);
             }
             catch (InterruptedException e) {
                 //e.printStackTrace();
-            }*/
+            }
         }
         return  null;
     }
