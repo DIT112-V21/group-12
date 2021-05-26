@@ -30,8 +30,6 @@ import java.util.ArrayList;
 
 public class DancingActivity extends AppCompatActivity {
 
-    //TODO: ASK AT THE STAND UP
-    //the list should be in the on create. Why is not private?
     private ArrayList<DanceMove> danceMoves;
     private ArrayList<CreatedDanceMove> createdDanceMoves;
     private ArrayList<Choreography> chorMoves;
