@@ -15,7 +15,7 @@ jobs:
       - name: Build Application
         run: |
           cd Application
-          gradlew build --stacktrace
+          ../gradlew build --stacktrace
   run-unit-tests:
     runs-on: ubuntu-latest
     steps:
@@ -28,7 +28,7 @@ jobs:
       - name: Run unit tests for Application
         run: |
           cd Application
-          gradlew test --info
+          ../gradlew test --info
   run-instrumented-tests:
     runs-on: macos-latest
     steps:
@@ -38,4 +38,4 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
-          script: cd Application && gradlew connectedAndroidTest
+          script: cd Application && ../gradlew connectedAndroidTest
