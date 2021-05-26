@@ -1,10 +1,12 @@
 package com.example.android.dancecar;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -16,11 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.dancecar.spotifyservice.SpotifyService;
 import com.example.android.dancecar.spotifyservice.TrackPlayerStateTask;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.protocol.types.Track;
+import com.wrapper.spotify.model_objects.miscellaneous.AudioAnalysis;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -30,6 +34,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 
+@RequiresApi(api = Build.VERSION_CODES.N)
 public class DanceMoves extends AppCompatActivity {
     ArrayList<DaneMoveObject> danceMoves = new ArrayList<DaneMoveObject>();
     ArrayList<ChorMoves> chorMoves = new ArrayList<ChorMoves>();
@@ -52,6 +57,7 @@ public class DanceMoves extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     TextView displaySong;
     TextView displayPlaybackPosition;
+    SpotifyService spotifyService = new SpotifyService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,8 +262,22 @@ public class DanceMoves extends AppCompatActivity {
                 .setEventCallback(playerState -> {
                     final Track track = playerState.track;
                     if (track != null) {
-                        Log.d("MainActivity", track.name + " by " + track.artist.name);
+
+
+                        String[] split = track.uri.split(":");
+
+                        String trackId = split[2];
+                        Log.d("MainActivity", track.name + " by " + track.artist.name + " (" + trackId + ")");
+
                         displaySong.setText(track.name + " by " + track.artist.name);
+
+                        AudioAnalysis analysis = spotifyService.getAudioAnalysisForTrack_Async(trackId);
+                        if(analysis != null)
+                        {
+                            Log.d("MainActivity", "Tempo: " + analysis.getTrack().getTempo());
+                            analysis.
+                        }
+
                     }
                 });
         TrackPlayerStateTask trackTask = new TrackPlayerStateTask();
