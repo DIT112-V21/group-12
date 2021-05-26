@@ -271,7 +271,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/play"
+        android:id="@+id/resume"
         style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="55dp"
         android:layout_height="35dp"
@@ -284,7 +284,8 @@
         android:background="@color/cardview_dark_background"
         android:cropToPadding="true"
         android:fadingEdge="none"
-        android:onClick="makeCarDance"
+        android:onClick="resumeSong"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -304,6 +305,7 @@
         android:layout_marginBottom="206dp"
         android:background="@color/cardview_dark_background"
         android:onClick="nextSong"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -339,16 +341,40 @@
 
     <ImageButton
         android:id="@+id/spotifyButton"
-        android:layout_width="33dp"
-        android:layout_height="28dp"
+        android:layout_width="80dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="352dp"
+        android:layout_marginEnd="289dp"
+        android:layout_marginRight="289dp"
+        android:layout_marginBottom="325dp"
+        android:background="#00FFFFFF"
         android:onClick="goToSpotify"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.097"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.577"
         app:srcCompat="@drawable/spotify" />
+
+    <ImageButton
+        android:id="@+id/playMusicId"
+        android:layout_width="84dp"
+        android:layout_height="55dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginLeft="26dp"
+        android:layout_marginTop="406dp"
+        android:layout_marginEnd="301dp"
+        android:layout_marginRight="301dp"
+        android:layout_marginBottom="270dp"
+        android:background="#00FFFFFF"
+        android:onClick="makeCarDance"
+        android:scaleType="fitEnd"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/play" />
 
     <ImageButton
         android:id="@+id/pause"
@@ -362,6 +388,7 @@
         android:layout_marginBottom="238dp"
         android:background="@color/cardview_dark_background"
         android:onClick="makeCarPause"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -381,6 +408,7 @@
         android:layout_marginBottom="206dp"
         android:background="@color/cardview_dark_background"
         android:onClick="previousSong"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
