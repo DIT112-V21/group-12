@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -227,6 +228,14 @@ public class DanceMoves extends AppCompatActivity {
     }
 
     public void goToSpotify(View view){
+        ImageButton previous = findViewById(R.id.previous);
+        ImageButton next = findViewById(R.id.next);
+        ImageButton pause = findViewById(R.id.pause);
+
+        previous.setVisibility(View.VISIBLE);
+        next.setVisibility(View.VISIBLE);
+        pause.setVisibility(View.VISIBLE);
+
         ConnectionParams connectionParams = new ConnectionParams.Builder(CLIENT_ID).setRedirectUri(REDIRECT_URI).showAuthView(true).build();
         SpotifyAppRemote.connect(getApplicationContext(), connectionParams, new Connector.ConnectionListener() {
 
