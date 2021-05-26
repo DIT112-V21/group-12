@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -59,7 +60,6 @@ public class DanceMoves extends AppCompatActivity {
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     TextView displaySong;
     TextView displayPlaybackPosition;
-    SpotifyService spotifyService = new SpotifyService();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class DanceMoves extends AppCompatActivity {
         danceMoves.add(dance3);
         DaneMoveObject dance4  = new DaneMoveObject("ChaChaCha");
         danceMoves.add(dance4);
-        Log.d(TAG, "onCreate: DanceMoves holds: " + danceMoves.toString());
+        //Log.d(TAG, "onCreate: DanceMoves holds: " + danceMoves.toString());
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
         rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
         createChor = findViewById(R.id.createChoreography);
@@ -133,7 +133,7 @@ public class DanceMoves extends AppCompatActivity {
             public void onClick(View v) {
                 if(checkBox.isChecked()){
                     selectedMove.add(dance);
-                    Log.d(TAG, "onClick: id is: " + dance.getId());
+                    //Log.d(TAG, "onClick: id is: " + dance.getId());
                     TextView current = findViewById(R.id.currentDances);
                     for(int i = 0; i < selectedMove.size(); i++){
                         String name = selectedMove.get(i).getDanceName();
@@ -149,7 +149,7 @@ public class DanceMoves extends AppCompatActivity {
                     selectedMoveText.remove(removeName);
                     current.setText(selectedMoveText.toString());
                     }
-                Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
+                //Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
             }
         };
     }
@@ -185,63 +185,33 @@ public class DanceMoves extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public String getTempo(Track track, PlayerState playerState){
-                    String tempo = "";
-                    track = playerState.track;
-                    if (track != null) {
-                        String[] split = track.uri.split(":");
-                        String trackId = split[2];
-                        AudioAnalysis analysis = spotifyService.getAudioAnalysisForTrack_Async(trackId);
-                        if(analysis != null)
-                        {
-                            tempo = analysis.getTrack().getTempo().toString();
-
-                        }
-                    }
-        TrackPlayerStateTask trackTask = new TrackPlayerStateTask();
-        trackTask.execute(mSpotifyAppRemote, displayPlaybackPosition);
-        return tempo;
-
-    }
-
     public void makeCarDance(View view){
-        mSpotifyAppRemote.getPlayerApi().subscribeToPlayerState().setEventCallback(playerState -> {
-            final Track track = playerState.track;
-            String tempo = getTempo(track, playerState);
-            String uri = track.uri;
-
-            if(selectedMove.size() > 0){
-                for(int i = 0; i < selectedMove.size(); i++){
-                    DaneMoveObject dance = selectedMove.get(i);
-                    String name = dance.getDanceName();
-
-                    Log.d(TAG, "makeCarDance: tempo is: " + tempo + "URIIS: " + uri);
-
-                    mMqttClient.publish("smartcar/makeCarDance/" + name ,tempo, 1, null);
-                    mSpotifyAppRemote.getPlayerApi().play(uri);
+                if(selectedMove.size() > 0){
+                    for(int i = 0; i < selectedMove.size(); i++){
+                        DaneMoveObject dance = selectedMove.get(i);
+                        String name = dance.getDanceName();
+                        mMqttClient.publish("smartcar/makeCarDance/" + name ,"1", 1, null);
                 }
+                    mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:5iepuklBVijTAYMJJ0Wyl4");
             }
 
             else if(selectedChorMoves.size() > 0){
                 for(int i = 0; i <selectedChorMoves.size(); i++){
                     ChorMoves chor = selectedChorMoves.get(i);
                     ArrayList<DaneMoveObject> fullDance = chor.getSelectedDances();
-                    Log.d(TAG, "makeCarDance: fulldance is " + fullDance.toString());
                     for(int j = 0; j <fullDance.size(); j++){
                         DaneMoveObject dance = fullDance.get(j);
                         String name = dance.getDanceName();
                         mMqttClient.publish("smartcar/makeCarDance/" + name ,"1",  1, null);
-                        mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL");
                     }
+                    mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:5iepuklBVijTAYMJJ0Wyl4");
                 }
             }
             else{
                 Toast.makeText(this, "You need to select a dance", Toast.LENGTH_SHORT).show();
             }
-        });
+        }
 
-
-    }
 
     public void makeCarPause(View view){
         mSpotifyAppRemote.getPlayerApi().pause();
@@ -277,7 +247,6 @@ public class DanceMoves extends AppCompatActivity {
 
             public void onConnected(SpotifyAppRemote spotifyAppRemote) {
                 mSpotifyAppRemote = spotifyAppRemote;
-                Log.d("MainActivity", "Connected! Yay!");
                 // Now you can start interacting with App Remote
 
                 connected();
@@ -327,7 +296,7 @@ public class DanceMoves extends AppCompatActivity {
             public void onClick(View v) {
                 if(checkBox.isChecked()){
                     selectedChorMoves.add(chor);
-                    Log.d(TAG, "onClick: id is: " + chor.getChorMoveID());
+                    //Log.d(TAG, "onClick: id is: " + chor.getChorMoveID());
                     TextView current = findViewById(R.id.currentDances);
                     for(int i = 0; i < selectedChorMoves.size(); i++){
                         String name = selectedChorMoves.get(i).getChorName();
@@ -342,9 +311,9 @@ public class DanceMoves extends AppCompatActivity {
                     TextView current = findViewById(R.id.currentDances);
                     selectedChorMovesText.remove(removeName);
                     current.setText(selectedChorMovesText.toString());
-                    Log.d(TAG, "onClick: removed to the selectedChorMoves");
+                    //Log.d(TAG, "onClick: removed to the selectedChorMoves");
                 }
-                Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
+                //Log.d("onClick: ", "CheckBox ID: " + checkBox.getId() + " Text: " + checkBox.getText().toString());
             }
         };
     }

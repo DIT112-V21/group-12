@@ -40,13 +40,13 @@ public class SpotifyService {
             // Set access token for further "spotifyApi" object usage
             spotifyApi.setAccessToken(clientCredentials.getAccessToken());
 
-            System.out.println("Expires in: " + clientCredentials.getExpiresIn());
+            //System.out.println("Expires in: " + clientCredentials.getExpiresIn());
         }
         catch (CancellationException e) {
-            System.out.println("Async operation cancelled.");
+            //System.out.println("Async operation cancelled.");
         }
         catch (Exception e) {
-            System.out.println("Async operation cancelled.");
+            //System.out.println("Async operation cancelled.");
         }
     }
 
@@ -60,12 +60,12 @@ public class SpotifyService {
 
             final AudioAnalysis audioAnalysis = audioAnalysisFuture.join();
 
-            System.out.println("Track duration: " + audioAnalysis.getTrack().getDuration());
+            //System.out.println("Track duration: " + audioAnalysis.getTrack().getDuration());
             return audioAnalysis;
         } catch (CompletionException e) {
-            System.out.println("Error: " + e.getCause().getMessage());
+            //System.out.println("Error: " + e.getCause().getMessage());
         } catch (CancellationException e) {
-            System.out.println("Async operation cancelled.");
+            //System.out.println("Async operation cancelled.");
         }
         return null;
     }
