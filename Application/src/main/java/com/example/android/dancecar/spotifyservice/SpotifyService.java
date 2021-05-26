@@ -57,9 +57,7 @@ public class SpotifyService {
                     .build();
             final CompletableFuture<AudioAnalysis> audioAnalysisFuture = getAudioAnalysisForTrackRequest.executeAsync();
 
-            // Thread free to do other tasks...
 
-            // Example Only. Never block in production code.
             final AudioAnalysis audioAnalysis = audioAnalysisFuture.join();
 
             System.out.println("Track duration: " + audioAnalysis.getTrack().getDuration());
