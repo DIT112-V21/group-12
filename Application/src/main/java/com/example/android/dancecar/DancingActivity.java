@@ -265,6 +265,9 @@ public class DancingActivity extends AppCompatActivity {
             for (int i = 0; i < selectedMoves.size(); i++) {
                 DanceMove dance = selectedMoves.get(i);
                 String name = dance.getDanceName();
+                if(!dance.isCreated()){
+                    mMqttClient.publish("smartcar/makeCarDance/" + name, "1", 1, null);
+                }
 
                 if (dance.isCreated()) {
                     for (CreatedDanceMove createdDance : createdDanceMoves) {
