@@ -184,7 +184,7 @@ public class DanceMoves extends AppCompatActivity {
     }
 
     public void goBackToDanceMenu(View view){
-        Intent intent = new Intent(this, DanceMode.class);
+        Intent intent = new Intent(this, DanceMoves.class);
         startActivity(intent);
     }
 
@@ -203,16 +203,15 @@ public class DanceMoves extends AppCompatActivity {
             }
         } else if(selectedChorMoves.size() > 0){
                 if(goToSpotify == true) {
-                mSpotifyAppRemote.getPlayerApi().play("spotify:playlist:37i9dQZF1DX2sUQwD7tbmL");
+                    mSpotifyAppRemote.getPlayerApi().resume();
         }
                 for(int i = 0; i <selectedChorMoves.size(); i++){
                     ChorMoves chor = selectedChorMoves.get(i);
                     ArrayList<DaneMoveObject> fullDance = chor.getSelectedDances();
-                    Log.d(TAG, "makeCarDance: fulldance is " + fullDance.toString());
                     for(int j = 0; j <fullDance.size(); j++){
-                    DaneMoveObject dance = fullDance.get(j);
-                    String name = dance.getDanceName();
-                    mMqttClient.publish("smartcar/makeCarDance/" + name ,"1",  1, null);
+                        DaneMoveObject dance = fullDance.get(j);
+                        String name = dance.getDanceName();
+                        mMqttClient.publish("smartcar/makeCarDance/" + name ,"1",  1, null);
                 }
             }
         }

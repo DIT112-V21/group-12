@@ -61,9 +61,9 @@ public class NewMoves extends AppCompatActivity {
 
     private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
 
-    DanceMoves dance = new DanceMoves();
-
     StopWatch stopWatch = new StopWatch();
+
+    DanceMoves dance = new DanceMoves();
 
     //EditText move_name, instructions, duration;
     DBHelper DB;
@@ -139,25 +139,31 @@ public class NewMoves extends AppCompatActivity {
         //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
         startStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int counter = 0;
                 if (!isChecked) {
                     // Start recording
                     startStop.setBackgroundColor(Color.parseColor("#FFC34A4E"));
                     save.setVisibility(View.GONE);
                     saveMessage.setText("");
                     startStopTimer();
+                    counter ++;
 
                 } else {
                     // Stop recording
                     startStop.setBackgroundColor(Color.parseColor("#8BC34A"));
                     startStopTimer();
+                    ToggleButton button = findViewById(R.id.startstopButton);
+                    button.setVisibility(View.INVISIBLE);
 
                 }
+
             }
         });
     }
 
     public void createNewDance(String name){
         DaneMoveObject newDance = new DaneMoveObject(name);
+        dance.danceMoves.add(newDance);
         dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
     }
 

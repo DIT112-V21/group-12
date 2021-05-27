@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void goToDance(View view){
-        Intent intent = new Intent(this, DanceMode.class);
+        Intent intent = new Intent(this, DanceMoves.class);
         startActivity(intent);
     }
 
