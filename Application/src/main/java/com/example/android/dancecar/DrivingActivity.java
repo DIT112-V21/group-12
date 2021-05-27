@@ -26,7 +26,7 @@ import com.spotify.protocol.types.Track;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class DrivingActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String EXTERNAL_MQTT_BROKER = "aerostun.dev";
@@ -35,29 +35,29 @@ public class MainActivity extends AppCompatActivity {
     private boolean isConnected = false;
     private String direction;
     private String currentSpeed;
-    Mode speedMode = new Mode("speed");
-    Mode angleMode = new Mode("angle");
-    Mode brakeMode = new Mode("brake");
-    ImageButton forward;
-    ImageButton backward;
-    ImageButton left;
-    ImageButton right;
-    Button speed;
-    Button angle;
-    Button brake;
-    Button one;
-    Button two;
-    Button three;
-    Button four;
-    Button currentSpeedMode;
-    Button currentAngleMode;
-    Button currentBrakeMode;
-    Button speedometer;
+    private Mode speedMode = new Mode("speed");
+    private Mode angleMode = new Mode("angle");
+    private Mode brakeMode = new Mode("brake");
+    private ImageButton forward;
+    private ImageButton backward;
+    private ImageButton left;
+    private ImageButton right;
+    private Button speed;
+    private Button angle;
+    private Button brake;
+    private Button one;
+    private Button two;
+    private Button three;
+    private Button four;
+    private Button currentSpeedMode;
+    private Button currentAngleMode;
+    private Button currentBrakeMode;
+    private Button speedometer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_driving);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
         initialiseButtons();
@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void goToDance(View view){
-        Intent intent = new Intent(this, DanceMoves.class);
+        Intent intent = new Intent(this, DancingActivity.class);
         startActivity(intent);
     }
 

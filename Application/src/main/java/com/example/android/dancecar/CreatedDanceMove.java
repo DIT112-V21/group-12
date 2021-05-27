@@ -2,11 +2,11 @@ package com.example.android.dancecar;
 
 import java.util.ArrayList;
 
-public class NewDanceMoves {
-    public ArrayList<IndividualMove> individualMoves = new ArrayList();
-    String newDanceName;
+public class CreatedDanceMove {
+    private ArrayList<IndividualMove> individualMoves = new ArrayList();
+    private String newDanceName;
 
-    public NewDanceMoves(ArrayList<IndividualMove> individualMoves, String newDanceName) {
+    public CreatedDanceMove(ArrayList<IndividualMove> individualMoves, String newDanceName) {
         this.individualMoves = individualMoves;
         this.newDanceName = newDanceName;
     }
@@ -19,11 +19,19 @@ public class NewDanceMoves {
         this.individualMoves = individualMoves;
     }
 
-    public String getNewDanceName() {
+    public String getName() {
         return newDanceName;
     }
 
     public void setNewDanceName(String newDanceName) {
         this.newDanceName = newDanceName;
+    }
+
+    @Override
+    public String toString() {
+        return "CreatedDanceMove{" +
+                "individualMoves=" + individualMoves +
+                ", newDanceName='" + newDanceName + '\'' +
+                '}';
     }
 }

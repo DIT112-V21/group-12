@@ -13,10 +13,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/DarkThemeApp">
-        <activity android:name=".NewMoves"></activity>
-        <activity android:name=".DanceMoves" />
+        <activity android:name=".RecordDanceMoveActivity"></activity>
+        <activity android:name=".DancingActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".DrivingActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

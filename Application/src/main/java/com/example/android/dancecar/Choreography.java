@@ -1,26 +1,29 @@
 package com.example.android.dancecar;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.UUID;
 
-public class ChorMoves {
-    ArrayList<DaneMoveObject> selectedDances;
-    int chorMoveID;
-    String chorName;
-    Random random = new Random();
+public class Choreography {
+    private ArrayList<DanceMove> selectedDances;
+    private int chorMoveID;
+    private String chorName;
+    private Random random = new Random();
 
-    public ChorMoves(ArrayList<DaneMoveObject> selectedDances,  String chorName) {
+    public Choreography(ArrayList<DanceMove> selectedDances, String chorName) {
         this.selectedDances = selectedDances;
         this.chorMoveID = random.nextInt();
         this.chorName = chorName;
     }
 
-    public ArrayList<DaneMoveObject> getSelectedDances() {
+
+
+    public ArrayList<DanceMove> getSelectedDances() {
         return selectedDances;
     }
 
-    public void setSelectedDances(ArrayList<DaneMoveObject> selectedDances) {
+    public void setSelectedDances(ArrayList<DanceMove> selectedDances) {
         this.selectedDances = selectedDances;
     }
 

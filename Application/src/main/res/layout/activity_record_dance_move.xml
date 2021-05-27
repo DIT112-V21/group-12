@@ -45,7 +45,7 @@
         android:layout_marginRight="133dp"
         android:layout_marginBottom="643dp"
         android:fontFamily="serif-monospace"
-        android:onClick="goToDrive"
+        android:onClick="goBackToDanceMenu"
         android:text="Drive"
         android:textColor="#8BC34A"
         android:textColorLink="#8BC34A"

@@ -2,23 +2,22 @@ package com.example.android.dancecar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -27,10 +26,12 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
+import java.util.UUID;
+
 import jServe.Core.StopWatch;
 
 
-public class NewMoves extends AppCompatActivity {
+public class RecordDanceMoveActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"; //Coonnect local
@@ -39,6 +40,7 @@ public class NewMoves extends AppCompatActivity {
     private String direction = "";
     private String lastDirection = "";
     private String currentSpeed;
+    private String inputText;
 
     private CountDownTimer countDownTimer;
     private long timeLeft = 15000;
@@ -56,46 +58,58 @@ public class NewMoves extends AppCompatActivity {
 
     private TextView recordingTimer;
     private TextView saveMessage;
+    private TextView testDuration;
 
     private ToggleButton startStop;
 
     private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
 
-    StopWatch stopWatch = new StopWatch();
+    private DancingActivity dance = new DancingActivity();
 
-    DanceMoves dance = new DanceMoves();
+    private StopWatch stopWatch = new StopWatch();
 
-    //EditText move_name, instructions, duration;
-    DBHelper DB;
+    IndividualMove individualMove = new IndividualMove();
+
+    private DBHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_moves);
+        setContentView(R.layout.activity_record_dance_move);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
         initialiseButtons();
 
-
+        // creating a new dbHelper class and passing our context to it.
+        dbHelper = new DBHelper(this);
 
         Button saveDance = findViewById(R.id.saveDance);
         saveDance.setOnClickListener(new View.OnClickListener(){
 
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder myDialog = new AlertDialog.Builder(NewMoves.this);
+                AlertDialog.Builder myDialog = new AlertDialog.Builder(RecordDanceMoveActivity.this);
                 myDialog.setTitle("Name");
-                final EditText name = new EditText(NewMoves.this);
+                final EditText name = new EditText(RecordDanceMoveActivity.this);
                 name.setInputType(InputType.TYPE_CLASS_TEXT);
                 myDialog.setView(name);
                 myDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (individualMoves.size() >= 2 && !isRecording) {
-                            NewDanceMoves danceMove = new NewDanceMoves(individualMoves, name.toString());
-                            String message = "Dance move saved";
-                            saveMessage.setText(message);
-                            createNewDance(name.toString());
+                            if (!dance.getCreatedDanceMoves().isEmpty()){
+                                for (CreatedDanceMove createdDanceMove : dance.getCreatedDanceMoves()){
+                                    inputText = name.getText().toString();
+                                    if (inputText.equals(createdDanceMove.getName())){
+                                        String message = "A dance move with this name already exists.";
+                                        saveMessage.setText(message);
+                                    } else {
+                                        createDanceMove(inputText);
+                                    }
+                                }
+                            } else {
+                                createDanceMove(name.getText().toString());
+                            }
                         } else {
                             String error = "No move created, please press \"Start\" and give the car at least 2 instructions.";
                             saveMessage.setText(error);
@@ -112,29 +126,6 @@ public class NewMoves extends AppCompatActivity {
                 myDialog.show();
             }
         });
-
-        /*
-        mMqttClient.publish("smartcar/", "instructions", 1, null);
-        mMqttClient.publish("smartcar/", "duration", 1, null);
-
-        DB = new DBHelper(this);
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String move_nameTXT = move_name.getText().toString();
-                String directionTXT = instructions.getText().toString();
-                int durationINT = Integer.parseInt(duration.getText().toString());
-
-                boolean checkInsertData = DB.saveMove(move_nameTXT, directionTXT, durationINT);
-                if(checkInsertData)
-                    Toast.makeText(NewMoves.this, "New move inserted!", Toast.LENGTH_SHORT).show();
-                else
-                    Toast.makeText(NewMoves.this, "New move not inserted!", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-         */
 
         //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
         startStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -161,10 +152,38 @@ public class NewMoves extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, DancingActivity.class);
+        startActivity(intent);
+    }
+
+    public void createDanceMove(String name){
+        CreatedDanceMove danceMove = new CreatedDanceMove(individualMoves, name);
+        createNewDance(name);
+        dance.setCreatedDanceMoves(danceMove);
+        int moveDuration;
+        String carInstruction;
+        int order = 0;
+        dbHelper.insertMove(name);
+        for (IndividualMove individualMove : individualMoves){
+            moveDuration = individualMove.getDuration();
+            carInstruction = individualMove.getCarInstruction();
+            order++;
+            int duration = Math.toIntExact(moveDuration);
+            dbHelper.insertIndividualMove(name, carInstruction, duration, order);
+        }
+        String message = "Dance move saved";
+        saveMessage.setText(message);
+        individualMoves.clear();
+    }
+
     public void createNewDance(String name){
-        DaneMoveObject newDance = new DaneMoveObject(name);
-        dance.danceMoves.add(newDance);
-        dance.danceMoves.add(newDance); //TODO why is it not sored correctly?
+        DanceMove newDance = new DanceMove(name);
+        newDance.setCreated(true);
+        //dance.setDanceMoves(newDance);
+
     }
 
 
@@ -265,9 +284,9 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void stopTimer () {
-        duration = stopWatch.elapsed();
-        IndividualMove individualMove = new IndividualMove(lastDirection, duration);
-        individualMoves.add(individualMove);
+        if (!lastDirection.equals("") && individualMoves.size() <= 20) {
+            saveIndividualMove();
+        }
         save.setVisibility(View.VISIBLE);
         countDownTimer.cancel();
         isRecording = false;
@@ -278,6 +297,7 @@ public class NewMoves extends AppCompatActivity {
         direction = "";
         lastDirection = "";
         stopWatch.stop();
+        mMqttClient.publish("smartcar/stopDance", "0", 1, null);
     }
 
     public void countDown() {
@@ -307,8 +327,9 @@ public class NewMoves extends AppCompatActivity {
     public void saveIndividualMove() {
         stopWatch.stop();
         if (individualMoves.size() <= 20) {
-            duration = stopWatch.elapsed();
-            IndividualMove individualMove = new IndividualMove(lastDirection, duration);
+            duration = stopWatch.elapsed() / 1000000;
+            int milliseconds = Math.toIntExact(duration);
+            IndividualMove individualMove = new IndividualMove(lastDirection, milliseconds);
             individualMoves.add(individualMove);
             stopWatch.start();
             lastDirection = direction;
@@ -321,12 +342,11 @@ public class NewMoves extends AppCompatActivity {
         if (isRecording) {
             int message = 0;
             direction = "forward";
-            //String dir = "forward";
             colorArrowButtons(direction);
             mMqttClient.publish("smartcar/forward", Integer.toString(message), 1, null);
             // First time the user presses an arrow button
 
-            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+            if (lastDirection.equals("")) {
                 stopWatch.start();
                 lastDirection = direction;
                 // When the user presses the next arrow button, the individual move will be saved
@@ -343,7 +363,7 @@ public class NewMoves extends AppCompatActivity {
             colorArrowButtons(direction);
             mMqttClient.publish("smartcar/backward", Integer.toString(message), 1, null);
             // First time the user presses an arrow button
-            if (!lastDirection.equals(direction) && lastDirection.equals("")) {
+            if (lastDirection.equals("")) {
                 stopWatch.start();
                 lastDirection = direction;
                 // When the user presses the next arrow button, the individual move will be saved
@@ -425,7 +445,7 @@ public class NewMoves extends AppCompatActivity {
     }
 
     public void goBackToDanceMenu(View view){
-        Intent intent = new Intent(this, DanceMoves.class);
+        Intent intent = new Intent(this, DancingActivity.class);
         startActivity(intent);
     }
 
@@ -433,6 +453,7 @@ public class NewMoves extends AppCompatActivity {
         uncolorButtons();
     }
 
+    @TargetApi(Build.VERSION_CODES.FROYO)
     public void colorImageButton(ImageButton button){
         button.setColorFilter(Color.parseColor("#8BC34A"));
     }
@@ -441,6 +462,7 @@ public class NewMoves extends AppCompatActivity {
         button.setBackgroundColor(Color.parseColor("#ED2E3C34"));
     }
 
+    @TargetApi(Build.VERSION_CODES.FROYO)
     public void uncolorButtons() {
         forward.setColorFilter(Color.TRANSPARENT);
         backward.setColorFilter(Color.TRANSPARENT);
