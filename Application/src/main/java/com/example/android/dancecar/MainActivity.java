@@ -16,11 +16,20 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+
+import com.spotify.protocol.client.Subscription;
+import com.spotify.protocol.types.PlayerState;
+import com.spotify.protocol.types.Track;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
+    private static final String EXTERNAL_MQTT_BROKER = "aerostun.dev";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"; //Coonnect local
     private MqttClient mMqttClient;
     private boolean isConnected = false;
@@ -53,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         connectToMqttBroker();
         initialiseButtons();
     }
+
 
     @Override
     protected void onResume() {
@@ -402,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void goToDance(View view){
-        Intent intent = new Intent(this, DanceMode.class);
+        Intent intent = new Intent(this, DanceMoves.class);
         startActivity(intent);
     }
 
