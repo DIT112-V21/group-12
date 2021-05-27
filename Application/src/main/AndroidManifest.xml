@@ -14,7 +14,6 @@
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/DarkThemeApp">
         <activity android:name=".RecordDanceMoveActivity"></activity>
-        <activity android:name=".DanceModeActivity" />
         <activity android:name=".DancingActivity" />
         <activity
             android:name=".DrivingActivity"
