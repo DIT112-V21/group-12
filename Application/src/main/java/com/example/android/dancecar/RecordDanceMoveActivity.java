@@ -272,7 +272,6 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         startStop = findViewById(R.id.startstopButton);
         saveMessage = findViewById(R.id.saveMessage);
         save = findViewById(R.id.saveDance);
-        testDuration = findViewById(R.id.duration);
     }
 
     // Timer code partially derived from https://www.youtube.com/watch?v=zmjfAcnosS0

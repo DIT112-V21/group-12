@@ -41,13 +41,13 @@ import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
-public class DanceMoves extends AppCompatActivity {
+public class DancingActivity extends AppCompatActivity {
     private ArrayList<DanceMove> danceMoves;
     private ArrayList<CreatedDanceMove> createdDanceMoves;
     private ArrayList<Choreography> chorMoves;
     private ArrayList<Choreography> selectedChorMoves;
     private ArrayList selectedChorMovesText;
-    private ArrayList<DanceMove> selectedMove;
+    private ArrayList<DanceMove> selectedMoves;
     private ArrayList selectedMoveText;
     private LinearLayout lLayout;
     private LinearLayout rLayout;
@@ -380,7 +380,7 @@ public class DanceMoves extends AppCompatActivity {
         trackTask.execute(mSpotifyAppRemote, displayPlaybackPosition);
     }
 
-    View.OnClickListener checkBoxDance(final CheckBox checkBox, final ChorMoves chor){
+    View.OnClickListener checkBoxDance(final CheckBox checkBox, final Choreography chor){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
