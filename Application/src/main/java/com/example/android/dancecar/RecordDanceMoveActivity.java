@@ -130,19 +130,24 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
         startStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int counter = 0;
                 if (!isChecked) {
                     // Start recording
                     startStop.setBackgroundColor(Color.parseColor("#FFC34A4E"));
                     save.setVisibility(View.GONE);
                     saveMessage.setText("");
                     startStopTimer();
+                    counter ++;
 
                 } else {
                     // Stop recording
                     startStop.setBackgroundColor(Color.parseColor("#8BC34A"));
                     startStopTimer();
+                    ToggleButton button = findViewById(R.id.startstopButton);
+                    button.setVisibility(View.INVISIBLE);
 
                 }
+
             }
         });
     }
@@ -177,7 +182,8 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
         newDance.setCreated(true);
-        dance.setDanceMoves(newDance);
+        //dance.setDanceMoves(newDance);
+
     }
 
 

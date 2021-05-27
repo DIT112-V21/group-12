@@ -1,5 +1,6 @@
 package com.example.android.dancecar;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -8,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -15,10 +17,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.dancecar.spotifyservice.SpotifyService;
+import com.example.android.dancecar.spotifyservice.TrackPlayerStateTask;
+import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
+import com.spotify.protocol.types.Image;
+import com.spotify.protocol.types.Track;
+import com.wrapper.spotify.model_objects.miscellaneous.AudioAnalysis;
 
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -29,23 +40,27 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 
-public class DancingActivity extends AppCompatActivity {
-
+@RequiresApi(api = Build.VERSION_CODES.N)
+public class DanceMoves extends AppCompatActivity {
     private ArrayList<DanceMove> danceMoves;
     private ArrayList<CreatedDanceMove> createdDanceMoves;
     private ArrayList<Choreography> chorMoves;
     private ArrayList<Choreography> selectedChorMoves;
-    private ArrayList<String> selectedChorMovesText;
-    private ArrayList<DanceMove> selectedMoves;
-    private ArrayList<String> selectedMoveText;
+    private ArrayList selectedChorMovesText;
+    private ArrayList<DanceMove> selectedMove;
+    private ArrayList selectedMoveText;
     private LinearLayout lLayout;
     private LinearLayout rLayout;
     private CheckBox checkBox;
-
     private DBHelper dbHelper;
     private Choreography choreography;
     private DanceMove danceMove;
-
+    boolean danceDone;
+    boolean startDance;
+    boolean goToSpotify = false;
+    private static final String CLIENT_ID = "764ef5ad07284dd499fcb8bb5604bc26";
+    private static final String REDIRECT_URI = "http://localhost:8888/callback";
+    private SpotifyAppRemote mSpotifyAppRemote;
     private  Button createChor;
     private String myText;
     private boolean isConnected = false;
@@ -53,6 +68,9 @@ public class DancingActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
+    TextView displaySong;
+    TextView displayPlaybackPosition;
+    SpotifyService spotifyService = new SpotifyService();
 
     private DBHelper myDB;
 
@@ -115,6 +133,8 @@ public class DancingActivity extends AppCompatActivity {
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
         rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
         createChor = findViewById(R.id.createChoreography);
+        displaySong = findViewById((R.id.displayTextSong));
+        displayPlaybackPosition = findViewById((R.id.displayTextPlaybackPosition));
         createChor.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -233,11 +253,14 @@ public class DancingActivity extends AppCompatActivity {
     }
 
     public void goBackToDanceMenu(View view){
-        Intent intent = new Intent(this, DanceModeActivity.class);
+        Intent intent = new Intent(this, DancingActivity.class);
         startActivity(intent);
     }
 
     public void makeCarDance(View view){
+        if(goToSpotify == true) {
+            mSpotifyAppRemote.getPlayerApi().resume();
+        }
         if(selectedMoves.size() > 0) {
             for (int i = 0; i < selectedMoves.size(); i++) {
                 DanceMove dance = selectedMoves.get(i);
@@ -260,6 +283,9 @@ public class DancingActivity extends AppCompatActivity {
                 }
             }
         } else if(selectedChorMoves.size() > 0){
+            if(goToSpotify == true) {
+                mSpotifyAppRemote.getPlayerApi().resume();
+            }
             for(int i = 0; i <selectedChorMoves.size(); i++){
                 Choreography chor = selectedChorMoves.get(i);
                 ArrayList<DanceMove> fullDance = chor.getSelectedDances();
@@ -270,9 +296,26 @@ public class DancingActivity extends AppCompatActivity {
                     mMqttClient.publish("smartcar/makeCarDance/" + name ,"1",  1, null);
                 }
             }
-        }else{
+        }
+         else{
             Toast.makeText(this, "You need to select a dance", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void makeCarPause(View view){
+        mSpotifyAppRemote.getPlayerApi().pause();
+    }
+
+    public void nextSong(View view){
+        mSpotifyAppRemote.getPlayerApi().skipNext();
+    }
+
+    public void previousSong(View view){
+        mSpotifyAppRemote.getPlayerApi().skipPrevious();
+    }
+
+    public void resumeSong(View view){
+        mSpotifyAppRemote.getPlayerApi().resume();
     }
 
     public void recordNewMove(View view){
@@ -280,7 +323,64 @@ public class DancingActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    View.OnClickListener checkBoxDance(final CheckBox checkBox, final Choreography chor){
+    public void goToSpotify(View view){
+        goToSpotify = true;
+        ImageButton play = findViewById(R.id.resume);
+        ImageButton next = findViewById(R.id.next);
+        ImageButton previous = findViewById(R.id.previous);
+        ImageButton pause = findViewById(R.id.pause);
+        play.setVisibility(View.VISIBLE);
+        pause.setVisibility(View.VISIBLE);
+        next.setVisibility(View.VISIBLE);
+        previous.setVisibility(View.VISIBLE);
+
+        ConnectionParams connectionParams = new ConnectionParams.Builder(CLIENT_ID).setRedirectUri(REDIRECT_URI).showAuthView(true).build();
+        SpotifyAppRemote.connect(getApplicationContext(), connectionParams, new Connector.ConnectionListener() {
+
+            public void onConnected(SpotifyAppRemote spotifyAppRemote) {
+                mSpotifyAppRemote = spotifyAppRemote;
+                Log.d("MainActivity", "Connected! Yay!");
+                // Now you can start interacting with App Remote
+
+                connected();
+            }
+
+            public void onFailure(Throwable throwable) {
+                Log.e("MyActivity", throwable.getMessage(), throwable);
+                // Something went wrong when attempting to connect! Handle errors here
+            }
+        });
+    }
+
+    protected void onStop() {
+        super.onStop();
+        SpotifyAppRemote.disconnect(mSpotifyAppRemote);
+    }
+
+    private void connected() {
+        mSpotifyAppRemote.getPlayerApi()
+                .subscribeToPlayerState()
+                .setEventCallback(playerState -> {
+                    final Track track = playerState.track;
+                    if (track != null) {
+                        String[] split = track.uri.split(":");
+                        String trackId = split[2];
+                        Log.d("MainActivity", track.name + " by " + track.artist.name + " (" + trackId + ")");
+                        displaySong.setText(track.name + " by " + track.artist.name);
+                        //AudioAnalysis analysis = spotifyService.getAudioAnalysisForTrack_Async(trackId);
+                        //if(analysis != null)
+                        //{
+                        //    Log.d("MainActivity", "Tempo: " + analysis.getTrack().getTempo());
+                            //analysis.
+                        //}
+
+                    }
+                });
+        TrackPlayerStateTask trackTask = new TrackPlayerStateTask();
+        trackTask.execute(mSpotifyAppRemote, displayPlaybackPosition);
+    }
+
+    View.OnClickListener checkBoxDance(final CheckBox checkBox, final ChorMoves chor){
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
