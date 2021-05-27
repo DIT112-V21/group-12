@@ -2,6 +2,7 @@ package com.example.android.dancecar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,6 +54,8 @@ public class DancingActivity extends AppCompatActivity {
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
 
+    private DBHelper myDB;
+
     public ArrayList<CreatedDanceMove> getCreatedDanceMoves() {
         return createdDanceMoves;
     }
@@ -69,6 +72,10 @@ public class DancingActivity extends AppCompatActivity {
         createdDanceMoves.add(createdDanceMove);
     }
 
+    public DBHelper getDbHelper() {
+        return dbHelper;
+    }
+
     public DancingActivity(){
         danceMoves = new ArrayList<>();
         createdDanceMoves = new ArrayList<>();
@@ -80,9 +87,15 @@ public class DancingActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        retrieveData();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final DBHelper myDB = new DBHelper(this);
+        myDB = new DBHelper(this);
         setContentView(R.layout.activity_dancing);
         mMqttClient = new MqttClient(getApplicationContext(), MQTT_SERVER, TAG);
         connectToMqttBroker();
@@ -95,7 +108,9 @@ public class DancingActivity extends AppCompatActivity {
         danceMoves.add(dance3);
         DanceMove dance4  = new DanceMove("ChaChaCha");
         danceMoves.add(dance4);
-        //danceMoves.add(dbHelper);
+
+        retrieveData();
+
         Log.d(TAG, "onCreate: DanceMoves holds: " + danceMoves.toString());
         lLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_L);
         rLayout = (LinearLayout) findViewById(R.id.linear_Layout_Dance_R);
@@ -115,7 +130,6 @@ public class DancingActivity extends AppCompatActivity {
                                 myText = name.getText().toString();
 
                                 createChoreography(myText);
-                                System.out.println("done");
 
                                 myDB.insertChorMove(selectedMoves, myText);
                             }
@@ -135,6 +149,12 @@ public class DancingActivity extends AppCompatActivity {
         createDanceMovesCheckboxes();
 
         createChoreographyCheckboxes();
+    }
+
+    public void retrieveData() {
+        createdDanceMoves = myDB.getCreatedDanceMove();
+        danceMoves.addAll(myDB.getDanceMove());
+        createdDanceMoves.toString();
     }
 
     View.OnClickListener checkBoxMove(final CheckBox checkBox, final DanceMove dance){
@@ -226,10 +246,9 @@ public class DancingActivity extends AppCompatActivity {
                 if (dance.isCreated()) {
                     for (CreatedDanceMove createdDance : createdDanceMoves) {
                         if (dance.getDanceName().equals(createdDance.getName())) {
-                            // TODO: add connection to mqtt
                             for (IndividualMove individualMove : createdDance.getIndividualMoves()) {
                                 String carInstruction = individualMove.getCarInstruction();
-                                long duration = individualMove.getDuration() / 1000000;
+                                long duration = individualMove.getDuration();
                                 mMqttClient.publish("smartcar/duration", Long.toString(duration), 1, null);
                                 mMqttClient.publish("smartcar/direction", carInstruction, 1, null);
                             }

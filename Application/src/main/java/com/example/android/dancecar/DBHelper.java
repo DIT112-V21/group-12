@@ -32,6 +32,11 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DATABASE_COL_CHORMOVESNAME = "chor_name";
     private static final String DATABASE_COL_SET_OF_MOVES = "set_of_moves";
 
+    private SQLiteDatabase db = getReadableDatabase();
+
+    public SQLiteDatabase getDb() {
+        return db;
+    }
 
     private IndividualMove individualMove;
     private DancingActivity danceActivity;
@@ -43,6 +48,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        System.out.println("Hi");
         SQLiteStatement moveData1 = db.compileStatement("CREATE TABLE "+DATABASE_TABLE_1 +" ("
                 + DATABASE_COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "
                 + DATABASE_COL_DANCE_NAME +" VARCHAR );");
@@ -96,19 +102,20 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
     // This method is used to add new individual move to our sqlite database, related to table 2.
-    public void insertIndividualMove(String danceMoveName, String carInstruction, long individualDuration, int order) {
+    public void insertIndividualMove(String danceMoveName, String carInstruction, int individualDuration, int order) {
 
         SQLiteDatabase db = getWritableDatabase();
         ContentValues valuesIndividual = new ContentValues();
 
         int iD = getMoveId(danceMoveName);
+        System.out.println(individualDuration+"d");
 
         valuesIndividual.put(DATABASE_COL_INSTRUCTION, carInstruction);
         valuesIndividual.put(DATABASE_COL_DURATION, individualDuration);
         valuesIndividual.put(DATABASE_COL_ORDER, order);
         valuesIndividual.put(DATABASE_COL_NEWID, iD);
 
-        System.out.println("Hi"); //test
+       // System.out.println("Hi"); //test
 
         db.insert(DATABASE_TABLE_2, null, valuesIndividual);
 
@@ -128,20 +135,95 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int getMoveId(String name){
+    public ArrayList<CreatedDanceMove> getCreatedDanceMove() {
 
-        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<CreatedDanceMove> createdDanceMoves = new ArrayList<>();
 
-        Cursor allIds = db.rawQuery("SELECT " + DATABASE_COL_ID + " FROM " + DATABASE_TABLE_1 + " WHERE " + DATABASE_COL_DANCE_NAME +"=?", new String[]{name});
+
+        String direction = "";
+        long duration = 0;
+
+
+        Cursor allNames = db.rawQuery("SELECT " + DATABASE_COL_DANCE_NAME + " FROM " + DATABASE_TABLE_1, new String[]{});
+
+        String name = "";
+
+
+        if (allNames.getCount() == 0) {
+            return createdDanceMoves;
+        } else {
+            while (allNames.moveToNext()) {
+                name = allNames.getString(0);
+                CreatedDanceMove createdDanceMove = new CreatedDanceMove(new ArrayList<IndividualMove>(), name);
+                createdDanceMoves.add(createdDanceMove);
+
+            }
+
+            for (CreatedDanceMove createdDanceMove : createdDanceMoves){
+                Cursor allIndividualMoves = db.rawQuery("SELECT " + DATABASE_COL_INSTRUCTION + ", " + DATABASE_COL_DURATION +
+                        " FROM " + DATABASE_TABLE_2 + " JOIN " + DATABASE_TABLE_1 + " ON " + DATABASE_COL_NEWID + "=" +
+                        DATABASE_COL_ID + " WHERE " + DATABASE_COL_DANCE_NAME + "=?", new String[]{createdDanceMove.getName()});
+
+                if (allIndividualMoves.getCount() == 0) {
+                    return createdDanceMoves;
+                } else {
+                    ArrayList<IndividualMove> individualMoves = new ArrayList<>();
+                    while (allIndividualMoves.moveToNext()) {
+                        direction = allIndividualMoves.getString(0);
+                        duration = allIndividualMoves.getInt(1);
+                        System.out.println(duration +"e");
+                        IndividualMove individualMove = new IndividualMove(direction, (int) duration);
+                        individualMoves.add(individualMove);
+                    }
+                    createdDanceMove.setIndividualMoves(individualMoves);
+                }
+            }
+            return createdDanceMoves;
+        }
+    }
+
+
+    public ArrayList<DanceMove> getDanceMove() {
+
+        ArrayList<DanceMove> danceMoves = new ArrayList<>();
+
+        Cursor allNames = db.rawQuery("SELECT " + DATABASE_COL_DANCE_NAME + " FROM " + DATABASE_TABLE_1, new String[]{});
+
+        String name = "";
+
+        if (allNames.getCount() == 0) {
+            return danceMoves;
+        } else {
+            while (allNames.moveToNext()) {
+                name = allNames.getString(0);
+                DanceMove danceMove = new DanceMove(name);
+                danceMove.setCreated(true);
+                danceMoves.add(danceMove);
+            }
+            return danceMoves;
+        }
+    }
+
+
+
+    public int getMoveId(String name) {
+
+        db = getReadableDatabase();
+        Cursor allIds = db.rawQuery("SELECT " + DATABASE_COL_ID + " FROM " + DATABASE_TABLE_1 + " WHERE "
+                + DATABASE_COL_DANCE_NAME + "=?", new String[]{name});
 
         int iD = 0;
 
-        while (allIds.moveToNext()){
-            iD = allIds.getInt(0);
+        if (allIds.getCount() == 0 || allIds.getCount() > 1) {
+            return iD;
+        } else {
+            while (allIds.moveToNext()) {
+                iD = allIds.getInt(0);
 
+            }
+            return iD;
         }
-        return iD;
     }
-    }
+}
 
 
