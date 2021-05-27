@@ -47,6 +47,8 @@ public class DanceMoves extends AppCompatActivity {
     LinearLayout lLayout;
     LinearLayout rLayout;
     CheckBox checkBox;
+    boolean danceDone;
+    boolean startDance;
     boolean goToSpotify = false;
     private static final String CLIENT_ID = "764ef5ad07284dd499fcb8bb5604bc26";
     private static final String REDIRECT_URI = "http://localhost:8888/callback";
@@ -187,6 +189,8 @@ public class DanceMoves extends AppCompatActivity {
     }
 
     public void makeCarDance(View view){
+        mMqttClient.subscribe("smartcar/danceStart", 1, null);
+        mMqttClient.subscribe("smartcar/danceComplete", 1, null);
         if(goToSpotify == true) {
             mSpotifyAppRemote.getPlayerApi().resume();
         }
@@ -195,6 +199,7 @@ public class DanceMoves extends AppCompatActivity {
                 DaneMoveObject dance = selectedMove.get(i);
                 String name = dance.getDanceName();
                 mMqttClient.publish("smartcar/makeCarDance/" + name ,"1", 1, null);
+
             }
         } else if(selectedChorMoves.size() > 0){
                 if(goToSpotify == true) {
