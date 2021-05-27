@@ -321,10 +321,8 @@
         android:layout_width="68dp"
         android:layout_height="50dp"
         android:layout_marginStart="55dp"
-        android:layout_marginLeft="55dp"
         android:layout_marginTop="496dp"
         android:layout_marginEnd="288dp"
-        android:layout_marginRight="288dp"
         android:layout_marginBottom="185dp"
         android:background="#00FFFFFF"
         android:onClick="goToSpotify"
@@ -333,17 +331,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/spot" />
+        app:srcCompat="@drawable/spotifyimage" />
 
     <ImageButton
         android:id="@+id/makeCarDance"
         android:layout_width="68dp"
         android:layout_height="50dp"
         android:layout_marginStart="55dp"
-        android:layout_marginLeft="55dp"
         android:layout_marginTop="437dp"
         android:layout_marginEnd="288dp"
-        android:layout_marginRight="288dp"
         android:layout_marginBottom="245dp"
         android:background="#00FFFFFF"
         android:onClick="makeCarDance"
@@ -352,7 +348,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/music_circle_icon_dance" />
+        app:srcCompat="@drawable/picture_1" />
 
     <ImageButton
         android:id="@+id/pause"
