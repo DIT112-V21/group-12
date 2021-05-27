@@ -4,7 +4,7 @@
 
 ## What?
 
-The DanceCar is a fun application that was developed in order to let users manually control as well as dance with their SmartCar. The DanceCar application has two different modes that is Dance and Drive that the user can alternate between. In Drive mode the user can control the car with four different speed, angle and braking alternatives so that the user can choose the appropriate mode based on the surrounding environment. In Dance mode the user will be presented with four built in moves where the user can select one or many moves. With the selected moves the user can make the car perform the dance or choose to create a new dance out of the moves selected. The user can also create new moves where the DanceCar records a driving sequance and stores it for later use. During any kind of dancing performance the user has the option to connect to spotify and play a song along with the dance.
+The DanceCar is a fun application that was developed in order to let users remote control as well as dance with their SmartCar. DanceCar has two different use modes to alternate between _Dance_ and _Drive_. In _Drive_ mode the user can use our application to control the car and drive with four different speed, angle and braking alternatives so that they can choose the appropriate mode based on the surrounding environment. In _Dance_ mode the user will be able to have the car perform dance moves accompanyed by music which is provided via anoth application (Spotify). Alternatively, the user can also create new moves as the DanceCar records a driving sequence and stores it for later use. During any kind of dancing performance the user has the option to connect to spotify and play a song along with the dance.
 
 ## Why?
 
@@ -12,20 +12,18 @@ Because it is guaranteed to be fun and furthermore the DanceCar is a small versi
 
 ## How?
 
-The DanceCar GUI is developed in Android Studio
-
-A smartphone application developed in Android Studio is used as the GUI in order to let users interact with the DanceCar. The connect between the smartphone application and the SmartCar is done via a local MQTT broker. The SmartCar is developed in Arduion using the smartcar shield library, Spotify connection is developed using the Spotify API.
+The DanceCar is an application developed over the [SmartCar](https://platisd.github.io/smartcar_shield/)Library. A smartphone application developed in Android Studio is used as the GUI, enabling users to interact with the DanceCar. The connect between the smartphone application and the SmartCar is done via a local MQTT broker. The SmartCar is developed in Arduino using the smartcar shield library, Spotify connection is developed using the Spotify API.
 
 
-In the smartphone application users will be able to remot control all functions of the DanceCar. When the smartphone application is opend the DanceCar will connect to a local MQTT broker that is responsible of sending correct data between the smartphone application and the DanceCar. When connecting the DanceCar to Spotify in the smartphone application the user needs to have spotify installed on the same smartphone and be logged in to a Spotify account. The user can select any song from a given playlist. If a user wants a song that is not present in this playlist the user can add songs to this playlist in Spotify. DanceCar is using Spotify API in order to connect to Spotify. 
+In the smartphone application users will be able to remote control all functions of the DanceCar, mimmicing physical car driving. When the smartphone application is opend the DanceCar will connect to a local MQTT broker that is responsible of sending correct data between the smartphone application and the DanceCar. When connecting the DanceCar to Spotify in the smartphone application the user needs to have spotify installed on the same smartphone and be logged in to a Spotify account. The user can select any song from a given playlist. If a user wants a song that is not present in this playlist the user can add songs to this playlist in Spotify. DanceCar is using Spotify APIs in order to connect to Spotify and retrieve music. 
 
 Make a catalog of dance moves for the car to move and blink in sync with the tempo of a song and make the timing of the execution of the moves be dependent on the tempo of any given song as an input variable. The program will extract the tempos of any given song and have the car dance all night long, ready to be sent off to a COVID-free music festival!
 
 ## Set-up
 
-In order to set-up the DanceCar you first need to download (Android studio), (Arduino), (SMCE) and a (MQTT mosquitto broker) that is compatible with your OS. All downloaded programs need to run when using the DanceCar. To get our application you need to clone and run the repository in Android Studio. In Android Studio you need to update Gradle. In Android Studio you need to download an AVD or connect an Android device that has Google Play store installed and API level 29 as minimum. In the device, install Spotify application and log in using you own account.
+In order to set-up the DanceCar you first need to download [Android Studio] (https://developer.android.com/studio), [Arduino IDE] (https://www.arduino.cc/), [SMCE] (https://github.com/ItJustWorksTM/smce-gd/releases) and a [MQTT mosquitto broker] (https://mosquitto.org/) that is compatible with your OS. All downloaded programs need to run when using the DanceCar. To get our application you need to clone and run the repository in Android Studio. Where you initially need to update _Gradle_. Further. you need to download an AVD or connect an Android device that has Google Play store installed and API level 29 as minimum, where you can test and install this application. In the device, you will also need to have installed Spotify application and log in using you own account.
 
-In order to run SMCE you need to select the smartcar.ino file located in DanceCar repository and compile the sketch. When compiling is complete press "start". After this you can use yor device in order to control all functions of the DanceCar.
+In order to run the emulation in the SMCE, you need to select the smartcar.ino file, located in DanceCar repository and compile as a sketch. When compiling is complete press "_Start_". After this you can use yor device in order to control all functions of the DanceCar and view the show on the emulator. 
 
 ## User manual
 
@@ -41,14 +39,14 @@ The button "CREATE DANCE" lets you select minimum 2 moves that will be created a
 
 **Software**
 
-- SMCE
-- Android Studio
-- Arduino IDE
-- MQTT mosquitto
-- SmartCar Library
-- Spotify Web API
-- Spotify Android SDK
-- Postman
+- [SMCE] (https://github.com/ItJustWorksTM/smce-gd/releases)
+- [SmartCar Library] (https://platisd.github.io/smartcar_shield/)
+- [Android Studio] (https://developer.android.com/studio)
+- [Arduino IDE] (https://www.arduino.cc/)
+- [MQTT mosquitto] (https://mosquitto.org/)
+- [Spotify Web API] (https://developer.spotify.com/documentation/web-api/)
+- [Spotify Android SDK] (https://developer.spotify.com/documentation/android/quick-start/)
+- [Postman, API testing] (https://www.postman.com/)
 
 ## Developers
 
