@@ -4,7 +4,7 @@
 
 ## What?
 
-The DanceCar is a fun application that was developed in order to let users remote control as well as dance with their SmartCar. DanceCar has two different use modes to alternate between _Dance_ and _Drive_. In _Drive_ mode the user can use our application to control the car and drive with four different speed, angle and braking alternatives so that they can choose the appropriate mode based on the surrounding environment. In _Dance_ mode the user will be able to have the car perform dance moves accompanyed by music which is provided via anoth application (Spotify). Alternatively, the user can also create new moves as the DanceCar records a driving sequence and stores it for later use. During any kind of dancing performance the user has the option to connect to spotify and play a song along with the dance.
+The DanceCar is a fun application that was developed in order to let users remote control as well as dance with their SmartCar. DanceCar has two different use modes to alternate between Dance and Drive. In Drive mode the user can use our application to control the car and drive with four different speed, angle and braking alternatives so that they can choose the appropriate mode based on the surrounding environment. In Dance mode the user will be able to have the car perform dance moves accompanied by music which is provided via another application (Spotify). Alternatively, the user can also create new moves as the DanceCar records a driving sequence and stores it for later use. During any kind of dancing performance the user has the option to connect to spotify and play a song along with the dance.
 
 ## Why?
 
@@ -21,7 +21,7 @@ Make a catalog of dance moves for the car to move and blink in sync with the tem
 
 ## Set-up
 
-In order to set-up the DanceCar you first need to download [Android Studio] (https://developer.android.com/studio), [Arduino IDE] (https://www.arduino.cc/), [SMCE] (https://github.com/ItJustWorksTM/smce-gd/releases) and a [MQTT mosquitto broker] (https://mosquitto.org/) that is compatible with your OS. All downloaded programs need to run when using the DanceCar. To get our application you need to clone and run the repository in Android Studio. Where you initially need to update _Gradle_. Further. you need to download an AVD or connect an Android device that has Google Play store installed and API level 29 as minimum, where you can test and install this application. In the device, you will also need to have installed Spotify application and log in using you own account.
+In order to set-up the DanceCar you first need to download [Android Studio](https://developer.android.com/studio), [Arduino IDE](https://www.arduino.cc/), [SMCE](https://github.com/ItJustWorksTM/smce-gd/releases) and a [MQTT mosquitto broker](https://mosquitto.org/) that is compatible with your OS. All downloaded programs need to run when using the DanceCar. To get our application you need to clone and run the repository in Android Studio. Where you initially need to update _Gradle_. Further. you need to download an AVD or connect an Android device that has Google Play store installed and API level 29 as minimum, where you can test and install this application. In the device, you will also need to have installed Spotify application and log in using you own account.
 
 In order to run the emulation in the SMCE, you need to select the smartcar.ino file, located in DanceCar repository and compile as a sketch. When compiling is complete press "_Start_". After this you can use yor device in order to control all functions of the DanceCar and view the show on the emulator. 
 
@@ -39,14 +39,14 @@ The button "CREATE DANCE" lets you select minimum 2 moves that will be created a
 
 **Software**
 
-- [SMCE] (https://github.com/ItJustWorksTM/smce-gd/releases)
-- [SmartCar Library] (https://platisd.github.io/smartcar_shield/)
-- [Android Studio] (https://developer.android.com/studio)
-- [Arduino IDE] (https://www.arduino.cc/)
-- [MQTT mosquitto] (https://mosquitto.org/)
-- [Spotify Web API] (https://developer.spotify.com/documentation/web-api/)
-- [Spotify Android SDK] (https://developer.spotify.com/documentation/android/quick-start/)
-- [Postman, API testing] (https://www.postman.com/)
+- [SMCE](https://github.com/ItJustWorksTM/smce-gd/releases)
+- [SmartCar Library](https://platisd.github.io/smartcar_shield/)
+- [Android Studio](https://developer.android.com/studio)
+- [Arduino IDE](https://www.arduino.cc/)
+- [MQTT mosquitto](https://mosquitto.org/)
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
+- [Spotify Android SDK](https://developer.spotify.com/documentation/android/quick-start/)
+- [Postman, API testing](https://www.postman.com/)
 
 ## Developers
 
