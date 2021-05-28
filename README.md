@@ -17,11 +17,9 @@ The DanceCar is an application developed over the [SmartCar](https://platisd.git
 
 In the smartphone application users will be able to remote control all functions of the DanceCar, mimicking physical car driving. When the smartphone application is opend the DanceCar will connect to a local MQTT broker that is responsible of sending correct data between the smartphone application and the DanceCar. When connecting the DanceCar to Spotify in the smartphone application the user needs to have spotify installed on the same smartphone and be logged in to a Spotify account. The user can select any song from a given playlist. If a user wants a song that is not present in this playlist the user can add songs to this playlist in Spotify. DanceCar is using Spotify APIs in order to connect to Spotify and retrieve music. 
 
-Make a catalog of dance moves for the car to move and blink in sync with the tempo of a song and make the timing of the execution of the moves be dependent on the tempo of any given song as an input variable. The program will extract the tempos of any given song and have the car dance all night long, ready to be sent off to a COVID-free music festival!
-
 ## Set-up
 
-In order to set-up the DanceCar you first need to download [Android Studio] (https://developer.android.com/studio), [Arduino IDE] (https://www.arduino.cc/), [SMCE] (https://github.com/ItJustWorksTM/smce-gd/releases) and a [MQTT mosquitto broker] (https://mosquitto.org/) that is compatible with your OS. All downloaded programs need to run when using the DanceCar. To get our application you need to clone and run the repository in Android Studio. Where you initially need to update _Gradle_. Further, you need to download an AVD or connect an Android device that has Google Play store installed and API level 29 as minimum, where you can test and install this application. In the device, you will also need to have installed Spotify application and log in using you own account.
+In order to set-up the DanceCar you first need to download [Android Studio](https://developer.android.com/studio), [Arduino IDE](https://www.arduino.cc/), [SMCE](https://github.com/ItJustWorksTM/smce-gd/releases) and a [MQTT mosquitto broker](https://mosquitto.org/) that is compatible with your OS. All downloaded programs need to run when using the DanceCar. To get our application you need to clone and run the repository in Android Studio. Where you initially need to update _Gradle_. Further, you need to download an AVD or connect an Android device that has Google Play store installed and API level 29 as minimum, where you can test and install this application. In the device, you will also need to have installed Spotify application and log in using you own account.
 
 In order to run the emulation in the SMCE, you need to select the smartcar.ino file, located in DanceCar repository and compile as a sketch. When compiling is complete press "_Start_". After this you can use yor device in order to control all functions of the DanceCar and view the show on the emulator. 
 
@@ -39,14 +37,14 @@ The button "CREATE DANCE" lets you select minimum 2 moves that will be created a
 
 **Software**
 
-- [SMCE] (https://github.com/ItJustWorksTM/smce-gd/releases)
-- [SmartCar Library] (https://platisd.github.io/smartcar_shield/)
-- [Android Studio] (https://developer.android.com/studio)
-- [Arduino IDE] (https://www.arduino.cc/)
-- [MQTT mosquitto] (https://mosquitto.org/)
-- [Spotify Web API] (https://developer.spotify.com/documentation/web-api/)
-- [Spotify Android SDK] (https://developer.spotify.com/documentation/android/quick-start/)
-- [Postman, API testing] (https://www.postman.com/)
+- [SMCE](https://github.com/ItJustWorksTM/smce-gd/releases)
+- [SmartCar Library](https://platisd.github.io/smartcar_shield/)
+- [Android Studio](https://developer.android.com/studio)
+- [Arduino IDE](https://www.arduino.cc/)
+- [MQTT mosquitto](https://mosquitto.org/)
+- [Spotify Web API](https://developer.spotify.com/documentation/web-api/)
+- [Spotify Android SDK](https://developer.spotify.com/documentation/android/quick-start/)
+- [Postman, API testing](https://www.postman.com/)
 
 ## Developers
 
