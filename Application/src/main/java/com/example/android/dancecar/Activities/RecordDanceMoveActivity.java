@@ -1,7 +1,6 @@
-package com.example.android.dancecar;
+package com.example.android.dancecar.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -20,56 +19,49 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.example.android.dancecar.Connections.DBHelper;
+import com.example.android.dancecar.Connections.MqttClient;
+import com.example.android.dancecar.R;
+
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
-import java.util.UUID;
 
+import com.example.android.dancecar.Moves.CreatedDanceMove;
+import com.example.android.dancecar.Moves.DanceMove;
+import com.example.android.dancecar.Moves.IndividualMove;
 import jServe.Core.StopWatch;
-
 
 public class RecordDanceMoveActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
-    private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883"; //Coonnect local
+    private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
     private MqttClient mMqttClient;
     private boolean isConnected = false;
     private String direction = "";
     private String lastDirection = "";
     private String currentSpeed;
     private String inputText;
-
     private CountDownTimer countDownTimer;
     private long timeLeft = 15000;
     private boolean isRecording = false;
     private String timerText = "";
     private long duration;
-
     private ImageButton forward;
     private ImageButton backward;
     private ImageButton left;
     private ImageButton right;
-
     private Button speedometer;
     private Button save;
-
     private TextView recordingTimer;
     private TextView saveMessage;
-    private TextView testDuration;
-
     private ToggleButton startStop;
-
     private ArrayList<IndividualMove> individualMoves = new ArrayList<>();
-
     private DancingActivity dance = new DancingActivity();
-
     private StopWatch stopWatch = new StopWatch();
-
-    IndividualMove individualMove = new IndividualMove();
-
     private DBHelper dbHelper;
 
     @Override
@@ -130,24 +122,19 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
         //Source for the code below: https://developer.android.com/guide/topics/ui/controls/togglebutton
         startStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int counter = 0;
                 if (!isChecked) {
                     // Start recording
                     startStop.setBackgroundColor(Color.parseColor("#FFC34A4E"));
                     save.setVisibility(View.GONE);
                     saveMessage.setText("");
                     startStopTimer();
-                    counter ++;
-
                 } else {
                     // Stop recording
                     startStop.setBackgroundColor(Color.parseColor("#8BC34A"));
                     startStopTimer();
                     ToggleButton button = findViewById(R.id.startstopButton);
                     button.setVisibility(View.INVISIBLE);
-
                 }
-
             }
         });
     }
@@ -182,8 +169,6 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     public void createNewDance(String name){
         DanceMove newDance = new DanceMove(name);
         newDance.setCreated(true);
-        //dance.setDanceMoves(newDance);
-
     }
 
 
@@ -217,12 +202,10 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     mMqttClient.subscribe("smartcar/odometerSpeed", 1, new IMqttActionListener() {
                         @Override
                         public void onSuccess(IMqttToken asyncActionToken) {
-
                         }
 
                         @Override
                         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-
                         }
                     });
                 }
@@ -238,7 +221,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
                     isConnected = false;
 
                     final String connectionLost = "Connection to MQTT broker lost";
-                    Log.w(TAG, connectionLost); //debug in logcat
+                    Log.w(TAG, connectionLost);
                 }
 
                 @Override
@@ -344,8 +327,8 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
             direction = "forward";
             colorArrowButtons(direction);
             mMqttClient.publish("smartcar/forward", Integer.toString(message), 1, null);
-            // First time the user presses an arrow button
 
+            // First time the user presses an arrow button
             if (lastDirection.equals("")) {
                 stopWatch.start();
                 lastDirection = direction;
@@ -362,6 +345,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
             direction = "backward";
             colorArrowButtons(direction);
             mMqttClient.publish("smartcar/backward", Integer.toString(message), 1, null);
+
             // First time the user presses an arrow button
             if (lastDirection.equals("")) {
                 stopWatch.start();
@@ -379,6 +363,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
             direction = "left";
             colorArrowButtons(direction);
             mMqttClient.publish("smartcar/left", Integer.toString(message), 1, null);
+
             // First time the user presses an arrow button
             if (!lastDirection.equals(direction) && lastDirection.equals("")) {
                 stopWatch.start();
@@ -396,6 +381,7 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
             direction = "right";
             colorArrowButtons(direction);
             mMqttClient.publish("smartcar/right", Integer.toString(message), 1, null);
+
             // First time the user presses an arrow button
             if (!lastDirection.equals(direction) && lastDirection.equals("")) {
                 stopWatch.start();
@@ -456,10 +442,6 @@ public class RecordDanceMoveActivity extends AppCompatActivity {
     @TargetApi(Build.VERSION_CODES.FROYO)
     public void colorImageButton(ImageButton button){
         button.setColorFilter(Color.parseColor("#8BC34A"));
-    }
-
-    public void colorButton(Button button){
-        button.setBackgroundColor(Color.parseColor("#ED2E3C34"));
     }
 
     @TargetApi(Build.VERSION_CODES.FROYO)

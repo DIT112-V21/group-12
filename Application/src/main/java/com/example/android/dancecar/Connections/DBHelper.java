@@ -1,4 +1,4 @@
-package com.example.android.dancecar;
+package com.example.android.dancecar.Connections;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,7 +7,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import com.example.android.dancecar.Moves.IndividualMove;
+
 import java.util.ArrayList;
+
+import com.example.android.dancecar.Moves.CreatedDanceMove;
+import com.example.android.dancecar.Moves.DanceMove;
 
 //Source code : https://www.geeksforgeeks.org/how-to-create-and-add-data-to-sqlite-database-in-android/
 //Source code : https://github.com/DIT112-V20/group-04/blob/master/app/src/main/java/se/healthrover/conectivity/SqlHelper.java
@@ -15,32 +20,20 @@ import java.util.ArrayList;
 public class DBHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "dancemoves.sqlite";
-
     private static final String DATABASE_TABLE_1 = "dancemoves_table";
     private static final String DATABASE_COL_ID = "id";
     private static final String DATABASE_COL_DANCE_NAME = "dance_name";
-
     private static final String DATABASE_TABLE_2 = "individualMove_table";
     private static final String DATABASE_COL_INDIVIDUAL_ID = "individual_id";
     private static final String DATABASE_COL_INSTRUCTION = "instruction";
     private static final String DATABASE_COL_DURATION = "individual_duration";
     private static final String DATABASE_COL_ORDER = "instruction_order";
     private static final String DATABASE_COL_NEWID = "dance_id";
-
     private static final String DATABASE_TABLE_3 = "chorMoves_table";
     private static final String DATABASE_COL_CHORMOVES_ID = "chor_id";
     private static final String DATABASE_COL_CHORMOVESNAME = "chor_name";
     private static final String DATABASE_COL_SET_OF_MOVES = "set_of_moves";
-
     private SQLiteDatabase db = getReadableDatabase();
-
-    public SQLiteDatabase getDb() {
-        return db;
-    }
-
-    private IndividualMove individualMove;
-    private DancingActivity danceActivity;
-    private Choreography choreography;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -67,7 +60,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 + DATABASE_COL_SET_OF_MOVES + " VARCHAR NOT NULL, "
                 + DATABASE_COL_CHORMOVESNAME +" VARCHAR NOT NULL, " +
                 "FOREIGN KEY ("+ DATABASE_COL_ID +") REFERENCES "+ DATABASE_TABLE_1 + " ("+DATABASE_COL_ID+"));");
-
 
         moveData1.execute();
         individualMoveData2.execute();
@@ -101,6 +93,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
         db.close();
     }
+
     // This method is used to add new individual move to our sqlite database, related to table 2.
     public void insertIndividualMove(String danceMoveName, String carInstruction, int individualDuration, int order) {
 
@@ -115,12 +108,11 @@ public class DBHelper extends SQLiteOpenHelper {
         valuesIndividual.put(DATABASE_COL_ORDER, order);
         valuesIndividual.put(DATABASE_COL_NEWID, iD);
 
-       // System.out.println("Hi"); //test
-
         db.insert(DATABASE_TABLE_2, null, valuesIndividual);
 
         db.close();
     }
+
     // This method is used to add new choreography to our sqlite database, related to table 3.
     public void insertChorMove(ArrayList<DanceMove> fullChor, String chor_name) {
 
@@ -138,16 +130,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public ArrayList<CreatedDanceMove> getCreatedDanceMove() {
 
         ArrayList<CreatedDanceMove> createdDanceMoves = new ArrayList<>();
-
-
         String direction = "";
         long duration = 0;
-
 
         Cursor allNames = db.rawQuery("SELECT " + DATABASE_COL_DANCE_NAME + " FROM " + DATABASE_TABLE_1, new String[]{});
 
         String name = "";
-
 
         if (allNames.getCount() == 0) {
             return createdDanceMoves;
@@ -156,7 +144,6 @@ public class DBHelper extends SQLiteOpenHelper {
                 name = allNames.getString(0);
                 CreatedDanceMove createdDanceMove = new CreatedDanceMove(new ArrayList<IndividualMove>(), name);
                 createdDanceMoves.add(createdDanceMove);
-
             }
 
             for (CreatedDanceMove createdDanceMove : createdDanceMoves){
@@ -204,8 +191,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-
-
     public int getMoveId(String name) {
 
         db = getReadableDatabase();
@@ -219,11 +204,8 @@ public class DBHelper extends SQLiteOpenHelper {
         } else {
             while (allIds.moveToNext()) {
                 iD = allIds.getInt(0);
-
             }
             return iD;
         }
     }
 }
-
-

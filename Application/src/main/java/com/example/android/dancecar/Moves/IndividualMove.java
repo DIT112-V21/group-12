@@ -1,4 +1,4 @@
-package com.example.android.dancecar;
+package com.example.android.dancecar.Moves;
 
 public class IndividualMove {
     private String carInstruction;
@@ -7,10 +7,6 @@ public class IndividualMove {
     public IndividualMove(String carInstruction, int duration) {
         this.carInstruction = carInstruction;
         this.duration = duration;
-    }
-
-    public IndividualMove() {
-
     }
 
     @Override
@@ -24,11 +20,8 @@ public class IndividualMove {
     public String getCarInstruction() {
         return carInstruction;
     }
-
-
+    
     public int getDuration() {
         return duration;
     }
-
-
 }
