@@ -1,14 +1,10 @@
-package com.example.android.dancecar;
+package com.example.android.dancecar.Activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
@@ -22,23 +18,25 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.dancecar.spotifyservice.SpotifyService;
+import com.example.android.dancecar.Connections.DBHelper;
+import com.example.android.dancecar.Moves.IndividualMove;
+import com.example.android.dancecar.Connections.MqttClient;
+import com.example.android.dancecar.R;
 import com.example.android.dancecar.spotifyservice.TrackPlayerStateTask;
 import com.spotify.android.appremote.api.ConnectionParams;
 import com.spotify.android.appremote.api.Connector;
 import com.spotify.android.appremote.api.SpotifyAppRemote;
-import com.spotify.protocol.types.Image;
 import com.spotify.protocol.types.Track;
-import com.wrapper.spotify.model_objects.miscellaneous.AudioAnalysis;
-
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import java.sql.SQLOutput;
 import java.util.ArrayList;
+
+import com.example.android.dancecar.Moves.Choreography;
+import com.example.android.dancecar.Moves.CreatedDanceMove;
+import com.example.android.dancecar.Moves.DanceMove;
 
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class DancingActivity extends AppCompatActivity {
@@ -52,11 +50,6 @@ public class DancingActivity extends AppCompatActivity {
     private LinearLayout lLayout;
     private LinearLayout rLayout;
     private CheckBox checkBox;
-    private DBHelper dbHelper;
-    private Choreography choreography;
-    private DanceMove danceMove;
-    boolean danceDone;
-    boolean startDance;
     boolean goToSpotify = false;
     private static final String CLIENT_ID = "764ef5ad07284dd499fcb8bb5604bc26";
     private static final String REDIRECT_URI = "http://localhost:8888/callback";
@@ -68,22 +61,12 @@ public class DancingActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
     private static final String LOCALHOST = "10.0.2.2";
     private static final String MQTT_SERVER = "tcp://" + LOCALHOST + ":1883";
-    TextView displaySong;
-    TextView displayPlaybackPosition;
-    SpotifyService spotifyService = new SpotifyService();
-
+    private TextView displaySong;
+    private TextView displayPlaybackPosition;
     private DBHelper myDB;
 
     public ArrayList<CreatedDanceMove> getCreatedDanceMoves() {
         return createdDanceMoves;
-    }
-
-    public ArrayList<DanceMove> getDanceMoves() {
-        return danceMoves;
-    }
-
-    public void setDanceMoves(DanceMove danceMove) {
-        danceMoves.add(danceMove);
     }
 
     public void setCreatedDanceMoves(CreatedDanceMove createdDanceMove) {
@@ -91,7 +74,7 @@ public class DancingActivity extends AppCompatActivity {
     }
 
     public DBHelper getDbHelper() {
-        return dbHelper;
+        return myDB;
     }
 
     public DancingActivity(){
@@ -154,7 +137,6 @@ public class DancingActivity extends AppCompatActivity {
                                 myDB.insertChorMove(selectedMoves, myText);
                             }
                         });
-
 
                 myDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
@@ -261,6 +243,7 @@ public class DancingActivity extends AppCompatActivity {
         if(goToSpotify == true) {
             mSpotifyAppRemote.getPlayerApi().resume();
         }
+
         if(selectedMoves.size() > 0) {
             for (int i = 0; i < selectedMoves.size(); i++) {
                 DanceMove dance = selectedMoves.get(i);
@@ -370,13 +353,6 @@ public class DancingActivity extends AppCompatActivity {
                         String trackId = split[2];
                         Log.d("MainActivity", track.name + " by " + track.artist.name + " (" + trackId + ")");
                         displaySong.setText(track.name + " by " + track.artist.name);
-                        //AudioAnalysis analysis = spotifyService.getAudioAnalysisForTrack_Async(trackId);
-                        //if(analysis != null)
-                        //{
-                        //    Log.d("MainActivity", "Tempo: " + analysis.getTrack().getTempo());
-                            //analysis.
-                        //}
-
                     }
                 });
         TrackPlayerStateTask trackTask = new TrackPlayerStateTask();
@@ -431,7 +407,7 @@ public class DancingActivity extends AppCompatActivity {
                     isConnected = false;
 
                     final String connectionLost = "Connection to MQTT broker lost";
-                    Log.w(TAG, connectionLost); //debug in logcat
+                    Log.w(TAG, connectionLost);
                 }
 
                 @Override
@@ -448,4 +424,3 @@ public class DancingActivity extends AppCompatActivity {
         }
     }
 }
-

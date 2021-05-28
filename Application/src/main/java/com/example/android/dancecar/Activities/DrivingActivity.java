@@ -1,7 +1,6 @@
-package com.example.android.dancecar;
+package com.example.android.dancecar.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -10,21 +9,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.example.android.dancecar.Mode;
+import com.example.android.dancecar.Connections.MqttClient;
+import com.example.android.dancecar.R;
+
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-
-import com.spotify.android.appremote.api.ConnectionParams;
-import com.spotify.android.appremote.api.Connector;
-import com.spotify.android.appremote.api.SpotifyAppRemote;
-
-import com.spotify.protocol.client.Subscription;
-import com.spotify.protocol.types.PlayerState;
-import com.spotify.protocol.types.Track;
-
-import java.util.ArrayList;
 
 public class DrivingActivity extends AppCompatActivity {
     private static final String TAG = "SmartcarMqttController";
@@ -63,7 +56,6 @@ public class DrivingActivity extends AppCompatActivity {
         initialiseButtons();
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -78,7 +70,6 @@ public class DrivingActivity extends AppCompatActivity {
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.i(TAG, "Disconnected from broker");
             }
-
             @Override
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
             }
@@ -94,12 +85,10 @@ public class DrivingActivity extends AppCompatActivity {
                     mMqttClient.subscribe("smartcar/odometerSpeed", 1, new IMqttActionListener() {
                         @Override
                         public void onSuccess(IMqttToken asyncActionToken) {
-
                         }
 
                         @Override
                         public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-
                         }
                     });
                 }
@@ -214,6 +203,7 @@ public class DrivingActivity extends AppCompatActivity {
         int message = 0;
         mMqttClient.publish("smartcar/speedOne", Integer.toString(message), 1, null);
     }
+
     public void numberModeTwo(View view){
         setCurrentModeNumber(2);
         colorNumberButtons("two");
@@ -221,6 +211,7 @@ public class DrivingActivity extends AppCompatActivity {
         int message = 0;
         mMqttClient.publish("smartcar/speedTwo", Integer.toString(message), 1, null);
     }
+
     public void numberModeThree(View view){
         setCurrentModeNumber(3);
         colorNumberButtons("three");
@@ -228,6 +219,7 @@ public class DrivingActivity extends AppCompatActivity {
         int message = 0;
         mMqttClient.publish("smartcar/speedThree", Integer.toString(message), 1, null);
     }
+
     public void numberModeFour(View view){
         setCurrentModeNumber(4);
         colorNumberButtons("four");
@@ -411,13 +403,9 @@ public class DrivingActivity extends AppCompatActivity {
             right.setColorFilter(Color.TRANSPARENT);
         }
     }
+
     public void goToDance(View view){
         Intent intent = new Intent(this, DancingActivity.class);
         startActivity(intent);
     }
-
-    public void sendMessage(ArrayList danceList) {
-        mMqttClient.publish("samrtcar/makeCarDance", "1", 1, null);
-    }
-
 }

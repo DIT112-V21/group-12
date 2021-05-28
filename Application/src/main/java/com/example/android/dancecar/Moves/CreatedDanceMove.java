@@ -1,9 +1,9 @@
-package com.example.android.dancecar;
+package com.example.android.dancecar.Moves;
 
 import java.util.ArrayList;
 
 public class CreatedDanceMove {
-    private ArrayList<IndividualMove> individualMoves = new ArrayList();
+    private ArrayList<IndividualMove> individualMoves;
     private String newDanceName;
 
     public CreatedDanceMove(ArrayList<IndividualMove> individualMoves, String newDanceName) {
@@ -21,10 +21,6 @@ public class CreatedDanceMove {
 
     public String getName() {
         return newDanceName;
-    }
-
-    public void setNewDanceName(String newDanceName) {
-        this.newDanceName = newDanceName;
     }
 
     @Override

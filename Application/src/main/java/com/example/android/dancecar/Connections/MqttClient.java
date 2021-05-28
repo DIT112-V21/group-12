@@ -1,7 +1,6 @@
-package com.example.android.dancecar;
+package com.example.android.dancecar.Connections;
 
 import android.content.Context;
-
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.*;
 
@@ -41,14 +40,6 @@ public class MqttClient {
     public void subscribe(String topic, int qos, IMqttActionListener subscriptionCallback) {
         try {
             mMqttAndroidClient.subscribe(topic, qos, null, subscriptionCallback);
-        } catch (MqttException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void unsubscribe(String topic, IMqttActionListener unsubscriptionCallback) {
-        try {
-            mMqttAndroidClient.unsubscribe(topic, null, unsubscriptionCallback);
         } catch (MqttException e) {
             e.printStackTrace();
         }
